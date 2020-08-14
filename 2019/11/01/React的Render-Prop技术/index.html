@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Render Prop是一种组件使用porps提供的方法去渲染children,外部方便共享内部数据 传统方式1234567891011121314// 简单渲染子组件const LinkerWrapper = (Component) =&amp;gt; &amp;#123;  const currentLink = &apos;www.fe.com&apos;  const Proxy = (props) =&amp;gt; &amp;#123;">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React的Render-Prop技术">
+<meta property="og:url" content="http://yoursite.com/2019/11/01/React的Render-Prop技术/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="Render Prop是一种组件使用porps提供的方法去渲染children,外部方便共享内部数据 传统方式1234567891011121314// 简单渲染子组件const LinkerWrapper = (Component) =&amp;gt; &amp;#123;  const currentLink = &apos;www.fe.com&apos;  const Proxy = (props) =&amp;gt; &amp;#123;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.691Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React的Render-Prop技术">
+<meta name="twitter:description" content="Render Prop是一种组件使用porps提供的方法去渲染children,外部方便共享内部数据 传统方式1234567891011121314// 简单渲染子组件const LinkerWrapper = (Component) =&amp;gt; &amp;#123;  const currentLink = &apos;www.fe.com&apos;  const Proxy = (props) =&amp;gt; &amp;#123;">
+
+<link rel="canonical" href="http://yoursite.com/2019/11/01/React的Render-Prop技术/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>React的Render-Prop技术 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/01/React的Render-Prop技术/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React的Render-Prop技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-01 12:59:05" itemprop="dateCreated datePublished" datetime="2019-11-01T12:59:05+08:00">2019-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Render Prop是一种组件使用porps提供的方法去渲染children,外部方便共享内部数据</p>
+<h2 id="传统方式"><a href="#传统方式" class="headerlink" title="传统方式"></a>传统方式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单渲染子组件</span></span><br><span class="line"><span class="keyword">const</span> LinkerWrapper = <span class="function">(<span class="params">Component</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">Proxy</span> = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Component link=&#123;currentLink&#125; &#123;...props&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Outer = LinkerWrapper(Nav)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 此时Outer中就是有link属性的了</span></span><br></pre></td></tr></table></figure>
+<p>这种方法在声明的时候，就已经确定了高阶组件要拓展什么属性</p>
+<h2 id="使用Render-Prop"><a href="#使用Render-Prop" class="headerlink" title="使用Render Prop"></a>使用Render Prop</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.render(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为link属性增加值</span></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    render=&#123;(link) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">link</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 为href属性增加值</span></span><br><span class="line"><span class="xml">const Outer = (</span></span><br><span class="line">  &lt;Linker</span><br><span class="line">    render=&#123;(link) =&gt; (&lt;Nav href=&#123;link&#125;/&gt;) &#125;</span><br><span class="line">  /&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这种方式的好处是比较简单，所有的组装都是用的时候才根据需要进行组装，并没有用到其他的特性，就是将一个porps的方法指定为他的子组件渲染的方法</p>
+<h3 id="不一定是Render"><a href="#不一定是Render" class="headerlink" title="不一定是Render"></a>不一定是Render</h3><p>这里仅仅是直观，让人可以一次了解到，这个属性就是将来要渲染的时候，使用的porp方式，也可以使用其他的属性名,仅仅是传递一个方法做children的生成函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.componentRender(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    componentRender=&#123;(currentLink) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">href</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用children属性"><a href="#使用children属性" class="headerlink" title="使用children属性"></a>使用children属性</h2><p>children属性比较特殊了，它既可以作为porps传递，也可以直接作子元素传递</p>
+<ul>
+<li>porps传递 <code>&lt;Button childre={&#39;click me&#39;} /&gt;</code></li>
+<li>子元素传递 <code>&lt;Button&gt;click me&lt;/Button&gt;</code></li>
+</ul>
+<p>所以可以使用children作为Render Prop的一种形式，更加直观，<em>其实会自动将子元素最为children属性传递下去</em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.children(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正常作为props属性</span></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    children=&#123;(currentLink) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">href</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 作为特殊的props属性</span></span><br><span class="line"><span class="xml">const Outer = (</span></span><br><span class="line">  &lt;Linker&gt;</span><br><span class="line">    &#123;link =&gt; (&lt;Nav href=&#123;link&#125;/&gt;) &#125;</span><br><span class="line">  &lt;/Linker&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="最好使用PropTypes声明出来"><a href="#最好使用PropTypes声明出来" class="headerlink" title="最好使用PropTypes声明出来"></a>最好使用PropTypes声明出来</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linker.propTypes = &#123;</span><br><span class="line">  childre: PropTypes.func.isRequire</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="相同children的顺序问题"><a href="#相同children的顺序问题" class="headerlink" title="相同children的顺序问题"></a>相同children的顺序问题</h3><p>子元素会覆盖children属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;button children=&#123;<span class="string">'props'</span>&#125; /&gt; =&gt; <span class="xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>props<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;button&gt;children&lt;<span class="regexp">/button&gt; =&gt; &lt;button&gt;children&lt;/</span>button&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 两者都声明的情况下， 最终显示效果为</span></span><br><span class="line">&lt;button children=&#123;<span class="string">'props'</span>&#125;&gt;children&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;button&gt;children&lt;/</span>button&gt;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/10/22/mongoose常用crud/" rel="prev" title="mongoose常用crud">
+      <i class="fa fa-chevron-left"></i> mongoose常用crud
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/11/01/React错误边界/" rel="next" title="React错误边界">
+      React错误边界 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统方式"><span class="nav-number">1.</span> <span class="nav-text">传统方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Render-Prop"><span class="nav-number">2.</span> <span class="nav-text">使用Render Prop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不一定是Render"><span class="nav-number">2.1.</span> <span class="nav-text">不一定是Render</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用children属性"><span class="nav-number">3.</span> <span class="nav-text">使用children属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最好使用PropTypes声明出来"><span class="nav-number">3.1.</span> <span class="nav-text">最好使用PropTypes声明出来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相同children的顺序问题"><span class="nav-number">3.2.</span> <span class="nav-text">相同children的顺序问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

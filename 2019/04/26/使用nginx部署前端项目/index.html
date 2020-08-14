@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="当前环境 centos7  安装相关依赖 gcc 安装 安装 nginx 需要先将官网下载的源码进行编译，编译依赖 gcc 环境，如果没有 gcc 环境，则需要安装： yum install gcc-c++  PCRE pcre-devel 安装 PCRE(Perl Compatible Regular Expressions) 是一个Perl库，包括 perl 兼容的正则表达式库。nginx">
+<meta name="keywords" content="运维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用nginx部署前端项目">
+<meta property="og:url" content="http://yoursite.com/2019/04/26/使用nginx部署前端项目/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="当前环境 centos7  安装相关依赖 gcc 安装 安装 nginx 需要先将官网下载的源码进行编译，编译依赖 gcc 环境，如果没有 gcc 环境，则需要安装： yum install gcc-c++  PCRE pcre-devel 安装 PCRE(Perl Compatible Regular Expressions) 是一个Perl库，包括 perl 兼容的正则表达式库。nginx">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.698Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用nginx部署前端项目">
+<meta name="twitter:description" content="当前环境 centos7  安装相关依赖 gcc 安装 安装 nginx 需要先将官网下载的源码进行编译，编译依赖 gcc 环境，如果没有 gcc 环境，则需要安装： yum install gcc-c++  PCRE pcre-devel 安装 PCRE(Perl Compatible Regular Expressions) 是一个Perl库，包括 perl 兼容的正则表达式库。nginx">
+
+<link rel="canonical" href="http://yoursite.com/2019/04/26/使用nginx部署前端项目/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>使用nginx部署前端项目 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/26/使用nginx部署前端项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用nginx部署前端项目
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-26 22:33:55" itemprop="dateCreated datePublished" datetime="2019-04-26T22:33:55+08:00">2019-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>当前环境 centos7</p>
+</blockquote>
+<h4 id="安装相关依赖"><a href="#安装相关依赖" class="headerlink" title="安装相关依赖"></a>安装相关依赖</h4><ul>
+<li><p>gcc 安装</p>
+<p>安装 nginx 需要先将官网下载的源码进行编译，编译依赖 gcc 环境，如果没有 gcc 环境，则需要安装：</p>
+<p><code>yum install gcc-c++</code></p>
+</li>
+<li><p>PCRE pcre-devel 安装</p>
+<p>PCRE(Perl Compatible Regular Expressions) 是一个Perl库，包括 perl 兼容的正则表达式库。nginx 的 http 模块使用 pcre 来解析正则表达式，所以需要在 linux 上安装 pcre 库，pcre-devel 是使用 pcre 开发的一个二次开发库。nginx也需要此库。命令：</p>
+<p><code>yum install -y pcre pcre-devel</code></p>
+</li>
+<li><p>zlib 安装</p>
+<p>zlib 库提供了很多种压缩和解压缩的方式， nginx 使用 zlib 对 http 包的内容进行 gzip ，所以需要在 Centos 上安装 zlib 库。</p>
+<p><code>yum install -y zlib zlib-devel</code></p>
+</li>
+<li><p>OpenSSL 安装</p>
+<p>OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及 SSL 协议，并提供丰富的应用程序供测试或其它目的使用。<br>nginx 不仅支持 http 协议，还支持 https（即在ssl协议上传输http），所以需要在 Centos 安装 OpenSSL 库。</p>
+<p><code>yum install -y openssl openssl-devel</code></p>
+</li>
+</ul>
+<h4 id="下载nginx"><a href="#下载nginx" class="headerlink" title="下载nginx"></a>下载nginx</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -c https://nginx.org/download/nginx-1.10.1.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜狐镜像</span></span><br><span class="line">wget -c http://mirrors.sohu.com/nginx/nginx-0.1.8.tar.gz</span><br></pre></td></tr></table></figure>
+<h4 id="解压nginx"><a href="#解压nginx" class="headerlink" title="解压nginx"></a>解压nginx</h4><p><code>tar -xzvf nginx-1.10.1.tar.gz</code></p>
+<h4 id="安装（进入解压目录）"><a href="#安装（进入解压目录）" class="headerlink" title="安装（进入解压目录）"></a>安装（进入解压目录）</h4><ul>
+<li><code>./configure</code></li>
+<li><code>make</code></li>
+<li><code>make install</code></li>
+<li>查看nginx的安装目录<code>whereis nginx</code></li>
+</ul>
+<h4 id="测试nginx"><a href="#测试nginx" class="headerlink" title="测试nginx"></a>测试nginx</h4><ul>
+<li><code>./nginx</code> 开区服务</li>
+<li><code>./nginx -s quit</code> 关闭服务</li>
+</ul>
+<h4 id="部署项目"><a href="#部署项目" class="headerlink" title="部署项目"></a>部署项目</h4><ul>
+<li>切换到安装目录中的<code>conf</code>文件夹</li>
+<li>编辑<code>vim nginx.config</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    root  &lt;项目的路径&gt;;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="启动nginx查看运行情况"><a href="#启动nginx查看运行情况" class="headerlink" title="启动nginx查看运行情况"></a>启动nginx查看运行情况</h4><ul>
+<li><code>ps -ef | grep nginx</code> 查看nginx运行的情况以及pid</li>
+<li><code>./nginx -s quit</code></li>
+</ul>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><ul>
+<li>以上操作需在nginx安装目录中，（可参考linux环境变量相关知识）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/运维/" rel="tag"># 运维</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/19/关于云开发中云函数超时定义/" rel="prev" title="关于云开发中云函数超时定义">
+      <i class="fa fa-chevron-left"></i> 关于云开发中云函数超时定义
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/05/04/使用vm连接虚拟机/" rel="next" title="使用vm连接虚拟机">
+      使用vm连接虚拟机 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装相关依赖"><span class="nav-number">1.</span> <span class="nav-text">安装相关依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下载nginx"><span class="nav-number">2.</span> <span class="nav-text">下载nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解压nginx"><span class="nav-number">3.</span> <span class="nav-text">解压nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装（进入解压目录）"><span class="nav-number">4.</span> <span class="nav-text">安装（进入解压目录）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试nginx"><span class="nav-number">5.</span> <span class="nav-text">测试nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部署项目"><span class="nav-number">6.</span> <span class="nav-text">部署项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动nginx查看运行情况"><span class="nav-number">7.</span> <span class="nav-text">启动nginx查看运行情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">8.</span> <span class="nav-text">注意</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

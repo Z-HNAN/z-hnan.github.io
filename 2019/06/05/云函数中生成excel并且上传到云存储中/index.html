@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="云环境1.0.51  小程序的云开发功能为我们带来了很大的方便，于是就打算研究一下如何在云函数中拉取数据，之后生成excel到云存储中，过程中踩了些坑，这里分享给大家，希望能有所帮助。 首先了解一个node生成excel的库excel-export虽然已经许久未更新了，但是目前还没有什么太大的问题，所以在他的基础上进行开发,并且上手也比较容易 主要用法 引入 1let nodeExcel = r">
+<meta name="keywords" content="wxmp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云函数中生成excel并且上传到云存储中">
+<meta property="og:url" content="http://yoursite.com/2019/06/05/云函数中生成excel并且上传到云存储中/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="云环境1.0.51  小程序的云开发功能为我们带来了很大的方便，于是就打算研究一下如何在云函数中拉取数据，之后生成excel到云存储中，过程中踩了些坑，这里分享给大家，希望能有所帮助。 首先了解一个node生成excel的库excel-export虽然已经许久未更新了，但是目前还没有什么太大的问题，所以在他的基础上进行开发,并且上手也比较容易 主要用法 引入 1let nodeExcel = r">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/2019/06/05/1.png">
+<meta property="og:image" content="http://yoursite.com/img/2019/06/05/2.png">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.697Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="云函数中生成excel并且上传到云存储中">
+<meta name="twitter:description" content="云环境1.0.51  小程序的云开发功能为我们带来了很大的方便，于是就打算研究一下如何在云函数中拉取数据，之后生成excel到云存储中，过程中踩了些坑，这里分享给大家，希望能有所帮助。 首先了解一个node生成excel的库excel-export虽然已经许久未更新了，但是目前还没有什么太大的问题，所以在他的基础上进行开发,并且上手也比较容易 主要用法 引入 1let nodeExcel = r">
+<meta name="twitter:image" content="http://yoursite.com/img/2019/06/05/1.png">
+
+<link rel="canonical" href="http://yoursite.com/2019/06/05/云函数中生成excel并且上传到云存储中/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>云函数中生成excel并且上传到云存储中 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/05/云函数中生成excel并且上传到云存储中/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          云函数中生成excel并且上传到云存储中
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-05 00:18:34" itemprop="dateCreated datePublished" datetime="2019-06-05T00:18:34+08:00">2019-06-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>云环境1.0.51</p>
+</blockquote>
+<p>小程序的云开发功能为我们带来了很大的方便，于是就打算研究一下如何在云函数中拉取数据，之后生成excel到云存储中，过程中踩了些坑，这里分享给大家，希望能有所帮助。</p>
+<h4 id="首先了解一个node生成excel的库excel-export"><a href="#首先了解一个node生成excel的库excel-export" class="headerlink" title="首先了解一个node生成excel的库excel-export"></a>首先了解一个node生成excel的库<a href="https://github.com/functionscope/Node-Excel-Export" target="_blank" rel="noopener">excel-export</a></h4><p><em>虽然已经许久未更新了，但是目前还没有什么太大的问题，所以在他的基础上进行开发,并且上手也比较容易</em></p>
+<h4 id="主要用法"><a href="#主要用法" class="headerlink" title="主要用法"></a>主要用法</h4><ol>
+<li><p>引入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> nodeExcel = <span class="built_in">require</span>(<span class="string">'excel-export'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建配置对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> conf = &#123;</span><br><span class="line">  stylesXmlFile, <span class="comment">// 约束文件（不然生成的excel打开会报一些问题）</span></span><br><span class="line">  cols,          <span class="comment">// 可理解为表头  [&#123; caption: 'columnName', type: 'string' &#125;], 这里出于方便,type为string,具体可移步其文档查看</span></span><br><span class="line">  rows,          <span class="comment">// 可以理解为填充的数据 ['wechat', 'mp']</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建流对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let result = nodeExcel.execute(conf)</span><br><span class="line">// 普通node后端可以直接使用 res.end(result, &apos;binary&apos;); 进行下载，要记得添加相应的头，其文档里也有说明</span><br><span class="line">// 最终可以使用 Buffer.from(result.toString(), &apos;binary&apos;) 转换为一个Buffer对象</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="嵌入云开发"><a href="#嵌入云开发" class="headerlink" title="嵌入云开发"></a>嵌入云开发</h4><p>大致的思路就是 [拉取数据] -&gt; [生成excel流对象] -&gt; [上传到云存储中] -&gt; [返回该fileID]</p>
+<h5 id="几个踩坑点"><a href="#几个踩坑点" class="headerlink" title="几个踩坑点"></a>几个踩坑点</h5><ol>
+<li>读入文件要使用 <code>path.resolve(__dirname, &#39;xxx&#39;)</code></li>
+<li>得到excel流对象 使用 <code>Buffer.from(result.toString(), &#39;binary&#39;)</code> 再配合<code>cloud.uploadFile</code></li>
+<li>生成时conf要配置<code>stylesXmlFile</code>,不然打开文件总有个提示，很不爽!,<code>styles.xml</code>这个文件可以在<code>node_modules/excel-export/example/styles.xml</code>找到。</li>
+<li>数据和表头最好是对应的，数据也可以存在空值</li>
+</ol>
+<h4 id="云函数目录结构"><a href="#云函数目录结构" class="headerlink" title="云函数目录结构"></a>云函数目录结构</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- testDownload</span><br><span class="line">- |- index.js</span><br><span class="line">- |- styles.xml</span><br><span class="line">- |- package.json</span><br><span class="line">- |- package-lock.json</span><br><span class="line">- |- node_modules (在开发工具中应该是不显示的)</span><br></pre></td></tr></table></figure>
+<h4 id="package-json中的依赖"><a href="#package-json中的依赖" class="headerlink" title="package.json中的依赖"></a>package.json中的依赖</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"dependencies": &#123;</span><br><span class="line">  "excel-export": "^0.5.1",</span><br><span class="line">  "wx-server-sdk": "latest"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="index-js文件代码"><a href="#index-js文件代码" class="headerlink" title="index.js文件代码"></a>index.js文件代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 云函数入口文件</span></span><br><span class="line"><span class="keyword">const</span> cloud = <span class="built_in">require</span>(<span class="string">'wx-server-sdk'</span>)</span><br><span class="line"><span class="keyword">const</span> nodeExcel = <span class="built_in">require</span>(<span class="string">'excel-export'</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"></span><br><span class="line">cloud.init(&#123;</span><br><span class="line">  env: <span class="string">"xxxx"</span>   <span class="comment">// 你的环境</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> db = cloud.database()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成分数项并且下载对应的excel</span></span><br><span class="line">exports.main = <span class="keyword">async</span> (event, context) =&gt; &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> collectionId = <span class="string">'123666'</span>                 <span class="comment">// 模拟的集合名</span></span><br><span class="line">  <span class="keyword">let</span> openId = <span class="string">'sda6248daa888764'</span>             <span class="comment">// 模拟openid</span></span><br><span class="line">  <span class="keyword">let</span> confParams = [<span class="string">'姓名'</span>, <span class="string">'学号'</span>, <span class="string">'签到时间'</span>] <span class="comment">// 模拟表头</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> jsonData = []</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 获取数据</span></span><br><span class="line">  <span class="keyword">await</span> db.collection(collectionId).get().then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    jsonData = res.data</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 转换成excel流数据</span></span><br><span class="line">  <span class="keyword">let</span> conf = &#123;</span><br><span class="line">    stylesXmlFile: path.resolve(__dirname, <span class="string">'styles.xml'</span>),</span><br><span class="line">    name: <span class="string">'sheet'</span>,</span><br><span class="line">    cols: confParams.map(<span class="function"><span class="params">param</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">caption</span>: param, <span class="attr">type</span>: <span class="string">'string'</span> &#125;</span><br><span class="line">    &#125;),</span><br><span class="line">    rows: jsonToArray(jsonData)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> result = nodeExcel.execute(conf) <span class="comment">// result为excel二进制数据流</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 上传到云存储</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> cloud.uploadFile(&#123;</span><br><span class="line">    cloudPath: <span class="string">`download/sheet<span class="subst">$&#123;openId&#125;</span>.xlsx`</span>,    <span class="comment">// excel文件名称及路径，即云存储中的路径</span></span><br><span class="line">    fileContent: Buffer.from(result.toString(), <span class="string">'binary'</span>),</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// json对象转换成数组填充</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">jsonToArray</span> (<span class="params">arrData</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>()</span><br><span class="line">    arrData.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> itemArray = <span class="keyword">new</span> <span class="built_in">Array</span>()</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> item) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key === <span class="string">'_id'</span> || key === <span class="string">'_openid'</span>) &#123; <span class="keyword">continue</span> &#125;</span><br><span class="line">        itemArray.push(item[key])</span><br><span class="line">      &#125;</span><br><span class="line">      arr.push(itemArray)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="触发云函数，可以看到云存储中有了刚刚生成的文件"><a href="#触发云函数，可以看到云存储中有了刚刚生成的文件" class="headerlink" title="触发云函数，可以看到云存储中有了刚刚生成的文件"></a>触发云函数，可以看到云存储中有了刚刚生成的文件</h4><p><img src="/img/2019/06/05/1.png" alt="数据库中的数据"><br>数据库中的数据,由于表头都是一样的，所以这边的key可以适当的简化，但是要注意数据库中拉取数据顺序的问题</p>
+<p><img src="/img/2019/06/05/2.png" alt="最终生成的excel"><br>最终生成的excel</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wxmp/" rel="tag"># wxmp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/01/jQuery中选择元素的相关/" rel="prev" title="2.jQuery中选择元素的相关">
+      <i class="fa fa-chevron-left"></i> 2.jQuery中选择元素的相关
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/06/11/promise中链式调用then的问题/" rel="next" title="promise中链式调用then的问题">
+      promise中链式调用then的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#首先了解一个node生成excel的库excel-export"><span class="nav-number">1.</span> <span class="nav-text">首先了解一个node生成excel的库excel-export</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主要用法"><span class="nav-number">2.</span> <span class="nav-text">主要用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#嵌入云开发"><span class="nav-number">3.</span> <span class="nav-text">嵌入云开发</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#几个踩坑点"><span class="nav-number">3.1.</span> <span class="nav-text">几个踩坑点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#云函数目录结构"><span class="nav-number">4.</span> <span class="nav-text">云函数目录结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#package-json中的依赖"><span class="nav-number">5.</span> <span class="nav-text">package.json中的依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#index-js文件代码"><span class="nav-number">6.</span> <span class="nav-text">index.js文件代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#触发云函数，可以看到云存储中有了刚刚生成的文件"><span class="nav-number">7.</span> <span class="nav-text">触发云函数，可以看到云存储中有了刚刚生成的文件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

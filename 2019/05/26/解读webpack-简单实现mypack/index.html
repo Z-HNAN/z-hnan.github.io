@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="虽然使用webpack有一阵日子了，但是对其内部的相关打包过程，还不是很了解，今天翻阅了相关资料后，借鉴写了一个webpack简化版本，仅是其核心的部分，mypack 了解一下requireJS的大致运行过程 这里需要node环境（用到了文件读写相关，webpack也是在node上运行的）  12345678910111213141516171819202122// a.jslet fs = re">
+<meta name="keywords" content="源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解读webpack,简单实现mypack">
+<meta property="og:url" content="http://yoursite.com/2019/05/26/解读webpack-简单实现mypack/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="虽然使用webpack有一阵日子了，但是对其内部的相关打包过程，还不是很了解，今天翻阅了相关资料后，借鉴写了一个webpack简化版本，仅是其核心的部分，mypack 了解一下requireJS的大致运行过程 这里需要node环境（用到了文件读写相关，webpack也是在node上运行的）  12345678910111213141516171819202122// a.jslet fs = re">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.703Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解读webpack,简单实现mypack">
+<meta name="twitter:description" content="虽然使用webpack有一阵日子了，但是对其内部的相关打包过程，还不是很了解，今天翻阅了相关资料后，借鉴写了一个webpack简化版本，仅是其核心的部分，mypack 了解一下requireJS的大致运行过程 这里需要node环境（用到了文件读写相关，webpack也是在node上运行的）  12345678910111213141516171819202122// a.jslet fs = re">
+
+<link rel="canonical" href="http://yoursite.com/2019/05/26/解读webpack-简单实现mypack/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>解读webpack,简单实现mypack | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/26/解读webpack-简单实现mypack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          解读webpack,简单实现mypack
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-26 20:24:21" itemprop="dateCreated datePublished" datetime="2019-05-26T20:24:21+08:00">2019-05-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>虽然使用webpack有一阵日子了，但是对其内部的相关打包过程，还不是很了解，今天翻阅了相关资料后，借鉴写了一个webpack简化版本，仅是其核心的部分，mypack</p>
+<h4 id="了解一下requireJS的大致运行过程"><a href="#了解一下requireJS的大致运行过程" class="headerlink" title="了解一下requireJS的大致运行过程"></a>了解一下requireJS的大致运行过程</h4><blockquote>
+<p>这里需要node环境（用到了文件读写相关，webpack也是在node上运行的）</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myRequire</span> (<span class="params">moduleName</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// content指示文件的内容</span></span><br><span class="line">  <span class="keyword">let</span> content = fs.readFileSync(moduleName, <span class="string">'UTF8'</span>)</span><br><span class="line">  <span class="keyword">let</span> fn = <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">'exports'</span>, <span class="string">'module'</span>, <span class="string">'require'</span>, <span class="string">'__dirname'</span>, </span><br><span class="line">    <span class="string">'__filename'</span>, content + <span class="string">'\n return module.exports'</span>)</span><br><span class="line">  <span class="keyword">let</span> <span class="built_in">module</span> = &#123;</span><br><span class="line">    exports: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> fn(<span class="built_in">module</span>.exports, <span class="built_in">module</span>, myRequire, __dirname, __filename)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> str = myRequire(<span class="string">'./b.js'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(str)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// b.js</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="string">"Hello RequireJS!"</span></span><br></pre></td></tr></table></figure>
+<h4 id="模拟一下AMD的打包方式，虽然不常用，但是对理解起来是有帮助的"><a href="#模拟一下AMD的打包方式，虽然不常用，但是对理解起来是有帮助的" class="headerlink" title="模拟一下AMD的打包方式，虽然不常用，但是对理解起来是有帮助的"></a>模拟一下AMD的打包方式，虽然不常用，但是对理解起来是有帮助的</h4><blockquote>
+<p>可以直接在浏览器中运行<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// myAMD.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> factories = &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myDefine</span> (<span class="params">moduleName, dependencies, factory</span>) </span>&#123;</span><br><span class="line">  factory.dependencies = dependencies <span class="comment">// 挂在该方法上的依赖关系</span></span><br><span class="line">  factories[moduleName] = factory <span class="comment">// 创建对应关系</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myRequire</span> (<span class="params">mods, callback</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = mods.map(<span class="function"><span class="params">mod</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> factory = factories[mod] <span class="comment">// 获取该方法</span></span><br><span class="line">    <span class="keyword">let</span> dependencies = factory.dependencies <span class="comment">// 获取该依赖</span></span><br><span class="line">    <span class="keyword">let</span> exports</span><br><span class="line">    myRequire(dependencies, <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">      exports = factory.apply(<span class="literal">null</span>, <span class="built_in">arguments</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> exports</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> callback.apply(<span class="literal">null</span>, result)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 申明依赖</span></span><br><span class="line">myDefine(<span class="string">'name'</span>, [], <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'AMD'</span></span><br><span class="line">&#125;)</span><br><span class="line">myDefine(<span class="string">'age'</span>, [], <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">666</span></span><br><span class="line">&#125;)</span><br><span class="line">myDefine(<span class="string">'person'</span>, [<span class="string">'name'</span>, <span class="string">'age'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">let</span> person = <span class="string">'person '</span> + name + <span class="string">' is '</span> + age</span><br><span class="line">  <span class="keyword">return</span> person</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 引入依赖 第一种方式</span></span><br><span class="line">myRequire([<span class="string">'name'</span>, <span class="string">'age'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(name, age)</span><br><span class="line">&#125;)</span><br><span class="line">myRequire([<span class="string">'person'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">person</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(person)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h6 id="其中的核心思想就是"><a href="#其中的核心思想就是" class="headerlink" title="其中的核心思想就是"></a>其中的核心思想就是</h6><ol>
+<li>申明了一个全局的factories，并且通过其moduleName作为key,其factory（也就是callback）作为value,在申明的过程中就已经关联到了全局的factories,后续直接从中取出即可。</li>
+<li>在挂载其依赖的时候，require内部分别将其依赖转换为依赖的结果（map方法），这里如果再有依赖可以利用递归的方式解决。</li>
+</ol>
+<h4 id="mypack的实现"><a href="#mypack的实现" class="headerlink" title="mypack的实现"></a>mypack的实现</h4><ol>
+<li>配置mypack的环境</li>
+</ol>
+<ul>
+<li><p>首先在建立mypack，（并进入mypack文件夹中）并且将在bin中创建出mypack.js,并且初始化npm环境<code>npm init -y</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|-mypack</span><br><span class="line">| |-bin</span><br><span class="line">|  |-mypack.js</span><br><span class="line">| |-package.json</span><br><span class="line">|</span><br><span class="line"></span><br><span class="line">// 注意修改package.json中的路径问题 bin: bin/mypack.js</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后在mypack.js中文件头部<code>#! /usr/bin/env node</code> 不然会报没有适当的js解析器</p>
+</li>
+<li><p>之后我们进行链接 <code>npm link</code> 这样我们就全局安装，退回其他位置都可以执行命令 <code>&gt;mypack</code></p>
+</li>
+</ul>
+<ol start="2">
+<li>首先确定入口文件，出口文件的位置，也即有执行的开始位置，将解析入口文件中的内容，递归的读入，把require替换成本规则可识别的函数名（本例myRequire），并且以key(文件路径)，value(内容)的形式放到总的modules中。也即所有用到的依赖已经到内存中。</li>
+<li>立即执行函数，并且第一个require的就是入口文件，依次执行，也就是碰见myRequire(已经在第二步全部正则替换)时，解析出内容返回。</li>
+<li>递归的进行myRequire的解析，其参数就为之前的modules的key,通过映射关系取出内容执行。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mypack.js  mypack代码</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#! /usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> entry = <span class="string">'./src/index.js'</span>  <span class="comment">// 入口文件</span></span><br><span class="line"><span class="keyword">let</span> output = <span class="string">'./dist/index.js'</span>  <span class="comment">// 出口文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">let</span> modules = []</span><br><span class="line"><span class="keyword">let</span> script = fs.readFileSync(entry, <span class="string">'UTF8'</span>)</span><br><span class="line"><span class="comment">// 匹配对应关系</span></span><br><span class="line"><span class="keyword">let</span> replaceReg = <span class="function">(<span class="params">script</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> script.replace(<span class="regexp">/require\(['"](.+?)["']\)/g</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> name = path.join(<span class="string">'./src'</span>, <span class="built_in">arguments</span>[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">let</span> content = fs.readFileSync(name, <span class="string">'UTF8'</span>)</span><br><span class="line">    <span class="comment">// 对于每拿到的content都进行一次替换</span></span><br><span class="line">    content = replaceReg(content)</span><br><span class="line">    modules.push(&#123;name, content&#125;)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`mypack_require('<span class="subst">$&#123;name&#125;</span>')`</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">script = replaceReg(script)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ejs = <span class="built_in">require</span>(<span class="string">'ejs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">(function(modules) &#123;</span></span><br><span class="line"><span class="string">   // 引入</span></span><br><span class="line"><span class="string">   function mypack_require(moduleId) &#123;</span></span><br><span class="line"><span class="string">     var module = &#123;</span></span><br><span class="line"><span class="string">       exports: &#123;&#125;</span></span><br><span class="line"><span class="string">     &#125;;</span></span><br><span class="line"><span class="string">     modules[moduleId].call(module.exports, module, module.exports, mypack_require);</span></span><br><span class="line"><span class="string">     return module.exports;</span></span><br><span class="line"><span class="string">   &#125;</span></span><br><span class="line"><span class="string">   return mypack_require("&lt;%-entry%&gt;");</span></span><br><span class="line"><span class="string"> &#125;)</span></span><br><span class="line"><span class="string">  (&#123;</span></span><br><span class="line"><span class="string">   "&lt;%-entry%&gt;": (function(module, exports, mypack_require) &#123;</span></span><br><span class="line"><span class="string">     eval(\`&lt;%-script%&gt;\`);</span></span><br><span class="line"><span class="string">  &#125;) // index.js的文件</span></span><br><span class="line"><span class="string">&lt;%for(let i = 0; i &lt; modules.length; i++)&#123;</span></span><br><span class="line"><span class="string">let module = modules[i]%&gt;</span></span><br><span class="line"><span class="string">  ,</span></span><br><span class="line"><span class="string">    "&lt;%-module.name%&gt;": (function(module, exports, mypack_require) &#123;</span></span><br><span class="line"><span class="string">      eval(\`&lt;%-module.content%&gt;\`);</span></span><br><span class="line"><span class="string">    &#125;)</span></span><br><span class="line"><span class="string">&lt;%&#125;%&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> &#125;);</span></span><br><span class="line"><span class="string">`</span></span><br><span class="line"><span class="comment">// 最终result为打包后的结果</span></span><br><span class="line"><span class="keyword">let</span> result = ejs.render(template, &#123;</span><br><span class="line">  entry,</span><br><span class="line">  script,</span><br><span class="line">  modules</span><br><span class="line">&#125;)</span><br><span class="line">fs.writeFileSync(output, result)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'mypack success'</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 目录结构</span><br><span class="line">|-src</span><br><span class="line">| |a.js</span><br><span class="line">| |c.js</span><br><span class="line">| |index.js</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js打包前的内容</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./a.js'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'hello mypack'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./c.js'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'hello mypack666'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// c.js</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'=====c.js======'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js 打包后的内容</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">modules</span>) </span>&#123;</span><br><span class="line">   <span class="comment">// 引入</span></span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">mypack_require</span>(<span class="params">moduleId</span>) </span>&#123;</span><br><span class="line">     <span class="keyword">var</span> <span class="built_in">module</span> = &#123;</span><br><span class="line">       exports: &#123;&#125;</span><br><span class="line">     &#125;;</span><br><span class="line">     modules[moduleId].call(<span class="built_in">module</span>.exports, <span class="built_in">module</span>, <span class="built_in">module</span>.exports, mypack_require);</span><br><span class="line">     <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> mypack_require(<span class="string">"./src/index.js"</span>);</span><br><span class="line"> &#125;)</span><br><span class="line">  (&#123;</span><br><span class="line">   <span class="string">"./src/index.js"</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, mypack_require</span>) </span>&#123;</span><br><span class="line">     <span class="built_in">eval</span>(<span class="string">`mypack_require('src\a.js')</span></span><br><span class="line"><span class="string">console.log('hello mypack')`</span>);</span><br><span class="line">  &#125;) <span class="comment">// index.js的文件</span></span><br><span class="line"></span><br><span class="line">  ,</span><br><span class="line">    <span class="string">"src\a.js"</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, mypack_require</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">eval</span>(<span class="string">`console.log('hello mypack666')`</span>);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &#125;);</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>添加一个styleLoader,这里以函数的形式进行放入，也可以单独写一个模块引入</li>
+</ol>
+<ul>
+<li>loader 其实就是在解析所有的代码时（递归读入代码，即replaceReg之中，对模块内容在进行一些处理）</li>
+<li>loader 解析不同的文件是根据正则表达式的后缀进行区分的。</li>
+<li>这里针对于styleLoader中的css代码，第一是进行了压缩成一行，并且替换掉了/r/n解析时的标志，因为innerText接收的是字符串，然而字符串是无法换行的，所以只能压缩成一行，在将原来空行形成的/r/n替换掉。（文末提出一种不压缩的方案）</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  mypack.js  mypack代码加入了styleLoader </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#! /usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> entry = <span class="string">'./src/index.js'</span>  <span class="comment">// 入口文件</span></span><br><span class="line"><span class="keyword">let</span> output = <span class="string">'./dist/index.js'</span>  <span class="comment">// 出口文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">let</span> modules = []</span><br><span class="line"><span class="keyword">let</span> script = fs.readFileSync(entry, <span class="string">'UTF8'</span>)</span><br><span class="line"><span class="comment">//======================styleLoader申明===================</span></span><br><span class="line"><span class="keyword">let</span> styleLoader = <span class="function"><span class="keyword">function</span> (<span class="params">source</span>) </span>&#123; <span class="comment">//模拟styleLoader</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">`</span></span><br><span class="line"><span class="string">    let style = document.createElement('style')</span></span><br><span class="line"><span class="string">    style.innerText = <span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(source).replace(<span class="regexp">/\\r\\n/g</span>, <span class="string">''</span>)&#125;</span></span></span><br><span class="line"><span class="string">    document.head.appendChild(style)</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//=====================styleLoader申明结束===================</span></span><br><span class="line"><span class="comment">// 匹配对应关系</span></span><br><span class="line"><span class="keyword">let</span> replaceReg = <span class="function">(<span class="params">script</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> script.replace(<span class="regexp">/require\(['"](.+?)["']\)/g</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> name = path.join(<span class="string">'./src'</span>, <span class="built_in">arguments</span>[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">let</span> content = fs.readFileSync(name, <span class="string">'UTF8'</span>)</span><br><span class="line">    <span class="comment">// 对于每拿到的content都进行一次替换</span></span><br><span class="line">    content = replaceReg(content)</span><br><span class="line"><span class="comment">//======================应用规则=====================</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="regexp">/\.css$/</span>.test(name))&#123;</span><br><span class="line">      content = styleLoader(content) <span class="comment">// 处理styleLoader</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//=====================应用规则结束===================</span></span><br><span class="line">    modules.push(&#123;name, content&#125;)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`mypack_require('<span class="subst">$&#123;name&#125;</span>')`</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">script = replaceReg(script)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ejs = <span class="built_in">require</span>(<span class="string">'ejs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">(function(modules) &#123;</span></span><br><span class="line"><span class="string">   // 引入</span></span><br><span class="line"><span class="string">   function mypack_require(moduleId) &#123;</span></span><br><span class="line"><span class="string">     var module = &#123;</span></span><br><span class="line"><span class="string">       exports: &#123;&#125;</span></span><br><span class="line"><span class="string">     &#125;;</span></span><br><span class="line"><span class="string">     modules[moduleId].call(module.exports, module, module.exports, mypack_require);</span></span><br><span class="line"><span class="string">     return module.exports;</span></span><br><span class="line"><span class="string">   &#125;</span></span><br><span class="line"><span class="string">   return mypack_require("&lt;%-entry%&gt;");</span></span><br><span class="line"><span class="string"> &#125;)</span></span><br><span class="line"><span class="string">  (&#123;</span></span><br><span class="line"><span class="string">   "&lt;%-entry%&gt;": (function(module, exports, mypack_require) &#123;</span></span><br><span class="line"><span class="string">     eval(\`&lt;%-script%&gt;\`);</span></span><br><span class="line"><span class="string">  &#125;) // index.js的文件</span></span><br><span class="line"><span class="string">&lt;%for(let i = 0; i &lt; modules.length; i++)&#123;</span></span><br><span class="line"><span class="string">let module = modules[i]%&gt;</span></span><br><span class="line"><span class="string">  ,</span></span><br><span class="line"><span class="string">    "&lt;%-module.name%&gt;": (function(module, exports, mypack_require) &#123;</span></span><br><span class="line"><span class="string">      eval(\`&lt;%-module.content%&gt;\`);</span></span><br><span class="line"><span class="string">    &#125;)</span></span><br><span class="line"><span class="string">&lt;%&#125;%&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> &#125;);</span></span><br><span class="line"><span class="string">`</span></span><br><span class="line"><span class="comment">// 最终result为打包后的结果</span></span><br><span class="line"><span class="keyword">let</span> result = ejs.render(template, &#123;</span><br><span class="line">  entry,</span><br><span class="line">  script,</span><br><span class="line">  modules</span><br><span class="line">&#125;)</span><br><span class="line">fs.writeFileSync(output, result)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'mypack success'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 目录结构</span><br><span class="line">|-src</span><br><span class="line">| |a.js</span><br><span class="line">| |c.js</span><br><span class="line">| |b.css</span><br><span class="line">| |index.js</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js打包前的内容</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./a.js'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./b.css'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'hello mypack'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./c.js'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'hello mypack666'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// c.js</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'=====c.js======'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//b.css</span></span><br><span class="line">body&#123;</span><br><span class="line">  background: hotpink;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js 打包后的内容</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">modules</span>) </span>&#123;</span><br><span class="line">   <span class="comment">// 引入</span></span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">mypack_require</span>(<span class="params">moduleId</span>) </span>&#123;</span><br><span class="line">     <span class="keyword">var</span> <span class="built_in">module</span> = &#123;</span><br><span class="line">       exports: &#123;&#125;</span><br><span class="line">     &#125;;</span><br><span class="line">     modules[moduleId].call(<span class="built_in">module</span>.exports, <span class="built_in">module</span>, <span class="built_in">module</span>.exports, mypack_require);</span><br><span class="line">     <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> mypack_require(<span class="string">"./src/index.js"</span>);</span><br><span class="line"> &#125;)</span><br><span class="line">  (&#123;</span><br><span class="line">   <span class="string">"./src/index.js"</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, mypack_require</span>) </span>&#123;</span><br><span class="line">     <span class="built_in">eval</span>(<span class="string">`mypack_require('src\a.js')</span></span><br><span class="line"><span class="string">mypack_require('src\b.css')</span></span><br><span class="line"><span class="string">console.log('hello mypack')`</span>);</span><br><span class="line">  &#125;) <span class="comment">// index.js的文件</span></span><br><span class="line"></span><br><span class="line">  ,</span><br><span class="line">    <span class="string">"src\c.js"</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, mypack_require</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">eval</span>(<span class="string">`console.log('=====c.js======')`</span>);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">  ,</span><br><span class="line">    <span class="string">"src\a.js"</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, mypack_require</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">eval</span>(<span class="string">`mypack_require('src\c.js')</span></span><br><span class="line"><span class="string">console.log('hello mypack666')`</span>);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">  ,</span><br><span class="line">    <span class="string">"src\b.css"</span>: (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, mypack_require</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">eval</span>(<span class="string">`</span></span><br><span class="line"><span class="string">    let style = document.createElement('style')</span></span><br><span class="line"><span class="string">    style.innerText = "body&#123;  background: hotpink;&#125;"</span></span><br><span class="line"><span class="string">    document.head.appendChild(style)</span></span><br><span class="line"><span class="string">  `</span>);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &#125;);</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>不压缩css的一种写法</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">style.innerText = \\\<span class="string">` <span class="subst">$&#123;source&#125;</span> \\\`</span></span><br><span class="line"><span class="string">// 代码在构建的时候 输出到index.js变成了 evel(`</span> ...\<span class="string">` backgrounde... \` ... `</span>)</span><br><span class="line"><span class="comment">// 代码再被执行的时候，执行evel的时候，就以模板字符串` background ...` 呈现出来</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js 打包后变为</span></span><br><span class="line">style.innerText = \<span class="string">` body&#123;</span></span><br><span class="line"><span class="string">  background: hotpink;</span></span><br><span class="line"><span class="string">&#125; \`</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/源码/" rel="tag"># 源码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/05/24/种好每一颗土豆/" rel="prev" title="种好每一颗土豆">
+      <i class="fa fa-chevron-left"></i> 种好每一颗土豆
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/05/31/对创建jQuery的理解/" rel="next" title="1.对创建jQuery的理解">
+      1.对创建jQuery的理解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#了解一下requireJS的大致运行过程"><span class="nav-number">1.</span> <span class="nav-text">了解一下requireJS的大致运行过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模拟一下AMD的打包方式，虽然不常用，但是对理解起来是有帮助的"><span class="nav-number">2.</span> <span class="nav-text">模拟一下AMD的打包方式，虽然不常用，但是对理解起来是有帮助的</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#其中的核心思想就是"><span class="nav-number">2.0.1.</span> <span class="nav-text">其中的核心思想就是</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mypack的实现"><span class="nav-number">3.</span> <span class="nav-text">mypack的实现</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

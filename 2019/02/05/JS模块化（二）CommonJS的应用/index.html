@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="基本使用 暴露出去 module.exports = value或者是exports.xxx = value 引入进来 let xxx = require(&amp;quot;./modules/xxx&amp;quot;);  补充：因为exports是 module.exports的一个引用，也就相当于在代码中，还有 var exports = module.exports,所以他们俩是等价的，但是要注意一点">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS模块化（二）CommonJS的应用">
+<meta property="og:url" content="http://yoursite.com/2019/02/05/JS模块化（二）CommonJS的应用/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="基本使用 暴露出去 module.exports = value或者是exports.xxx = value 引入进来 let xxx = require(&amp;quot;./modules/xxx&amp;quot;);  补充：因为exports是 module.exports的一个引用，也就相当于在代码中，还有 var exports = module.exports,所以他们俩是等价的，但是要注意一点">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.691Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS模块化（二）CommonJS的应用">
+<meta name="twitter:description" content="基本使用 暴露出去 module.exports = value或者是exports.xxx = value 引入进来 let xxx = require(&amp;quot;./modules/xxx&amp;quot;);  补充：因为exports是 module.exports的一个引用，也就相当于在代码中，还有 var exports = module.exports,所以他们俩是等价的，但是要注意一点">
+
+<link rel="canonical" href="http://yoursite.com/2019/02/05/JS模块化（二）CommonJS的应用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>JS模块化（二）CommonJS的应用 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/05/JS模块化（二）CommonJS的应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JS模块化（二）CommonJS的应用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-05 13:22:49" itemprop="dateCreated datePublished" datetime="2019-02-05T13:22:49+08:00">2019-02-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
+<li>暴露出去 <code>module.exports = value</code>或者是<code>exports.xxx = value</code></li>
+<li>引入进来 <code>let xxx = require(&quot;./modules/xxx&quot;);</code></li>
+</ul>
+<p>补充：因为exports是 module.exports的一个引用，也就相当于在代码中，还有</p>
+<p><code>var exports = module.exports</code>,所以他们俩是等价的，但是要注意一点，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可理解为 var exports = module.exports 系统自动做的</span></span><br><span class="line"><span class="comment">// 导出的时候 是 return module.exports</span></span><br><span class="line"></span><br><span class="line">exports.foo = bar		<span class="comment">// module.exports.foo = bar</span></span><br><span class="line">exports = &#123;&#125; 			<span class="comment">// 这里改变了exports的指向，</span></span><br><span class="line">				<span class="comment">// 指向了一个新的对象后，而不是module.export</span></span><br><span class="line">exports.age = <span class="number">16</span>		<span class="comment">// 所以在导出的时候，不会有这个age</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 也就是相当于exports如果改变了指向，</span></span><br><span class="line"><span class="comment">// 那么以后添加的方法则不会暴露出去，（改变指向后，无法修改到原对象了）</span></span><br></pre></td></tr></table></figure>
+<h4 id="CommonJS-node-服务端"><a href="#CommonJS-node-服务端" class="headerlink" title="CommonJS-node(服务端)"></a>CommonJS-node(服务端)</h4><ul>
+<li><p>首先部署出文件的结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">├─modules</span><br><span class="line">│      modules1.js</span><br><span class="line">│      modules2.js</span><br><span class="line">│      modules3.js</span><br><span class="line">│</span><br><span class="line">│  app.js</span><br><span class="line">│  package-lock.json</span><br><span class="line">│  package.json</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>modules的文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">module1.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用module.exports = value</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	msg:<span class="string">"module1"</span>,</span><br><span class="line">	foo()&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">"foo() "</span> + <span class="keyword">this</span>.msg);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module2.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用module.exports = value</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>  (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"foo() module2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module3.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用exports.xxx = value</span></span><br><span class="line">exports.foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"foo() module3"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"bar() module3"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露一个数组出去</span></span><br><span class="line">exports.arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>app.js主配置文件 使用node app.js运行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">app.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提前引入第三方库</span></span><br><span class="line"><span class="comment">// 引入uniq</span></span><br><span class="line"><span class="keyword">let</span> uniq = <span class="built_in">require</span>(<span class="string">"uniq"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将其他模块汇总到主模块</span></span><br><span class="line"><span class="keyword">let</span> module1 = <span class="built_in">require</span>(<span class="string">"./modules/modules1"</span>);</span><br><span class="line"><span class="keyword">let</span> module2 = <span class="built_in">require</span>(<span class="string">"./modules/modules2"</span>);</span><br><span class="line"><span class="keyword">let</span> module3 = <span class="built_in">require</span>(<span class="string">"./modules/modules3"</span>);</span><br><span class="line"></span><br><span class="line">module1.foo();				<span class="comment">// foo() module1</span></span><br><span class="line">module2();					<span class="comment">// foo() module2</span></span><br><span class="line"></span><br><span class="line">module3.foo();				<span class="comment">// foo() module3</span></span><br><span class="line">module3.bar();				<span class="comment">// bar() module3</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(module3.arr);	<span class="comment">// [ 1, 2, 3, 4, 5, 2, 3, 1, 2, 4 ]</span></span><br><span class="line"><span class="keyword">let</span> result = uniq(module3.arr);</span><br><span class="line"><span class="built_in">console</span>.log(module3.arr);	<span class="comment">// [ 1, 2, 3, 4, 5 ]</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在服务端运行的时候 语法相对简单，要注意第三方库要放在最开始的地方，因入库写名字就可以</p>
+<h4 id="CommonJS-Browserify-客户端"><a href="#CommonJS-Browserify-客户端" class="headerlink" title="CommonJS-Browserify(客户端)"></a>CommonJS-Browserify(客户端)</h4><ul>
+<li><p>首先部署出文件的结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">├─js</span><br><span class="line">│  ├─dist</span><br><span class="line">│  └─src</span><br><span class="line">│          app.js</span><br><span class="line">│          modules1.js</span><br><span class="line">│          modules2.js</span><br><span class="line">│          modules3.js</span><br><span class="line">│</span><br><span class="line">│  package-lock.json</span><br><span class="line">│  package.json</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>modules的文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">module1.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用module.exports = value</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	msg:<span class="string">"module1"</span>,</span><br><span class="line">	foo()&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">"foo() "</span> + <span class="keyword">this</span>.msg);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module2.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用module.exports = value</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>  (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"foo() module2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module3.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用exports.xxx = value</span></span><br><span class="line">exports.foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"foo() module3"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"bar() module3"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露一个数组出去</span></span><br><span class="line">exports.arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>app.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提前引入第三方库</span></span><br><span class="line"><span class="comment">// 引入uniq</span></span><br><span class="line"><span class="keyword">let</span> uniq = <span class="built_in">require</span>(<span class="string">"uniq"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将其他模块汇总到主模块</span></span><br><span class="line"><span class="keyword">let</span> module1 = <span class="built_in">require</span>(<span class="string">"./modules/modules1"</span>);</span><br><span class="line"><span class="keyword">let</span> module2 = <span class="built_in">require</span>(<span class="string">"./modules/modules2"</span>);</span><br><span class="line"><span class="keyword">let</span> module3 = <span class="built_in">require</span>(<span class="string">"./modules/modules3"</span>);</span><br><span class="line"></span><br><span class="line">module1.foo();</span><br><span class="line">module2();</span><br><span class="line"></span><br><span class="line">module3.foo();</span><br><span class="line">module3.bar();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(module3.arr);</span><br><span class="line"><span class="keyword">let</span> result = uniq(module3.arr);</span><br><span class="line"><span class="built_in">console</span>.log(module3.arr);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打包处理js<br><code>browserify js/src/app.js -o js/dist/bundle.js</code></p>
+</li>
+<li><p>在 页面引入 （运行结果与之前相同）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"js/dist/bundle.js"</span> &gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在客户端运行的时候，要放到<strong>dist</strong>生成环境的文件夹，要进行打包处理才能变成浏览器识别的文件 </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/02/05/JS模块化（一）/" rel="prev" title="JS模块化（一）">
+      <i class="fa fa-chevron-left"></i> JS模块化（一）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/02/05/JS模块化（三）AMD(Asynchronous Module Definition)的应用/" rel="next" title="JS模块化（三）AMD(Asynchronous Module Definition)的应用">
+      JS模块化（三）AMD(Asynchronous Module Definition)的应用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CommonJS-node-服务端"><span class="nav-number">2.</span> <span class="nav-text">CommonJS-node(服务端)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CommonJS-Browserify-客户端"><span class="nav-number">3.</span> <span class="nav-text">CommonJS-Browserify(客户端)</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

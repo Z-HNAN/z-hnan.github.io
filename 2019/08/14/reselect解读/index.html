@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="基于1.0.0 进行解读  简单回顾一下高阶函数1234567891011121314151617181920212223function myMemorize(fn) &amp;#123;  let lastRet = null  let lastParam = null  let resultFuc = fn  return (...args) =&amp;gt; &amp;#123;    if (lastRet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="reselect解读">
+<meta property="og:url" content="http://yoursite.com/2019/08/14/reselect解读/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="基于1.0.0 进行解读  简单回顾一下高阶函数1234567891011121314151617181920212223function myMemorize(fn) &amp;#123;  let lastRet = null  let lastParam = null  let resultFuc = fn  return (...args) =&amp;gt; &amp;#123;    if (lastRet">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.696Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="reselect解读">
+<meta name="twitter:description" content="基于1.0.0 进行解读  简单回顾一下高阶函数1234567891011121314151617181920212223function myMemorize(fn) &amp;#123;  let lastRet = null  let lastParam = null  let resultFuc = fn  return (...args) =&amp;gt; &amp;#123;    if (lastRet">
+
+<link rel="canonical" href="http://yoursite.com/2019/08/14/reselect解读/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>reselect解读 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/reselect解读/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          reselect解读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-14 20:55:05" itemprop="dateCreated datePublished" datetime="2019-08-14T20:55:05+08:00">2019-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>基于1.0.0 进行解读</p>
+</blockquote>
+<h4 id="简单回顾一下高阶函数"><a href="#简单回顾一下高阶函数" class="headerlink" title="简单回顾一下高阶函数"></a>简单回顾一下高阶函数</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myMemorize</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> lastRet = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">let</span> lastParam = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">let</span> resultFuc = fn</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...args</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (lastRet &amp;&amp; args.every(<span class="function">(<span class="params">value, index</span>) =&gt;</span> value === lastParam[index])) &#123;</span><br><span class="line">      <span class="comment">// 有缓存结果，并且参数完全一致</span></span><br><span class="line">      <span class="keyword">return</span> lastRet</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 缓存结果不一致</span></span><br><span class="line">    lastParam = args</span><br><span class="line">    lastRet = resultFuc(...args)</span><br><span class="line">    <span class="keyword">return</span> lastRet</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b</span><br><span class="line"><span class="keyword">let</span> memAdd = myMemorize(add)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'---------------------------'</span>)</span><br><span class="line">add(<span class="number">1</span>, <span class="number">2</span>)  =&gt; <span class="number">3</span> 计算</span><br><span class="line">add(<span class="number">1</span>, <span class="number">2</span>)  =&gt; <span class="number">3</span> 计算</span><br><span class="line"></span><br><span class="line">memAdd(<span class="number">1</span>, <span class="number">2</span>) =&gt; <span class="number">3</span> 计算</span><br><span class="line">memAdd(<span class="number">1</span>, <span class="number">2</span>) =&gt; <span class="number">3</span> 缓存</span><br></pre></td></tr></table></figure>
+<h4 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h4><p>进行缓存数据，他对纯函数的结果进行一次缓存，（纯函数<em>Pure Function</em>：给定确定的输入输出，他的值都是不变的，所以有了缓存的需求，不用每一次都计算）</p>
+<p>另外，在react中，由于React的Diff算法，他会打补丁，那么如果给的state相同的话，就会跳过这个补丁，也就省去了此次的刷新操作，节省了时间。然而在原本的React中，state更新时，所有的state都会被通知到，内容完全一样，只是他们的内存地址不同，所以就导致了Diff会打上一个无用的补丁，做一些不必要的视图刷新操作。</p>
+<h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><p>使用高阶函数，将上一次的纯函数的参数，和函数运算的结果，做存储，如果此次的参数和上一次的完全相同，那么就认为可以使用上一次的缓存，也就达到了存储的目的。大量运用到了高阶函数的思想。</p>
+<h4 id="主要的方法"><a href="#主要的方法" class="headerlink" title="主要的方法"></a>主要的方法</h4><ul>
+<li><p><code>createSelectorCreator(memoize)</code><br>用来做生成一个select,他的高阶函数作用是定制化了记忆函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">createSelectorCreator (memoize) &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * dependencies 他所要依赖的相关函数</span></span><br><span class="line"><span class="comment">   * resultFunc 运行最终结果的函数</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">dependencies, resultFunc</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 拿到一个定制化的memoize</span></span><br><span class="line">    <span class="keyword">const</span> memoizeResultFunc = memoize(resultFunc)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回selector,他的作用是处理每一个state</span></span><br><span class="line">    <span class="keyword">const</span> selector = <span class="function">(<span class="params">state, props, ...args</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 执行每一个dependency,获取到每一个参数</span></span><br><span class="line">      <span class="keyword">const</span> params = dependencies.map(</span><br><span class="line">          dependency =&gt; dependency(state, props, ...args)</span><br><span class="line">      );</span><br><span class="line">      <span class="comment">// 通过定制记忆函数返回数据</span></span><br><span class="line">      <span class="keyword">return</span> memoizedResultFunc(...params);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> selector</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>defaultMemoize(func)</code><br>默认的一个记忆函数，他的高阶函数作用是，记住了上一次参数和结果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">defaultMemoize (func) &#123;</span><br><span class="line">  <span class="keyword">let</span> lastParams = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">let</span> lastResult = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 如果上一次有结果，并且 每个参数都相同，就返回结果</span></span><br><span class="line">    <span class="keyword">if</span> (lastParams !== <span class="literal">null</span> &amp;&amp; </span><br><span class="line">      params.every(<span class="function">(<span class="params">value, index</span>) =&gt;</span> value === lastParams[index])) &#123;</span><br><span class="line">      <span class="keyword">return</span> lastResult;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 记忆上一次的参数，真正执行一次，并把结果都缓存起来</span></span><br><span class="line">    lastParams = params;</span><br><span class="line">    lastResult = func(...params);</span><br><span class="line">    <span class="keyword">return</span> lastResult;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>defaultEqualityCheck(a, b)</code><br>这个函数的作用是判断连个参数是否相等，上面使用了硬比较 <code>===</code>, 当然也可以用其他的判断方法代替一下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">value === lastParams[index]</span><br><span class="line">defaultEqualityCheck(value, lastParams[index])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> state = &#123;</span><br><span class="line">  shop: &#123;</span><br><span class="line">    items: [&#123;<span class="attr">id</span>:<span class="number">1</span>, <span class="attr">value</span>: <span class="number">1</span>&#125;,&#123;<span class="attr">id</span>:<span class="number">2</span>, <span class="attr">value</span>: <span class="number">2</span>&#125;,&#123;<span class="attr">id</span>:<span class="number">3</span>, <span class="attr">value</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> shopItemsSelector = <span class="function"><span class="params">state</span> =&gt;</span> state.shop.items</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> totalSelector = createSelector(</span><br><span class="line">  shopItemsSelector,</span><br><span class="line">  (items) =&gt; items.reduce(<span class="function">(<span class="params">acc, item</span>) =&gt;</span> acc + item.value, <span class="number">0</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> total = totalSelector(state)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 创建出selector</span></span><br><span class="line"><span class="keyword">let</span> selector = createSelector([fun1, fun2], fun3)</span><br><span class="line"><span class="keyword">let</span> someState = (<span class="function"><span class="keyword">function</span>(<span class="params">state, props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> state1 = fun1(state, props)</span><br><span class="line">  <span class="keyword">let</span> state2 = fun2(state, props)</span><br><span class="line">  <span class="keyword">return</span> fun3(state1, state2)</span><br><span class="line">&#125;)(state, props)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 记忆结果</span></span><br><span class="line"><span class="keyword">return</span> fun3(state1, state2),</span><br><span class="line"><span class="comment">// 将直接执行fun3替换为已经记忆化过的memoizedResultFunc</span></span><br><span class="line"><span class="keyword">return</span> memoizedResultFunc(state1, state2)</span><br><span class="line">他去判断state的值是否相同，如果相同，就直接返回出一个上一次存储的结果</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/08/14/redux中常用的efffects/" rel="prev" title="redux中常用的efffects">
+      <i class="fa fa-chevron-left"></i> redux中常用的efffects
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/08/14/taro中集成redux-saga/" rel="next" title="taro中集成redux-saga">
+      taro中集成redux-saga <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单回顾一下高阶函数"><span class="nav-number">1.</span> <span class="nav-text">简单回顾一下高阶函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目的"><span class="nav-number">2.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流程"><span class="nav-number">3.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主要的方法"><span class="nav-number">4.</span> <span class="nav-text">主要的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行过程"><span class="nav-number">5.</span> <span class="nav-text">执行过程</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

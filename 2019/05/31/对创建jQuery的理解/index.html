@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn; 本文以jQuery2.0.3分析为例  关于构造函数的两个点 在JS中创建对象必须要使用new，否则就如同构建了一个普通对象，this表示未来创建的实例， 并返回this  123456function Student (school) &amp;#123;  this.school = scho">
+<meta name="keywords" content="源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.对创建jQuery的理解">
+<meta property="og:url" content="http://yoursite.com/2019/05/31/对创建jQuery的理解/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn; 本文以jQuery2.0.3分析为例  关于构造函数的两个点 在JS中创建对象必须要使用new，否则就如同构建了一个普通对象，this表示未来创建的实例， 并返回this  123456function Student (school) &amp;#123;  this.school = scho">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.700Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.对创建jQuery的理解">
+<meta name="twitter:description" content="关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn; 本文以jQuery2.0.3分析为例  关于构造函数的两个点 在JS中创建对象必须要使用new，否则就如同构建了一个普通对象，this表示未来创建的实例， 并返回this  123456function Student (school) &amp;#123;  this.school = scho">
+
+<link rel="canonical" href="http://yoursite.com/2019/05/31/对创建jQuery的理解/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>1.对创建jQuery的理解 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/31/对创建jQuery的理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          1.对创建jQuery的理解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-31 15:18:38" itemprop="dateCreated datePublished" datetime="2019-05-31T15:18:38+08:00">2019-05-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="关于jQuery中创建对象的相关，jQuery-fn-init-prototype-jQuery-fn"><a href="#关于jQuery中创建对象的相关，jQuery-fn-init-prototype-jQuery-fn" class="headerlink" title="关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn;"></a>关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn;</h2><blockquote>
+<p>本文以jQuery2.0.3分析为例</p>
+</blockquote>
+<h2 id="关于构造函数的两个点"><a href="#关于构造函数的两个点" class="headerlink" title="关于构造函数的两个点"></a>关于构造函数的两个点</h2><ul>
+<li>在JS中创建对象必须要使用<code>new</code>，否则就如同构建了一个普通对象，<code>this</code>表示未来创建的实例， 并返回this</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Student</span> (<span class="params">school</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.school = school</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Student(<span class="string">'hdu'</span>) <span class="comment">// 创建了对象 &#123;school: 'hdu'&#125;</span></span><br><span class="line">Student(<span class="string">'hdu'</span>) <span class="comment">// 仅仅是执行了一个函数 并无其他作用</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果构造函数中有返回值<code>return xxx</code> 如果<code>xxx</code>是个复杂类型（对象,数组…）时，最终返回这个复杂类型（对象,数组…）</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Student</span> (<span class="params">school</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.school = school</span><br><span class="line">  <span class="keyword">return</span> <span class="number">666</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Student(<span class="string">'hdu'</span>) <span class="comment">// &#123;school: 'hdu'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Student</span> (<span class="params">school</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.school = school</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">name</span>: <span class="string">'LiHua'</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Student(<span class="string">'hdu'</span>) <span class="comment">// &#123;name: 'LiHua'&#125;</span></span><br></pre></td></tr></table></figure>
+<h4 id="jQuery-fn-init-prototype-jQuery-fn的作用"><a href="#jQuery-fn-init-prototype-jQuery-fn的作用" class="headerlink" title="jQuery.fn.init.prototype = jQuery.fn的作用"></a><code>jQuery.fn.init.prototype = jQuery.fn</code>的作用</h4><blockquote>
+<p>首先在jQuery中定义了 <code>jQuery.fn = jQuery.prototype</code> ，其应该是方便后续的调用，fn就是prototype</p>
+</blockquote>
+<blockquote>
+<p>我们在调用jQuery的时候，是采用<code>$(&#39;&#39;)</code>(<em>$ = jQuery</em>)</p>
+</blockquote>
+<p>我们都知道jQuery是面向对象的思想，其<code>$(&#39;&#39;).css()</code>,那么我们就能推测出来，<code>$(&#39;&#39;)</code>返回值是一个对象，<br>但是之前我们看到构造函数必须要使用<code>new</code>这个关键字才行,也就是<code>new $(&#39;&#39;)</code>，<br>然而jQuery目的就是让我们<code>write less</code>,所以我们自然就推测出来，<code>$(&#39;&#39;)</code>他的返回值是一个对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jQuery = <span class="function"><span class="keyword">function</span>(<span class="params"> selector, context </span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这也就证明了我们的推测, 调用<code>$(&#39;&#39;)</code>其返回值是<code>jQuery.fn.init</code>的一个实例</p>
+<p>那么问题又来了，我们在使用的时候，好多方法都是挂载到<code>$</code>原型上面的，那么既然创建出的是<code>jQuery.fn.init</code>的一个实例，<br>调用<code>$(&#39;&#39;).css()</code> 那么这个<code>css()</code>应该在<code>jQuery.fn.init</code>的原型上才对，但是纵观源码，都是对<code>jQuery</code>的原型操作的，<br>我们自己定义拓展方法也是 <code>$.fn.myFunction</code>,这都说明了我们确实是挂载到 <code>$</code>的原型上的，所以我们不妨大胆假设一下，<br><strong><code>jQuery.fn.init</code>的原型就是<code>jQuery</code>的原型</strong>，这样才能很好的解释我们的推测，也就说明了我们虽然创建出的是<code>jQuery.fn.init</code>的一个实例，<br>由于其原型也是<code>jQuery</code>的原型，所以我们给jQuery添加的拓展方法，自然就关联到jQuery.fn.init上了</p>
+<p>带着问题向下翻，果不其然!<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Give the init function the jQuery prototype for later instantiation</span></span><br><span class="line">jQuery.fn.init.prototype = jQuery.fn;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>jQuery为了我们书写方便，避免了<code>new $(&#39; &#39;)</code>, 但是他的源码中帮我们new了一个对象出来，为了关联，就只能把jQuery的原型和底层帮我们new出来的这个的原型绑定在一起，</p>
+<p>这就有一个假象： <code>$(&#39;&#39;)</code>，给我们 new 了一个jQuery出来。</p>
+<ul>
+<li>其实我们用的是jQuery.fn.init的实例</li>
+<li>jQuery也只是一个方法名</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/源码/" rel="tag"># 源码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/05/26/解读webpack-简单实现mypack/" rel="prev" title="解读webpack,简单实现mypack">
+      <i class="fa fa-chevron-left"></i> 解读webpack,简单实现mypack
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/06/01/jQuery中选择元素的相关/" rel="next" title="2.jQuery中选择元素的相关">
+      2.jQuery中选择元素的相关 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于jQuery中创建对象的相关，jQuery-fn-init-prototype-jQuery-fn"><span class="nav-number">1.</span> <span class="nav-text">关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于构造函数的两个点"><span class="nav-number">2.</span> <span class="nav-text">关于构造函数的两个点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery-fn-init-prototype-jQuery-fn的作用"><span class="nav-number">2.0.1.</span> <span class="nav-text">jQuery.fn.init.prototype = jQuery.fn的作用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

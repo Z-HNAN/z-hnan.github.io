@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="图片懒加载 delay load主要核心 懒加载，不要给他img的src赋值适当的时候，再将img的地址赋值给src,这样可以做到按需加载，&amp;lt;img src=&amp;quot;&amp;quot; data-src=&amp;quot;xxx&amp;quot;/&amp;gt;,等到合适的时机进行替换即可 懒加载处理时机懒加载的对象已经完全出现在了视口内，即当前视口的底端距离window（height + scrollTop）">
+<meta name="keywords" content="恰饭">
+<meta property="og:type" content="article">
+<meta property="og:title" content="总结题2">
+<meta property="og:url" content="http://yoursite.com/2019/12/26/总结题2/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="图片懒加载 delay load主要核心 懒加载，不要给他img的src赋值适当的时候，再将img的地址赋值给src,这样可以做到按需加载，&amp;lt;img src=&amp;quot;&amp;quot; data-src=&amp;quot;xxx&amp;quot;/&amp;gt;,等到合适的时机进行替换即可 懒加载处理时机懒加载的对象已经完全出现在了视口内，即当前视口的底端距离window（height + scrollTop）">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.701Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="总结题2">
+<meta name="twitter:description" content="图片懒加载 delay load主要核心 懒加载，不要给他img的src赋值适当的时候，再将img的地址赋值给src,这样可以做到按需加载，&amp;lt;img src=&amp;quot;&amp;quot; data-src=&amp;quot;xxx&amp;quot;/&amp;gt;,等到合适的时机进行替换即可 懒加载处理时机懒加载的对象已经完全出现在了视口内，即当前视口的底端距离window（height + scrollTop）">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/26/总结题2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>总结题2 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/26/总结题2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          总结题2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-26 18:00:51" itemprop="dateCreated datePublished" datetime="2019-12-26T18:00:51+08:00">2019-12-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="图片懒加载-delay-load"><a href="#图片懒加载-delay-load" class="headerlink" title="图片懒加载 delay load"></a>图片懒加载 <code>delay load</code></h1><p>主要核心</p>
+<h2 id="懒加载，不要给他img的src赋值"><a href="#懒加载，不要给他img的src赋值" class="headerlink" title="懒加载，不要给他img的src赋值"></a>懒加载，不要给他img的src赋值</h2><p>适当的时候，再将img的地址赋值给src,这样可以做到按需加载，<code>&lt;img src=&quot;&quot; data-src=&quot;xxx&quot;/&gt;</code>,等到合适的时机进行替换即可</p>
+<h2 id="懒加载处理时机"><a href="#懒加载处理时机" class="headerlink" title="懒加载处理时机"></a>懒加载处理时机</h2><p>懒加载的对象已经完全出现在了视口内，即当前视口的<strong>底端距离window（height + scrollTop）</strong>,必须要&gt;= 该<strong>对象距离顶部的距离img（height + offset.Top）</strong></p>
+<h2 id="事件相关"><a href="#事件相关" class="headerlink" title="事件相关"></a>事件相关</h2><p>委托给window事件，图片加载完成的事件,<code>img.addEventListener(&#39;onLoad&#39;, handle)</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="undefined">      width: 410px;</span></span><br><span class="line"><span class="undefined">      margin: 0 auto;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.imgBox</span> &#123;</span></span><br><span class="line"><span class="undefined">      height: 180px;</span></span><br><span class="line"><span class="undefined">      margin-bottom: 20px;</span></span><br><span class="line"><span class="css">      <span class="selector-tag">background-color</span>: <span class="selector-id">#BBB</span>;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.imgBox</span> <span class="selector-tag">img</span> &#123;</span></span><br><span class="line"><span class="undefined">      display: none;</span></span><br><span class="line"><span class="undefined">      height: 100%;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../node_modules/jquery/dist/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./delayLoad.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $container = $(<span class="string">'.container'</span>);</span><br><span class="line"><span class="keyword">const</span> $<span class="built_in">window</span> = $(<span class="built_in">window</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态创建图片</span></span><br><span class="line"><span class="keyword">let</span> str = <span class="string">''</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">20</span>).fill(<span class="literal">null</span>).forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">  str += <span class="string">`&lt;div class="imgBox"&gt;</span></span><br><span class="line"><span class="string">      &lt;img src="" data-img="https://i0.hdslb.com/bfs/archive/a84e5a2751c81ddf51ecb7267eb118284da6c4b7.jpg@1100w_484h_1c_100q.jpg"/&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;`</span></span><br><span class="line">&#125;)</span><br><span class="line">$container.html(str)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取每一个imgBox</span></span><br><span class="line">$imgBoxs = $container.children(<span class="string">'.imgBox'</span>)</span><br><span class="line"><span class="built_in">console</span>.log($imgBoxs);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 懒加载</span></span><br><span class="line"><span class="comment"> * 计算视口（当前显示的位置）底部 &gt;= 该图片底部到顶部的距离</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> handleDeladyLoad = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 获取视口底部到顶部的距离</span></span><br><span class="line">  <span class="keyword">let</span> viewPortTop = $<span class="built_in">window</span>.outerHeight() + $<span class="built_in">window</span>.scrollTop()</span><br><span class="line"></span><br><span class="line">  $imgBoxs.each(<span class="function">(<span class="params">index, item</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> $item = $(item);</span><br><span class="line">    <span class="keyword">let</span> $img = $item.children(<span class="string">'img'</span>)</span><br><span class="line">    <span class="keyword">let</span> isLoad = $item.attr(<span class="string">'isLoad'</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取图片到顶部的距离</span></span><br><span class="line">    <span class="keyword">let</span> imgTop = $item.outerHeight() + $item.offset().top</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否需要加载出图片</span></span><br><span class="line">    <span class="keyword">if</span> (imgTop &lt;= viewPortTop &amp;&amp; isLoad !== <span class="string">'true'</span>) &#123;</span><br><span class="line">      <span class="comment">// 标记加载完成</span></span><br><span class="line">      $item.attr(<span class="string">'isLoad'</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 设置图片src字段，并加载图片</span></span><br><span class="line">      $img.attr(<span class="string">'src'</span>, $img.attr(<span class="string">'data-img'</span>))</span><br><span class="line">      $img.on(<span class="string">'load'</span>, () =&gt; $img.fadeIn())</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 挂载加载完成，和滚动事件</span></span><br><span class="line">$<span class="built_in">window</span>.on(<span class="string">'load scroll'</span>, handleDeladyLoad)</span><br></pre></td></tr></table></figure>
+<h1 id="数组扁平化"><a href="#数组扁平化" class="headerlink" title="数组扁平化"></a>数组扁平化</h1><h2 id="ES6方法flat"><a href="#ES6方法flat" class="headerlink" title="ES6方法flat"></a>ES6方法flat</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.flat(<span class="literal">Infinity</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="使用ES6的set进行存储"><a href="#使用ES6的set进行存储" class="headerlink" title="使用ES6的set进行存储"></a>使用ES6的set进行存储</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>(arr))</span><br></pre></td></tr></table></figure>
+<h2 id="使用toString，再分割"><a href="#使用toString，再分割" class="headerlink" title="使用toString，再分割"></a>使用toString，再分割</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.toString().split(<span class="string">','</span>).map(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Number</span>(item))</span><br></pre></td></tr></table></figure>
+<h2 id="使用stringify去除"><a href="#使用stringify去除" class="headerlink" title="使用stringify去除[,]"></a>使用stringify去除<code>[</code>,<code>]</code></h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(arr).replace(<span class="regexp">/(\[|\])/g</span>, <span class="string">''</span>).split(<span class="string">','</span>).map(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Number</span>(item))</span><br></pre></td></tr></table></figure>
+<h2 id="手动扁平化"><a href="#手动扁平化" class="headerlink" title="手动扁平化"></a>手动扁平化</h2><p>检测元素中是否含有数组，有则继续展下去</p>
+<h3 id="concat是将传入的参数，合并到数组中去，"><a href="#concat是将传入的参数，合并到数组中去，" class="headerlink" title="concat是将传入的参数，合并到数组中去，"></a><code>concat</code>是将传入的参数，合并到数组中去，</h3><p>比如concat(1, [2, 3], [4, [5], 6])</p>
+<ul>
+<li><code>1</code>, 直接放入 [x, 1]</li>
+<li><code>[2,3]</code>， 直接合并 [x, 2, 3]</li>
+<li><code>[4, [5], 6]</code>, 合并每一项 [x, 4, [5], 6]</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(arr.some(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Array</span>.isArray(item))) &#123;</span><br><span class="line">  <span class="comment">// 将该数组每一项拆开合并进去</span></span><br><span class="line">  arr = [].concat(...arr)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="手动递归"><a href="#手动递归" class="headerlink" title="手动递归"></a>手动递归</h2><h3 id="实现方法一"><a href="#实现方法一" class="headerlink" title="实现方法一"></a>实现方法一</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFlat</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = []</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 循环每一项，不是数组的存储起来</span></span><br><span class="line">  <span class="keyword">const</span> put = <span class="function"><span class="params">arr</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, item; item = arr[i++]; ) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(item)) &#123;</span><br><span class="line">        put(item)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      result.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  put(arr)</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实现方法二"><a href="#实现方法二" class="headerlink" title="实现方法二"></a>实现方法二</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFlat</span> (<span class="params">arr</span>)  </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, item; item = arr[i++];) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(item)) &#123;</span><br><span class="line">      <span class="comment">// 当前每一项是否是数组</span></span><br><span class="line">      <span class="comment">// result = [...result, ...myFlat(item)]</span></span><br><span class="line">      result = result.concat(myFlat(item))</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 如果是数据，直接push</span></span><br><span class="line">      result.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="英文字母组成字符串前后添加空格"><a href="#英文字母组成字符串前后添加空格" class="headerlink" title="英文字母组成字符串前后添加空格"></a>英文字母组成字符串前后添加空格</h1><p>正则匹配，<code>\b</code>表示单词边界，不仅是一个空格</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'这里是HDU，你好HDUer未来一起努力'</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\b[a-z]+\b/ig</span></span><br><span class="line">str = str.replace(reg, value =&gt; <span class="string">` <span class="subst">$&#123;value&#125;</span> `</span>).trim()</span><br></pre></td></tr></table></figure>
+<h1 id="自定义的-attr-要求可以进行获取标签中的任何元素任意位置"><a href="#自定义的-attr-要求可以进行获取标签中的任何元素任意位置" class="headerlink" title="自定义的$attr,要求可以进行获取标签中的任何元素任意位置"></a>自定义的$attr,要求可以进行获取标签中的任何元素任意位置</h1><p>获取所有的标签，<code>document.getElementByTagName(&#39;*&#39;)</code></p>
+<h1 id="正则中，无论是字符串还是模板字符串，-都要注意转义符的存在，比如-b-regExp正则中new-RegExp-b"><a href="#正则中，无论是字符串还是模板字符串，-都要注意转义符的存在，比如-b-regExp正则中new-RegExp-b" class="headerlink" title="正则中，无论是字符串还是模板字符串，\都要注意转义符的存在，比如/\b/, regExp正则中new RegExp(\b)"></a>正则中，无论是字符串还是模板字符串，<code>\</code>都要注意转义符的存在，比如<code>/\b/</code>, regExp正则中<code>new RegExp(</code>\b<code>)</code></h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box aa'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-count</span>=<span class="string">'666'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box clearfix'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-count</span>=<span class="string">'123'</span> <span class="attr">data-type</span>=<span class="string">'QQ'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-type</span>=<span class="string">'QQ'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'clearfix'</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">$attr('data-count', '123') -&gt; [<span class="tag">&lt;<span class="name">div</span> <span class="attr">data-count</span>=<span class="string">'123'</span> <span class="attr">data-type</span>=<span class="string">'QQ'</span> /&gt;</span>]</span><br><span class="line">$attr('class', 'box') -&gt; [<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box aa'</span> /&gt;</span>, <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box clearfix'</span> /&gt;</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="实现，主要是要注意其特殊性，class属性可多选"><a href="#实现，主要是要注意其特殊性，class属性可多选" class="headerlink" title="实现，主要是要注意其特殊性，class属性可多选"></a>实现，主要是要注意其特殊性，class属性可多选</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">$attr</span> (<span class="params">property, value</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 获取页面所有的元素</span></span><br><span class="line">  <span class="keyword">let</span> elements = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'*'</span>)</span><br><span class="line">  <span class="keyword">const</span> arr = []</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 转换为数组形式</span></span><br><span class="line">  elements = <span class="built_in">Array</span>.from(elements)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 依此寻找</span></span><br><span class="line">  elements.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> itemPropertyValue = item.getAttribute(property)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 特殊处理class, 正则匹配内部元素</span></span><br><span class="line">    <span class="keyword">if</span> (property === <span class="string">'class'</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`\\b<span class="subst">$&#123;value&#125;</span>\\b`</span>)</span><br><span class="line">      <span class="keyword">if</span> (reg.test(itemPropertyValue)) &#123; arr.push(item) &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理其他值，直接判断是否相同</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (itemPropertyValue === value) &#123; arr.push(item) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="实现一个内置的new方法"><a href="#实现一个内置的new方法" class="headerlink" title="实现一个内置的new方法"></a>实现一个内置的new方法</h1><ol>
+<li>创建原型对象</li>
+<li>调用构造函数</li>
+<li>返回构造函数</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myNew</span> (<span class="params">Fn, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 手动创建字面量对象， 并进行挂载</span></span><br><span class="line">  <span class="comment">// const obj = &#123;&#125;</span></span><br><span class="line">  <span class="comment">// Object.setPrototypeOf(Fn.prototype)</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Object.create以某个原型挂载一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = <span class="built_in">Object</span>.create(Fn.prototype)</span><br><span class="line">  Fn.call(obj, ...args)</span><br><span class="line">  <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/恰饭/" rel="tag"># 恰饭</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/26/总结题1/" rel="prev" title="总结题1">
+      <i class="fa fa-chevron-left"></i> 总结题1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/26/总结题3/" rel="next" title="总结题3">
+      总结题3 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#图片懒加载-delay-load"><span class="nav-number">1.</span> <span class="nav-text">图片懒加载 delay load</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#懒加载，不要给他img的src赋值"><span class="nav-number">1.1.</span> <span class="nav-text">懒加载，不要给他img的src赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#懒加载处理时机"><span class="nav-number">1.2.</span> <span class="nav-text">懒加载处理时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件相关"><span class="nav-number">1.3.</span> <span class="nav-text">事件相关</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组扁平化"><span class="nav-number">2.</span> <span class="nav-text">数组扁平化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ES6方法flat"><span class="nav-number">2.1.</span> <span class="nav-text">ES6方法flat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ES6的set进行存储"><span class="nav-number">2.2.</span> <span class="nav-text">使用ES6的set进行存储</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用toString，再分割"><span class="nav-number">2.3.</span> <span class="nav-text">使用toString，再分割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用stringify去除"><span class="nav-number">2.4.</span> <span class="nav-text">使用stringify去除[,]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手动扁平化"><span class="nav-number">2.5.</span> <span class="nav-text">手动扁平化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#concat是将传入的参数，合并到数组中去，"><span class="nav-number">2.5.1.</span> <span class="nav-text">concat是将传入的参数，合并到数组中去，</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手动递归"><span class="nav-number">2.6.</span> <span class="nav-text">手动递归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现方法一"><span class="nav-number">2.6.1.</span> <span class="nav-text">实现方法一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现方法二"><span class="nav-number">2.6.2.</span> <span class="nav-text">实现方法二</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#英文字母组成字符串前后添加空格"><span class="nav-number">3.</span> <span class="nav-text">英文字母组成字符串前后添加空格</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义的-attr-要求可以进行获取标签中的任何元素任意位置"><span class="nav-number">4.</span> <span class="nav-text">自定义的$attr,要求可以进行获取标签中的任何元素任意位置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正则中，无论是字符串还是模板字符串，-都要注意转义符的存在，比如-b-regExp正则中new-RegExp-b"><span class="nav-number">5.</span> <span class="nav-text">正则中，无论是字符串还是模板字符串，\都要注意转义符的存在，比如/\b/, regExp正则中new RegExp(\b)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">5.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现，主要是要注意其特殊性，class属性可多选"><span class="nav-number">5.2.</span> <span class="nav-text">实现，主要是要注意其特殊性，class属性可多选</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现一个内置的new方法"><span class="nav-number">6.</span> <span class="nav-text">实现一个内置的new方法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

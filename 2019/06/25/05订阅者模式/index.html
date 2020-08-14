@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="05订阅者模式">
+<meta property="og:url" content="http://yoursite.com/2019/06/25/05订阅者模式/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.687Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="05订阅者模式">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+
+<link rel="canonical" href="http://yoursite.com/2019/06/25/05订阅者模式/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>05订阅者模式 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/05订阅者模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          05订阅者模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-25 16:30:53" itemprop="dateCreated datePublished" datetime="2019-06-25T16:30:53+08:00">2019-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 订阅，发布者</span></span><br><span class="line"><span class="comment"> 模拟售楼部的情况</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> salesOffices = &#123; <span class="comment">// 售楼部</span></span><br><span class="line">  clientList: &#123;&#125;, <span class="comment">// 订阅的列表</span></span><br><span class="line">  </span><br><span class="line">  listen: <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 订阅者：订阅事件</span></span><br><span class="line">    <span class="keyword">if</span> ( !<span class="keyword">this</span>.clientList[ key ] ) &#123; <span class="comment">// 如果还没有订阅过，先初始化一下</span></span><br><span class="line">      <span class="keyword">this</span>.clientList[ key ] = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.clientList[ key ].push( fn ) <span class="comment">// 订阅消息添加进缓存列表</span></span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  trigger: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 发布者: 发布消息</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ), <span class="comment">// 消息类型</span></span><br><span class="line">      fns = <span class="keyword">this</span>.clientList[ key ] <span class="comment">// 订阅该消息的所有方法</span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span>) &#123; <span class="comment">// 没有人订阅</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123; <span class="comment">// 执行订阅</span></span><br><span class="line">      fn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123; <span class="comment">// 订阅squareMeter88事件</span></span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;)</span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter100'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123; <span class="comment">// 订阅squareMeter100事件</span></span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'squareMeter100 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span>) <span class="comment">// 发布squareMeter88事件</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter100'</span>, <span class="number">3000000</span>) <span class="comment">// 发布squareMeter100事件</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 通用的订阅者事件（增加remove） </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> event = &#123;</span><br><span class="line">  clientList: &#123;&#125;,</span><br><span class="line">  listen: <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 订阅功能</span></span><br><span class="line">    <span class="keyword">if</span> ( !<span class="keyword">this</span>.clientList[ key ]) &#123;</span><br><span class="line">      <span class="keyword">this</span>.clientList[ key ] = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.clientList[ key ].push( fn )</span><br><span class="line">  &#125;,</span><br><span class="line">  remove: <span class="function"><span class="keyword">function</span>(<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 取消事件的订阅</span></span><br><span class="line">    <span class="keyword">var</span> fns = <span class="keyword">this</span>.clientList[ key ]</span><br><span class="line">    <span class="keyword">if</span> ( !fns ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( !fn ) &#123; <span class="comment">// 没有指定 默认去除所有</span></span><br><span class="line">      fns &amp;&amp; ( fns.length = <span class="number">0</span> )</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">for</span> ( <span class="keyword">var</span> l = fns.length - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">         <span class="keyword">var</span> _fn = fns[ l ]</span><br><span class="line">         <span class="keyword">if</span> ( _fn === fn ) &#123;</span><br><span class="line">           fns.splice( l, <span class="number">1</span>)</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  trigger: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 发布功能</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ),</span><br><span class="line">      fns = <span class="keyword">this</span>.clientList[ key ]</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span> ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123;</span><br><span class="line">      fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> installEvent = <span class="function"><span class="keyword">function</span> (<span class="params"> obj </span>) </span>&#123; <span class="comment">// 安装事件</span></span><br><span class="line">  <span class="keyword">for</span> ( <span class="keyword">var</span> key <span class="keyword">in</span> event) &#123;</span><br><span class="line">    obj[ key ] = event[ key ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> salesOffices = &#123;&#125;</span><br><span class="line">installEvent(salesOffices) <span class="comment">// 安装发布者模块</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> handleSquareMeter88Fn1 = <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'fn1得知 squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> handleSquareMeter88Fn2 = <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'fn2得知 squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn1 ) <span class="comment">// fn1订阅squareMeter88事件</span></span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn2 ) <span class="comment">// fn2订阅squareMeter88事件</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span> )</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'==========================='</span>)</span><br><span class="line">salesOffices.remove( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn1 ) <span class="comment">// 取消fn1对squareMeter88事件的订阅</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span> )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 然而现实中不需要为特定的对象专门注册这一个发布订阅， 共用一个即可 */</span></span><br><span class="line"><span class="keyword">var</span> Event = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> clientList = &#123;&#125;,</span><br><span class="line">    listen,</span><br><span class="line">    trigger,</span><br><span class="line">    remove</span><br><span class="line">    </span><br><span class="line">    listen = <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> ( !clientList[ key ]) &#123;</span><br><span class="line">        clientList[ key ] = []</span><br><span class="line">      &#125;</span><br><span class="line">      clientList[ key ].push( fn )</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    remove = <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> fns = clientList[ key ]</span><br><span class="line">      <span class="keyword">if</span> ( !fns ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> ( !fn ) &#123;</span><br><span class="line">        fns &amp;&amp; (fns.length = <span class="number">0</span>)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> ( <span class="keyword">var</span> l = fns.length - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">          <span class="keyword">var</span> _fn = fns[ l ]</span><br><span class="line">          <span class="keyword">if</span> ( _fn === fn ) &#123;</span><br><span class="line">            fns.splice( l, <span class="number">1</span> )</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    trigger = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ),</span><br><span class="line">        fns = clientList[ key ]</span><br><span class="line">      <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123;</span><br><span class="line">        fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 简单实现到这里， 完整的发布者 订阅者模式还需要提供如下两个方面的能力</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 1.全局事件命名冲突 </span></span><br><span class="line"><span class="comment"> 比如都发布了一个 squareMeter88 无法确定具体是那一个 事件发布出来的，可能事件重名，不便于管理</span></span><br><span class="line"><span class="comment"> 这里可以引入 namespace 在每一个命名空间内进行事件的订阅</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 可以显示创建命名空间后在内部调用</span></span><br><span class="line"><span class="comment"> 默认情况下不申明，就在自己申明的'_default'环境中</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 2.离线时间的发布</span></span><br><span class="line"><span class="comment"> 有的事件发布出来，可能订阅者还没来得及订阅，这里可以使用一个离线的cache,等待何时的时机发布出去</span></span><br><span class="line"><span class="comment"> 离线事件只能发布一次，不能重复发布，不然就没有了发布的意义（它只是当时没发布，等到事宜的时机再将事件发布出去）</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 在触发的时候，判定有离线事件队列，就先别真触发，先放入离线事件队列中</span></span><br><span class="line"><span class="comment"> 当触发监听listen时 如果有离线事件队列，就把离线事件队列调出来运行一次</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/25/04迭代器模式/" rel="prev" title="04迭代器模式">
+      <i class="fa fa-chevron-left"></i> 04迭代器模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/06/25/06命令模式/" rel="next" title="06命令模式">
+      06命令模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

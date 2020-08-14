@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="测试环境 npm-v 6.8.0   要了解npm解决包冲突的问题，就要先了解一下他是如何找包的 node中require查找依赖的方式123│   app.js│└───node_modules 一般我们们的app.js中的requier查找依赖的时候，会去目录下的node_modules去寻找 但是，实际他会以一种依次向上的方式进行寻找，这里以common模块依赖jquery为例123//">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="npm中关于依赖包冲突的问题">
+<meta property="og:url" content="http://yoursite.com/2019/03/06/npm中关于依赖包冲突的问题/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="测试环境 npm-v 6.8.0   要了解npm解决包冲突的问题，就要先了解一下他是如何找包的 node中require查找依赖的方式123│   app.js│└───node_modules 一般我们们的app.js中的requier查找依赖的时候，会去目录下的node_modules去寻找 但是，实际他会以一种依次向上的方式进行寻找，这里以common模块依赖jquery为例123//">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="npm中关于依赖包冲突的问题">
+<meta name="twitter:description" content="测试环境 npm-v 6.8.0   要了解npm解决包冲突的问题，就要先了解一下他是如何找包的 node中require查找依赖的方式123│   app.js│└───node_modules 一般我们们的app.js中的requier查找依赖的时候，会去目录下的node_modules去寻找 但是，实际他会以一种依次向上的方式进行寻找，这里以common模块依赖jquery为例123//">
+
+<link rel="canonical" href="http://yoursite.com/2019/03/06/npm中关于依赖包冲突的问题/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>npm中关于依赖包冲突的问题 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/06/npm中关于依赖包冲突的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          npm中关于依赖包冲突的问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-06 23:01:21" itemprop="dateCreated datePublished" datetime="2019-03-06T23:01:21+08:00">2019-03-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>测试环境 npm-v 6.8.0 </p>
+</blockquote>
+<p>要了解npm解决包冲突的问题，就要先了解一下他是如何找包的</p>
+<h4 id="node中require查找依赖的方式"><a href="#node中require查找依赖的方式" class="headerlink" title="node中require查找依赖的方式"></a>node中require查找依赖的方式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">└───node_modules</span><br></pre></td></tr></table></figure>
+<p>一般我们们的app.js中的requier查找依赖的时候，会去目录下的node_modules去寻找</p>
+<p>但是，实际他会以一种依次向上的方式进行寻找，<strong>这里以common模块依赖jquery为例</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// common.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> $ = <span class="built_in">require</span>(<span class="string">'jquery'</span>)</span><br></pre></td></tr></table></figure></p>
+<hr>
+<ul>
+<li><p>向外层目录寻找(当前目录没找到指定的js)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">├───common</span><br><span class="line">│   │   common.js</span><br><span class="line">│   │</span><br><span class="line">│   └───node_modules</span><br><span class="line">│       └───bootstrap</span><br><span class="line">└───node_modules</span><br><span class="line">    └───jquery</span><br></pre></td></tr></table></figure>
+<ol>
+<li>首先 common.js会在本级的node_modules中寻找是否存在jquery</li>
+<li>之后，他会向上一层目录去寻找，是否有node_modules,并去寻找</li>
+</ol>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>向外层目录寻找(当前目录不存在node_modules)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">├───common</span><br><span class="line">│       common.js</span><br><span class="line">│</span><br><span class="line">└───node_modules</span><br><span class="line">    └───jquery</span><br></pre></td></tr></table></figure>
+<ol>
+<li>首先，common.js的本级目录不存在node_modules，直接跳向上一级目录</li>
+<li>在上级目录中，找到了指定的js</li>
+</ol>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>向多层目录下寻找（直到找到根目录为止）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">├───mgr</span><br><span class="line">│   └───public</span><br><span class="line">│       ├───common</span><br><span class="line">│       │   │   common.js</span><br><span class="line">│       │   │</span><br><span class="line">│       │   └───node_modules</span><br><span class="line">│       │       └───bootstrap</span><br><span class="line">│       └───node_modules</span><br><span class="line">│           └───express</span><br><span class="line">└───node_modules</span><br><span class="line">    └───jquery</span><br></pre></td></tr></table></figure>
+<ol>
+<li>首先，common.js在本级的node_modules中寻找，未找到，跳转到上一级目录</li>
+<li>查找到了public目录， 查看此目录的node_modules中寻找，未找到，跳转上一级目录</li>
+<li>来到了mgr目录， 未找到node_modules目录，继续向上寻找</li>
+<li>来到了项目根目录下，在本级的node_modules中，寻找到了</li>
+</ol>
+<p>可以看出，他在寻找的时候，会依次向上寻找，直到根目录下</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p><strong>node不会去兄弟目录中查找</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">├───common</span><br><span class="line">│   │   common.js</span><br><span class="line">│   │</span><br><span class="line">│   └───node_modules</span><br><span class="line">│       └───bootstrap</span><br><span class="line">├───host</span><br><span class="line">│   └───node_modules</span><br><span class="line">│       └───jquery</span><br><span class="line">└───node_modules</span><br><span class="line">    └───express</span><br></pre></td></tr></table></figure>
+<ol>
+<li>common.js去本级node_modules目录下寻找，没有找到，返回上一级</li>
+<li>来到了项目根目录，去本级目录下的node_modules目录下寻找,没有找到，寻找结束，未找到。</li>
+<li><strong>注意，他不会钻到他的兄弟目录host中去寻找</strong>，他只能向上寻找，不能向下。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h4 id="npm解决包冲突的问题"><a href="#npm解决包冲突的问题" class="headerlink" title="npm解决包冲突的问题"></a>npm解决包冲突的问题</h4><ul>
+<li><p>有两个相同的项目依赖了同一个文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">├───a</span><br><span class="line">│   └───c_v1.0.0</span><br><span class="line">└───b</span><br><span class="line">    └───c_v2.0.0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>a 依赖了1.0.0的c文件</li>
+<li>b 依赖了2.0.0的c文件</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>版本不同的时候，他会分别在各自的包下建立node_modules文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">└───node_modules</span><br><span class="line">    ├───a</span><br><span class="line">    │   └───node_modules</span><br><span class="line">    │       └───c(v1.0.0)</span><br><span class="line">    ├───b</span><br><span class="line">    │   └───node_modules</span><br><span class="line">    │       └───c(v2.0.0)</span><br><span class="line">    ├───bootstrap</span><br><span class="line">    ├───c</span><br><span class="line">    └───jquery</span><br></pre></td></tr></table></figure>
+<ul>
+<li>a依赖了的c包（1.0.0） (实际上没有版本号，就叫c)</li>
+<li>b依赖了的c包2.0.0 (实际上没有版本号，就叫c)</li>
+<li>由于他查找包的机制，就会找到适合自己版本的</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>仅仅单个版本不同</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">│   app.js</span><br><span class="line">│</span><br><span class="line">└───node_modules</span><br><span class="line">    ├───a</span><br><span class="line">    │   └───node_modules</span><br><span class="line">    │       └───c(v1.0.0)</span><br><span class="line">    ├───b</span><br><span class="line">    ├───d</span><br><span class="line">    ├───bootstrap</span><br><span class="line">    ├───c</span><br><span class="line">    └───jquery</span><br></pre></td></tr></table></figure>
+<ul>
+<li>a依赖了c包（1.0.0）</li>
+<li>b也依赖的c包</li>
+<li>d也依赖的c包</li>
+<li>由于包查找机制，先从内层查找，依次向外翻，a会使用它特定版本的c,其他使用外部的c就好</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/03/06/node中文件操作路径问题/" rel="prev" title="node中文件操作路径问题">
+      <i class="fa fa-chevron-left"></i> node中文件操作路径问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/03/17/orcl创建数据库基于DBCA-11g/" rel="next" title="orcl创建数据库基于DBCA-11g（图）">
+      orcl创建数据库基于DBCA-11g（图） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#node中require查找依赖的方式"><span class="nav-number">1.</span> <span class="nav-text">node中require查找依赖的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#npm解决包冲突的问题"><span class="nav-number">2.</span> <span class="nav-text">npm解决包冲突的问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

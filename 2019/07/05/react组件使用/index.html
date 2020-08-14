@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="jsx的使用 不建议将JSX直接渲染到dom中，一般都是渲染到一个DIV中（可能会频繁跟换，div比较适合） {}内是js，表达式，但是一定要存在返回值才可以，for 与 if 都不可以，不能直接放一个对象（ 除了给style赋值 除了React.element对象   一般循环创建JSX元素都是采用map方法来完成，注意使用key={}来绑定key的值  React的流程 使用Babel将JSX">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react组件使用">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/react组件使用/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="jsx的使用 不建议将JSX直接渲染到dom中，一般都是渲染到一个DIV中（可能会频繁跟换，div比较适合） {}内是js，表达式，但是一定要存在返回值才可以，for 与 if 都不可以，不能直接放一个对象（ 除了给style赋值 除了React.element对象   一般循环创建JSX元素都是采用map方法来完成，注意使用key={}来绑定key的值  React的流程 使用Babel将JSX">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-02T17:07:06.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react组件使用">
+<meta name="twitter:description" content="jsx的使用 不建议将JSX直接渲染到dom中，一般都是渲染到一个DIV中（可能会频繁跟换，div比较适合） {}内是js，表达式，但是一定要存在返回值才可以，for 与 if 都不可以，不能直接放一个对象（ 除了给style赋值 除了React.element对象   一般循环创建JSX元素都是采用map方法来完成，注意使用key={}来绑定key的值  React的流程 使用Babel将JSX">
+
+<link rel="canonical" href="http://yoursite.com/2019/07/05/react组件使用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>react组件使用 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/react组件使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          react组件使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-05 09:06:59" itemprop="dateCreated datePublished" datetime="2019-07-05T09:06:59+08:00">2019-07-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="jsx的使用"><a href="#jsx的使用" class="headerlink" title="jsx的使用"></a>jsx的使用</h2><ol>
+<li>不建议将JSX直接渲染到dom中，一般都是渲染到一个DIV中（可能会频繁跟换，div比较适合）</li>
+<li><code>{}</code>内是js，表达式，但是一定要存在返回值才可以，for 与 if 都不可以，不能直接放一个对象（<ul>
+<li>除了给style赋值</li>
+<li>除了React.element对象</li>
+</ul>
+</li>
+<li>一般循环创建JSX元素都是采用map方法来完成，注意使用key={}来绑定key的值</li>
+</ol>
+<h2 id="React的流程"><a href="#React的流程" class="headerlink" title="React的流程"></a>React的流程</h2><ol>
+<li>使用Babel将JSX语法规则 解析成React.createElement(type, props, children),仅仅是形式，也就是将JSX语法表述出来，但是此时并没有执行。</li>
+<li><p>React.createElement(type, props, children) 执行，创建一个虚拟DOM，主要包含一下的部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  type: <span class="string">'xxx'</span>, <span class="comment">// 创建的元素标签名称</span></span><br><span class="line">  props: &#123; <span class="attr">key</span>: value, children&#125;, <span class="comment">// 用于标签上的属性， 并且将children放入</span></span><br><span class="line">  ref: xxx,</span><br><span class="line">  key: xxx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RenderDOM.render(obj, container, callback) 渲染这个虚拟dom</p>
+<ul>
+<li>创建obj中的type -&gt; dom 元素 document.createElement()</li>
+<li>根据属性，给dom标签上加属性，并且只循环自身属性（<code>hasOwnProperty</code>） 特殊属性要注意，比如className, style,</li>
+<li>挂载dom节点到Container上， container.appendChild(dom)</li>
+</ul>
+</li>
+</ol>
+<h2 id="React申明组件的方式-基于函数"><a href="#React申明组件的方式-基于函数" class="headerlink" title="React申明组件的方式-基于函数"></a>React申明组件的方式-基于函数</h2><ul>
+<li>所有的组件都是以函数的方式声明出去 <code>export default function Component (props) { ... }</code></li>
+<li>要在该页面中引入 React才可以正常的使用，因为要使用React.createElement 来创建出元素</li>
+<li>经过babel处理后，所有的属性都会以props对象的形式存在起来，所以函数的形参位置就是接受的函数</li>
+</ul>
+<h2 id="React申明组件的方式-基于组件Component"><a href="#React申明组件的方式-基于组件Component" class="headerlink" title="React申明组件的方式-基于组件Component"></a>React申明组件的方式-基于组件Component</h2><ul>
+<li>基于JSX来craeate-element来转换为对象</li>
+<li>继承React.component并且在构造器中要调用 super</li>
+<li>组件中关于props的使用<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.super中传入props，因为是实例到对象上了，所以可以使用this.来进行访问</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">constructor</span> (props) &#123; </span><br><span class="line">  <span class="keyword">super</span>(props)</span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 这里可以正常的访问到元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render ()&#123; </span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 这里可以正常的访问到元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.不传入，在constructor中是无法使用的，其他地方react做了默认关联</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">constructor</span> () &#123;</span><br><span class="line">  <span class="keyword">super</span>()</span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 不可以访问到元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render ()&#123; </span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 这里可以正常的访问到元素</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="React申明组件-函数式-和-组件式异同"><a href="#React申明组件-函数式-和-组件式异同" class="headerlink" title="React申明组件 函数式 和 组件式异同"></a>React申明组件 函数式 和 组件式异同</h2><h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><ul>
+<li>都是通过JSX转换执行</li>
+</ul>
+<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
+<li>函数式（静态组件） -&gt; 普通函数执行 其中 this为undefined<ul>
+<li>操作较简单</li>
+<li>适合简单调取的方式</li>
+</ul>
+</li>
+<li>组件式 （动态组件）-&gt; 调用new来创建， 其中this为创建的虚拟元素<ul>
+<li>较为复杂</li>
+<li>能够使用生命周期函数</li>
+<li>能够使用一些状态来动态更新内容 </li>
+</ul>
+</li>
+</ul>
+<h2 id="组件中的状态"><a href="#组件中的状态" class="headerlink" title="组件中的状态"></a>组件中的状态</h2><p>只有基于类的组件，有状态，可以使用生命周期函数</p>
+<ul>
+<li>属性只读（别人给的）</li>
+<li>状态读写（自己设定）</li>
+</ul>
+<h4 id="模拟双向数据绑定"><a href="#模拟双向数据绑定" class="headerlink" title="模拟双向数据绑定"></a>模拟双向数据绑定</h4><p>可以在input的onchange事件中绑定setState()<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123;text&#125; = <span class="keyword">this</span>.state</span><br><span class="line">&lt;input type=<span class="string">"text"</span> onchange=&#123;ev =&gt; &#123;</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    text: ev.target.value</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;&#125; value=&#123;text&#125; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;div&gt;&#123;text&#125;&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="组件生命周期"><a href="#组件生命周期" class="headerlink" title="组件生命周期"></a>组件生命周期</h2><h4 id="组件第一次创建的生命周期"><a href="#组件第一次创建的生命周期" class="headerlink" title="组件第一次创建的生命周期"></a>组件第一次创建的生命周期</h4><ul>
+<li><p>static defaultProps{} (默认参数，非正式的第一步，需安装组件 prop-types 才可配置)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> defaultProps = &#123;</span><br><span class="line">  speed: <span class="number">300</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">  speed: PropTypes.number</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>constructor()<br>组件的构造函数</p>
+</li>
+<li>componentWillMount()<br>组件挂载之间</li>
+<li>render()<br>渲染中</li>
+<li>componentDidMount()<br>组件渲染完成后，一般将请求数据放到此处</li>
+</ul>
+<h4 id="改变状态的生命周期"><a href="#改变状态的生命周期" class="headerlink" title="改变状态的生命周期"></a>改变状态的生命周期</h4><ul>
+<li>shouldComponentUpdate(nextProps, nextState)<br>钩子函数，必需返回true,才能够出发更新，一般做性能优化使用</li>
+<li>componentWillUpdate(nextProps, nextState)<br>更新之前，此时的props, state还是之前的数据，可以理解为栈，此时还没有压栈</li>
+<li>render<br>渲染中</li>
+<li>componentDidUpdate()<br>更新完成后</li>
+</ul>
+<h4 id="传入的属性发生变化"><a href="#传入的属性发生变化" class="headerlink" title="传入的属性发生变化"></a>传入的属性发生变化</h4><ul>
+<li>componentWillReceiveProps(nextProps, nextState)<br>传入的属性发生了变化，接下来执行改变状态生命周期的一系列</li>
+</ul>
+<h4 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h4><ul>
+<li>componentWillUnmount()<br>该组件被卸载之前，并不是销毁，组件还在</li>
+</ul>
+<h2 id="setState-注意"><a href="#setState-注意" class="headerlink" title="setState() 注意"></a>setState() 注意</h2><p>改变状态的这个方法是一个异步执行的方法，一定要慎用 <code>n: this.state.n++</code> 这类操作,最好使用<code>n: this.state.n+1</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.state = &#123;</span><br><span class="line">  n: <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.state.n)</span><br><span class="line"><span class="keyword">this</span>.setState(&#123;</span><br><span class="line">  n: <span class="keyword">this</span>.state.n++</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.state.n)</span><br><span class="line"><span class="comment">// ======= 运行情况 (注意++ 是先赋值，后自增1)</span></span><br><span class="line"><span class="comment">//  主线程                       等待队列</span></span><br><span class="line">    <span class="number">1.</span> log(<span class="number">0</span>)</span><br><span class="line">                                <span class="number">2.</span> set <span class="keyword">this</span>.state.n = <span class="number">0</span> (此时还没到++)</span><br><span class="line">    <span class="number">3.</span> <span class="keyword">this</span>.state.n = <span class="number">1</span> (此时已经给他++了)</span><br><span class="line">    <span class="number">4.</span> log(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">执行情况 <span class="number">1</span> -&gt; <span class="number">3</span> -&gt; <span class="number">4</span> -&gt; <span class="number">2</span> 最终结束后 <span class="keyword">this</span>.state.n = <span class="number">0</span></span><br><span class="line">所以执行到下一个生命周期的时候，把n=<span class="number">0</span>带了过去</span><br></pre></td></tr></table></figure></p>
+<h2 id="组件之间通信"><a href="#组件之间通信" class="headerlink" title="组件之间通信"></a>组件之间通信</h2><h4 id="属性传递-只读"><a href="#属性传递-只读" class="headerlink" title="属性传递 (只读)"></a>属性传递 (只读)</h4><p>通过props进行传递，父亲给儿子， 儿子设置给孙子<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index</span></span><br><span class="line">&lt;Parent n=&#123;<span class="number">1</span>&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Parent</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Parent</span></span><br><span class="line">&lt;Son n=&#123;<span class="keyword">this</span>.props.n&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Son</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Son</span></span><br><span class="line">&lt;div&gt;&#123;<span class="keyword">this</span>.props.n&#125;&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="上下文传递-可二次修改，不影响其他组件"><a href="#上下文传递-可二次修改，不影响其他组件" class="headerlink" title="上下文传递 (可二次修改，不影响其他组件)"></a>上下文传递 (可二次修改，不影响其他组件)</h4><p>父组件先把需要给后代元素（包括孙子），全都设置好，后代组件需要信息，直接去调取即可（不需要儿子转递了）<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ==父组件==</span></span><br><span class="line"><span class="comment">// 设置上下文类型</span></span><br><span class="line"><span class="keyword">static</span> childContextTypes = &#123;</span><br><span class="line">  n: PropTypes.number,</span><br><span class="line">  m: PropTypes.number</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 向上下文传递数据</span></span><br><span class="line">getChildContext () &#123;</span><br><span class="line">  <span class="keyword">let</span> &#123;n, m&#125; <span class="comment">// 得到需要放置的值</span></span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="comment">// 传递下去</span></span><br><span class="line">    n,</span><br><span class="line">    m</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==子组件==</span></span><br><span class="line"><span class="comment">// 子组件需要主动接受的信息</span></span><br><span class="line"><span class="keyword">static</span> contextTypes = &#123;</span><br><span class="line">  n: PropTypes.number</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.context.n)</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/25/js设计模式总结/" rel="prev" title="js设计模式总结">
+      <i class="fa fa-chevron-left"></i> js设计模式总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/07/05/redux与react-redux/" rel="next" title="redux与react-redux">
+      redux与react-redux <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#jsx的使用"><span class="nav-number">1.</span> <span class="nav-text">jsx的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#React的流程"><span class="nav-number">2.</span> <span class="nav-text">React的流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#React申明组件的方式-基于函数"><span class="nav-number">3.</span> <span class="nav-text">React申明组件的方式-基于函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#React申明组件的方式-基于组件Component"><span class="nav-number">4.</span> <span class="nav-text">React申明组件的方式-基于组件Component</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#React申明组件-函数式-和-组件式异同"><span class="nav-number">5.</span> <span class="nav-text">React申明组件 函数式 和 组件式异同</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#相同点"><span class="nav-number">5.0.1.</span> <span class="nav-text">相同点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不同点"><span class="nav-number">5.0.2.</span> <span class="nav-text">不同点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件中的状态"><span class="nav-number">6.</span> <span class="nav-text">组件中的状态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#模拟双向数据绑定"><span class="nav-number">6.0.1.</span> <span class="nav-text">模拟双向数据绑定</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件生命周期"><span class="nav-number">7.</span> <span class="nav-text">组件生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#组件第一次创建的生命周期"><span class="nav-number">7.0.1.</span> <span class="nav-text">组件第一次创建的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改变状态的生命周期"><span class="nav-number">7.0.2.</span> <span class="nav-text">改变状态的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#传入的属性发生变化"><span class="nav-number">7.0.3.</span> <span class="nav-text">传入的属性发生变化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卸载"><span class="nav-number">7.0.4.</span> <span class="nav-text">卸载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#setState-注意"><span class="nav-number">8.</span> <span class="nav-text">setState() 注意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件之间通信"><span class="nav-number">9.</span> <span class="nav-text">组件之间通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性传递-只读"><span class="nav-number">9.0.1.</span> <span class="nav-text">属性传递 (只读)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#上下文传递-可二次修改，不影响其他组件"><span class="nav-number">9.0.2.</span> <span class="nav-text">上下文传递 (可二次修改，不影响其他组件)</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
