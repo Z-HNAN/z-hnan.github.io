@@ -188,6 +188,339 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/20/移动端适配方案总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/02/20/移动端适配方案总结/" class="post-title-link" itemprop="url">移动端适配方案总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-20 11:56:50" itemprop="dateCreated datePublished" datetime="2019-02-20T11:56:50+08:00">2019-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>对于移动端设备，通常就是解决不同设备的显示问题，总结常见布局的优缺点</p>
+<ul>
+<li>流式布局</li>
+<li>响应式布局</li>
+<li>rem适配</li>
+</ul>
+<p>在移动端的设备，需要进行视口的设置(类似于 浏览器-包含一个视口-包含我们看到的页面dom)，要最先解读到css属性所以一般放在头部<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, user-scalable=0"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	....</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>其中width,视口的宽度自动跟随设备调整，</li>
+<li>inital-scale是初始化缩放级别，用户看到的和在pc端的是1:1的关系，（不会因为整体缩小，而导致字体过小无法看到）</li>
+<li>user-scalable是用户是否可以自动缩放 1 yes  或者 0 no</li>
+</ol>
+<h4 id="流式布局"><a href="#流式布局" class="headerlink" title="流式布局"></a>流式布局</h4><hr>
+<p>流式布局的原理就是利用<code>width:100%</code>已达到解决响应式的问题，在这种设计基础上，一定要注意</p>
+<ul>
+<li>使用边框盒子（防止溢出）<code>box-sizing: border-box</code></li>
+<li>宽度尽量使用<code>width: 100%</code></li>
+</ul>
+<p>比较简单，使用浏览器自适应宽度，达到自适应的效果，要注意由于使用border-box所以在设置的时候，要尽量设置爱元素的padding,防止元素溢出</p>
+<ul>
+<li>双飞翼布局</li>
+<li>两栏布局</li>
+</ul>
+<p>有一款插件，是为了解决局部元素的滑动，可以使用iscroll.js,当其元素有超出的长度的时候，可以在局部进行滑动，<a href="https://github.com/cubiq/iscroll" target="_blank" rel="noopener">iscroll,局部刷新</a></p>
+<h4 id="响应式布局"><a href="#响应式布局" class="headerlink" title="响应式布局"></a>响应式布局</h4><hr>
+<p>响应式布局主要通过<strong>媒体查询</strong>来判断当前容器的宽度之类，在执行相应的css代码</p>
+<ul>
+<li>css媒体查询 <code>@media screen and (max-width: 768px)</code> <em>最大宽度为768px时执行的代码</em></li>
+</ul>
+<p>css代码<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">*&#123;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.contain</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">1000px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">1000px</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">	<span class="attribute">background</span>: pink;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">768px</span>) and (min-width: <span class="number">320px</span>)&#123;</span><br><span class="line">	<span class="selector-class">.contain</span>&#123;</span><br><span class="line">		<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">		<span class="attribute">background</span>: blue;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">992px</span>) and (min-width: <span class="number">768px</span>)&#123;</span><br><span class="line">	<span class="selector-class">.contain</span>&#123;</span><br><span class="line">		<span class="attribute">width</span>: <span class="number">750px</span>;</span><br><span class="line">		<span class="attribute">background</span>: green;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">1200px</span>) and (min-width: <span class="number">992px</span>)&#123;</span><br><span class="line">	<span class="selector-class">.contain</span>&#123;</span><br><span class="line">		<span class="attribute">width</span>: <span class="number">970px</span>;</span><br><span class="line">		<span class="attribute">background</span>: red;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">media</span> screen and (min-width: <span class="number">1200px</span>)&#123;</span><br><span class="line">	<span class="selector-class">.contain</span>&#123;</span><br><span class="line">		<span class="attribute">width</span>: <span class="number">1200px</span>;</span><br><span class="line">		<span class="attribute">background</span>: yellow;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>html代码<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">		媒体查询</span></span><br><span class="line"><span class="comment">		使用css关键字 @media screen and (&lt;这里接条件&gt;)</span></span><br><span class="line"><span class="comment">		通过查询不同的屏幕尺寸 做不同的相应（css 优先级）</span></span><br><span class="line"><span class="comment">		</span></span><br><span class="line"><span class="comment">		需求</span></span><br><span class="line"><span class="comment">		超小屏幕 768px		宽度100%		背景色   蓝色</span></span><br><span class="line"><span class="comment">		小屏设备768px-992px	宽度750px	背景色	绿色</span></span><br><span class="line"><span class="comment">		中屏设备992px-1200px	宽度970px	背景色	红色</span></span><br><span class="line"><span class="comment">		大屏设备	1200px		宽度1170px	背景色	黄色</span></span><br><span class="line"><span class="comment">		</span></span><br><span class="line"><span class="comment">		宽度要小于最小界限 保证显示不出现滚动条</span></span><br><span class="line"><span class="comment">	--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"contain"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>最终的效果为</p>
+<ul>
+<li>大屏设备    1200px        宽度1170px    背景色    黄色<br><img src="/img/2019/02/13/1.png" alt="大屏设备"></li>
+<li>中屏设备992px-1200px    宽度970px    背景色    红色<br><img src="/img/2019/02/13/2.png" alt="中屏设备"></li>
+<li>小屏设备768px-992px    宽度750px    背景色    绿色<br><img src="/img/2019/02/13/3.png" alt="小屏设备"></li>
+<li>超小屏幕 768px        宽度100%        背景色   蓝色<br><img src="/img/2019/02/13/4.png" alt="超小屏幕"></li>
+</ul>
+<p>其中著名的框架有<strong><a href="https://v3.bootcss.com" target="_blank" rel="noopener">bootstrap</a></strong></p>
+<h4 id="rem适配"><a href="#rem适配" class="headerlink" title="rem适配"></a>rem适配</h4><hr>
+<p>rem适配主要通过:html中的style中font-size从而判断出整体的页面布局样式大小，从而达到自适应。<br><strong>也就是在html头部统一定义了基准大小，所有尺寸按照基准大小设置，如果更改了设备，只需要动态更改基准大小，从而就能达到整个页面的自适应效果</strong></p>
+<blockquote>
+<p>em是以父元素为基准，rem是以根元素root(<em>也就是<code>&lt;html&gt;&lt;/html&gt;</code></em>),</p>
+</blockquote>
+<p>这里有一个换算， 当前基准尺寸 = （当前设备宽度/设计稿设备宽度）* 设计稿基准尺寸</p>
+<ul>
+<li>使用不同屏幕下的基准值 动态的去设置html中的font-size这个基准值</li>
+</ul>
+<p><em>假设当前设计稿 width:750px  font-size:100px</em><br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// 动态设配基准值的css</span><br><span class="line">@<span class="keyword">meadia</span> (min-width: <span class="number">750px</span>)&#123;</span><br><span class="line">	<span class="selector-tag">html</span>&#123;</span><br><span class="line">		font-size:100px;		//	(750/750)*100</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">meadia</span> (min-width: <span class="number">640px</span>)&#123;</span><br><span class="line">	<span class="selector-tag">html</span>&#123;</span><br><span class="line">		font-size:85.33333px;	//	(640/750)*100</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">meadia</span> (min-width: <span class="number">414px</span>)&#123;</span><br><span class="line">	<span class="selector-tag">html</span>&#123;</span><br><span class="line">		font-size:55.2px;		//	(414/750)*100</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">meadia</span> (min-width: <span class="number">320px</span>)&#123;</span><br><span class="line">	<span class="selector-tag">html</span>&#123;</span><br><span class="line">		font-size:42.7px;		//	(320/750)*100</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 样式的css代码</span><br><span class="line"><span class="selector-tag">span</span>&#123;</span><br><span class="line">	font-size: 0.2rem;		// 设计稿中是20px 基准值是100px 相对为 20/100 rem, </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">div</span>&#123;</span><br><span class="line">	width: 100%;			// 设计稿中是100%的宽度</span><br><span class="line">	height: 0.5rem;			// 设计稿中是50px 基准值是100px 相对为 50/100 rem		</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 如果是到了其他设备 比如414px的设备  则在原有代码的情况下</span></span><br><span class="line"><span class="comment">* 之前的设计稿 0.2rem = 0.2 * 100 = 20px</span></span><br><span class="line"><span class="comment">* 就会变为0.2rem = 0.2 * 55.2 = 11.4px</span></span><br><span class="line"><span class="comment">* 也就达到了适配的目的,等比例缩放的效果。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>在这里使用less编写，可以达到自动计算所有的适配屏的css代码的编写</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@charset</span> <span class="string">"UTF-8"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*variable.less*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 适配设备的集合</span></span><br><span class="line"><span class="variable">@adapterDeviceList:</span><span class="number">750px</span>,<span class="number">720px</span>,<span class="number">640px</span>,<span class="number">540px</span>,<span class="number">480px</span>,<span class="number">424px</span>,<span class="number">414px</span>,<span class="number">400px</span>,<span class="number">384px</span>,<span class="number">375px</span>,<span class="number">360px</span>,<span class="number">320px</span>;</span><br><span class="line"><span class="comment">// 设计稿尺寸</span></span><br><span class="line"><span class="variable">@psdWidth:</span><span class="number">750px</span>;</span><br><span class="line"><span class="comment">// 预设基准值</span></span><br><span class="line"><span class="variable">@baseFontSize:</span><span class="number">100px</span>;</span><br><span class="line"><span class="comment">// 主流设备的个数</span></span><br><span class="line"><span class="variable">@len:</span>length(<span class="variable">@adapterDeviceList</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*adapter.less*/</span></span><br><span class="line"><span class="comment">// 1.适配不同宽度的基准，利用递归函数实现循环 </span></span><br><span class="line"><span class="comment">// 2.由于这里是min-width，考虑到css从上到下读取，应该使用min-width:320,414,640,750这种顺序</span></span><br><span class="line"></span><br><span class="line"><span class="selector-class">.adapterMixin</span>(<span class="variable">@index</span>) <span class="keyword">when</span>(<span class="variable">@index</span> &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">@media</span> (<span class="attribute">min-width</span>: extract(<span class="variable">@adapterDeviceList</span>, <span class="variable">@index</span>))&#123;</span><br><span class="line">        <span class="selector-tag">html</span>&#123;</span><br><span class="line">            <span class="attribute">font-size</span>: extract(<span class="variable">@adapterDeviceList</span>, <span class="variable">@index</span>) / <span class="variable">@psdWidth</span> * <span class="variable">@baseFontSize</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.adapterMixin</span>(<span class="variable">@index</span> - <span class="number">1</span>);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数的使用</span></span><br><span class="line"><span class="selector-class">.adapterMixin</span>(<span class="variable">@len</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*样式的less代码，由于less有计算功能，就比较方便*/</span></span><br><span class="line"><span class="comment">//@baseFontSize; 为之前定义过的基准font-size</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">span</span>&#123;</span><br><span class="line">	<span class="attribute">font-size</span>: <span class="number">20rem</span>/<span class="variable">@baseFontSize</span>;	<span class="comment">//设计稿是20px  直接就是20 rem / 100 = 0.2rem</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">div</span>&#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;					<span class="comment">// 设计稿中是100%的宽度</span></span><br><span class="line">	<span class="attribute">height</span>: <span class="number">50rem</span>/<span class="variable">@baseFontSize</span>;	<span class="comment">// 	设计稿是50px  直接就是50 rem / 100 = 0.5rem</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用了less后，可以动态的生成适配代码，并且以后的维护也比较方便,也不用去计算那些适配值，只需要带入即可</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><hr>
+<p>无论是<strong>流式布局</strong>，<strong>响应式布局</strong>，<strong>rem布局</strong>，其实之间都用到了很多相似的地方，很多地方，都有width:100%等。并且在rem布局中很多地方也用到了width:100%，所以并不只是单一的技术实现，是多种技术共同作用，达到移动端适配的目的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/05/JS模块化（四）ES6的应用（目前使用较广，较火）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/02/05/JS模块化（四）ES6的应用（目前使用较广，较火）/" class="post-title-link" itemprop="url">JS模块化（四）ES6的应用（目前使用较广，较火）</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-05 13:25:03" itemprop="dateCreated datePublished" datetime="2019-02-05T13:25:03+08:00">2019-02-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>ES6模块化需要编译打包处理，由于目前部分浏览器不支持es6，需要先转换es5</p>
+</blockquote>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
+<li>暴露出去 <code>export</code></li>
+<li>应用进来 <code>import</code></li>
+<li>使用方式<ol>
+<li>先用babel转化es5</li>
+<li>使用browserify编译转换</li>
+</ol>
+</li>
+<li>需要提前安装一些库<br><code>npm install babel-cli browserify -g</code><br><code>npm install babel-preset-es2015 --save-dev</code></li>
+</ul>
+<h4 id="自定义依赖"><a href="#自定义依赖" class="headerlink" title="自定义依赖"></a>自定义依赖</h4><ul>
+<li><p>文件结构 （列举了主要部分）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">│  .babelrc</span><br><span class="line">│  package-lock.json</span><br><span class="line">│  package.json</span><br><span class="line">│</span><br><span class="line">├─js</span><br><span class="line">│  ├─dist</span><br><span class="line">│  └─src</span><br><span class="line">│          main.js</span><br><span class="line">│          modules1.js</span><br><span class="line">│          modules2.js</span><br><span class="line">│          modules3.js</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>.babelrc (babel run controller)</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"presets"</span>:[<span class="string">"es2015"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>各个模块文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">modules1.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露模块  分别暴漏</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"foo() module1"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"bar() module1"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">modules2.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露模块 统一暴露</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun1</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"fun1() module2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun2</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"fun2() module2"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;fun1, fun2&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">modules3.js</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认暴露 export default </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">	msg:<span class="string">"默认暴露"</span>,</span><br><span class="line">	foo()&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">"foo() modules3"</span>,<span class="keyword">this</span>.msg);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主文件 main.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入其他模块</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 语法 import xxx from '路径'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 统一暴露方式  统一暴露方式 是要什么取什么</span></span><br><span class="line"><span class="keyword">import</span> &#123;foo, bar, arr&#125; <span class="keyword">from</span> <span class="string">'./modules1'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;fun1, fun2&#125; <span class="keyword">from</span> <span class="string">'./modules1'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认暴露</span></span><br><span class="line"><span class="keyword">import</span> modules3 <span class="keyword">from</span> <span class="string">'./modules3'</span>;</span><br><span class="line"></span><br><span class="line">foo();				<span class="comment">// foo() module1</span></span><br><span class="line">bar();				<span class="comment">// bar() module1</span></span><br><span class="line"><span class="built_in">console</span>.log(arr);	<span class="comment">// [ 1, 2, 3, 4, 5 ]</span></span><br><span class="line">fun1();				<span class="comment">// fun1() module2</span></span><br><span class="line">fun2();				<span class="comment">// fun2() module2 </span></span><br><span class="line"></span><br><span class="line">modules3.foo();		<span class="comment">// foo() modules3 默认暴露</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译打包 </p>
+<ol>
+<li>babel命令 es6-es5 <code>babel js/src -d js/lib</code></li>
+<li>使用browserift命令 <code>browserify js/src/main.js -o js/dist/bundle.js</code></li>
+</ol>
+</li>
+<li><p>将最终的bundle放入index.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"04-ES6/js/dist/bundle.js"</span> &gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这种方式需要<strong>首先使用babel将es6-es5,在使用browserify进行编译打包</strong>，每一次改变都需要这样，相对较为繁琐（所以就有了后面的自动打包工具） </p>
+<h4 id="使用第三方依赖"><a href="#使用第三方依赖" class="headerlink" title="使用第三方依赖"></a>使用第三方依赖</h4><ul>
+<li><p>在npm安装依赖 （jquery为例 <code>npm install jquery@1.12.4</code>）</p>
+</li>
+<li><p>在主文件中引入即可</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> $ <span class="keyword">from</span> <span class="string">"jquery"</span>;</span><br><span class="line"></span><br><span class="line">$(<span class="string">"body"</span>).css(<span class="string">"background"</span>,<span class="string">"yellowgreen"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>babel</code>与<code>browserify</code>分别进行编译 打包</p>
+</li>
+<li><p>最后html代码还是 放入browserify最终生成的代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"04-ES6/js/dist/bundle.js"</span> &gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>使用ES6的这种方式 相对来时 是比较简单的，而且命令也相对好记  <code>export</code>与<code>import</code>这种方式也是使用最为广泛，目前比较好的一种方式，唯一不好的就是需要每一次都编译打包，后来诞生出一些自动化工具。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/05/JS模块化（三）AMD(Asynchronous Module Definition)的应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/02/05/JS模块化（三）AMD(Asynchronous Module Definition)的应用/" class="post-title-link" itemprop="url">JS模块化（三）AMD(Asynchronous Module Definition)的应用</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-05 13:23:53" itemprop="dateCreated datePublished" datetime="2019-02-05T13:23:53+08:00">2019-02-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
+<li><p>暴露出去</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义没有依赖的模块</span></span><br><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> 模块	</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义有依赖的模块</span></span><br><span class="line">define([<span class="string">'module1'</span>,<span class="string">'module2'</span>],<span class="function"><span class="keyword">function</span>(<span class="params">m1,m2</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> 模块</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>应用进来</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">requirejs([<span class="string">'module1'</span>,<span class="string">'module2'</span>],<span class="function"><span class="keyword">function</span>(<span class="params">m1,m2</span>)</span>&#123;</span><br><span class="line">	使用m1,m2即可</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="自定义依赖的引用"><a href="#自定义依赖的引用" class="headerlink" title="自定义依赖的引用"></a>自定义依赖的引用</h4><ul>
+<li><p>文件的结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">└─js</span><br><span class="line">    │  main.js</span><br><span class="line">    │</span><br><span class="line">    ├─libs</span><br><span class="line">    │      require.js</span><br><span class="line">    │</span><br><span class="line">    └─modules</span><br><span class="line">            alerter.js</span><br><span class="line">            dataService.js</span><br><span class="line">│</span><br><span class="line">│  index.html</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>modules 的文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">dataService.js</span><br><span class="line"></span><br><span class="line">define(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> name = <span class="string">"dataService.js"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">getName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 向外暴露模块</span></span><br><span class="line">	<span class="keyword">return</span> &#123;getName&#125;;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">alerter.js</span><br><span class="line"></span><br><span class="line">define([<span class="string">'dataService'</span>],<span class="function"><span class="keyword">function</span> (<span class="params">dataService</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> msg = <span class="string">"alerter.js"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">showMsg</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(msg, dataService.getName());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 向外暴露模块</span></span><br><span class="line">	<span class="keyword">return</span> &#123;showMsg&#125;;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主文件main.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">// 配置requirejs</span></span><br><span class="line">	requirejs.config(&#123;</span><br><span class="line">		baseUrl: <span class="string">"js/"</span>,</span><br><span class="line">		paths: &#123;</span><br><span class="line">			dataService: <span class="string">'./modules/dataService'</span>,</span><br><span class="line">			alerter: <span class="string">'./modules/alerter'</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 引入依赖</span></span><br><span class="line">	requirejs([<span class="string">'alerter'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">alerter</span>) </span>&#123;</span><br><span class="line">		alerter.showMsg();		<span class="comment">// alerter.js dataService.js</span></span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>html文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">data-main</span>=<span class="string">"js/main.js"</span> <span class="attr">src</span>=<span class="string">"js/libs/require.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这种方式需要做requirejs的配置，之后再引入js文件的时候，<strong>注意src是requre.js 而data-main才是我们的main.js</strong>,这种方式是针对客户端较早出现的一种方式</p>
+<h4 id="引入第三方的依赖-（引入jQuery为例）"><a href="#引入第三方的依赖-（引入jQuery为例）" class="headerlink" title="引入第三方的依赖 （引入jQuery为例）"></a>引入第三方的依赖 （引入jQuery为例）</h4><ul>
+<li><p>放入相关的js，文件结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">│  index.html</span><br><span class="line">│</span><br><span class="line">└─js</span><br><span class="line">    │  main.js</span><br><span class="line">    │</span><br><span class="line">    ├─libs</span><br><span class="line">    │      jquery-1.11.0.js</span><br><span class="line">    │      require.js</span><br><span class="line">    │</span><br><span class="line">    └─modules</span><br><span class="line">            alerter.js</span><br><span class="line">            dataService.js</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其余和之前相同，就是引入第三方库即可，main.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">// 配置requirejs</span></span><br><span class="line">	requirejs.config(&#123;</span><br><span class="line">		baseUrl: <span class="string">"js/"</span>,</span><br><span class="line">		paths: &#123;</span><br><span class="line">			dataService: <span class="string">'./modules/dataService'</span>,</span><br><span class="line">			alerter: <span class="string">'./modules/alerter'</span>,</span><br><span class="line">			jquery: <span class="string">'./libs/jquery-1.11.0'</span>	<span class="comment">// jQuery源码中 遵循了AMD规范 并且暴露模块为jquery</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 引入依赖</span></span><br><span class="line">	requirejs([<span class="string">'alerter'</span>,<span class="string">"jquery"</span>], <span class="function"><span class="keyword">function</span>(<span class="params">alerter,$</span>) </span>&#123;</span><br><span class="line">		alerter.showMsg();</span><br><span class="line">		$(<span class="string">"body"</span>).css(<span class="string">"background"</span>,<span class="string">"deeppink"</span>);</span><br><span class="line">		</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>html文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">data-main</span>=<span class="string">"js/main.js"</span> <span class="attr">src</span>=<span class="string">"js/libs/require.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>都是在内部引入的，所以发请求只需要一个请求就可以搞定，只需要配置好模块路径即可</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/05/JS模块化（二）CommonJS的应用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -833,456 +1166,6 @@ $(<span class="built_in">document</span>).ajaxStart(<span class="function"><span
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/26/你所遭受的苦难，都将在未来的某个时刻派上用场/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/11/26/你所遭受的苦难，都将在未来的某个时刻派上用场/" class="post-title-link" itemprop="url">你所遭受的苦难，都将在未来的某个时刻派上用场</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-11-26 23:42:31" itemprop="dateCreated datePublished" datetime="2018-11-26T23:42:31+08:00">2018-11-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>加油，一切都会过去！干！</p>
-</blockquote>
-<p><img src="/img/20181126/1.png" alt="1"></p>
-<div style="text-align: right"><br>    2018-11-26&#160; &#160; 23:26 <br><br>    杭州·杭州电子科技大学<br></div>
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/定制bootstrap的列相关/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/11/08/定制bootstrap的列相关/" class="post-title-link" itemprop="url">定制bootstrap的列相关</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-11-08 09:37:29" itemprop="dateCreated datePublished" datetime="2018-11-08T09:37:29+08:00">2018-11-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="如何定制bs的栅格"><a href="#如何定制bs的栅格" class="headerlink" title="如何定制bs的栅格"></a>如何定制bs的栅格</h1><hr>
-<blockquote>
-<p>BS（bootstrap）默认是以12列，那么我们如果想布局5列的话，就比较困难了，(12/5不能整除的，所以我们布局五列的时候，使用原生的bs进行调整就很困难了)这里我们可以使用bs的定制功能，定制一个我们自己想要的列数等，<strong>这里我们使用15列为基础，则每一列占3列 col-sm-3</strong></p>
-</blockquote>
-<h2 id="去bs官网进行定制并下载"><a href="#去bs官网进行定制并下载" class="headerlink" title="去bs官网进行定制并下载"></a>去bs官网进行定制并下载</h2><ul>
-<li>官网<br><img src="/img/20181108/1.png" alt=""><br><img src="/img/20181108/2.png" alt=""></li>
-<li>下载之后<code>js</code>,<code>css</code>,<code>font</code><br><img src="/img/20181108/3.png" alt=""></li>
-</ul>
-<p>完成定制之后，我们的列就已经变成了15列，那么我们此时进行普通的操作即可。<br><img src="/img/20181108/4.png" alt=""></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/29/Linux的基本操作及Jdk-MySQL-Tomcat/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/10/29/Linux的基本操作及Jdk-MySQL-Tomcat/" class="post-title-link" itemprop="url">Linux的基本操作及Jdk,MySQL,Tomcat</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-10-29 20:27:24" itemprop="dateCreated datePublished" datetime="2018-10-29T20:27:24+08:00">2018-10-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Linux-中的一些-常用操作"><a href="#Linux-中的一些-常用操作" class="headerlink" title="Linux 中的一些 常用操作"></a>Linux 中的一些 常用操作</h2><ul>
-<li>目录的操作<ul>
-<li>创建文件夹 <code>mkdir &lt;name&gt;</code></li>
-<li>查看隐藏文件 <code>ls -a</code></li>
-<li>查看文件的详细信息 <code>ls -l</code>或者是<code>ll</code></li>
-<li>修改目录名称 <code>mv &lt;oldName&gt; &lt;newName&gt;</code></li>
-<li>拷贝操作 <code>cp -r &lt;src&gt; &lt;dest&gt;</code></li>
-<li>删除操作 <code>rm -rf &lt;fileName&gt;</code>使用提示<code>rm -r &lt;fileName&gt;</code> 在输入y或者n选择是否确定删除</li>
-</ul>
-</li>
-<li>文件的操作<ul>
-<li><code>cat &lt;fileName&gt;</code> 查看某个文件的最后一屏幕  </li>
-<li><code>more &lt;fileName&gt;</code> 查看文件的所有，<code>回车</code>是一行  <code>空格</code>下一页</li>
-<li><code>less &lt;fileName&gt;</code> 查看文件页的形式，使用上下页查看，<code>PageUp键</code>向上 <code>PageDown键</code>向下  <code>q</code>结束查看</li>
-<li><code>tail -&lt;n&gt; &lt;filename&gt;</code> 查看文件的后n行</li>
-<li><code>tail -f &lt;fileName&gt;</code> 查看文件的日志</li>
-<li><code>ll -h</code> 查看文件的大小</li>
-</ul>
-</li>
-<li>文件的编辑<ul>
-<li>使用<code>vi</code>或者<code>vim</code>进入文本编辑器</li>
-<li><code>i</code>,<code>o</code>进行文本编辑</li>
-<li><code>:wq</code>保存并退出 writeQuit</li>
-<li><code>:q</code> 不保存退出 quit</li>
-</ul>
-</li>
-<li>文件的压缩(tar只是打包命令 文件大小没有多少区别 .tar.gz是加入gzip指令，会压缩存放)<ul>
-<li>-c: 建立压缩档案</li>
-<li>-x：解压</li>
-<li>-t：查看内容</li>
-<li>-r：向压缩归档文件末尾追加文件</li>
-<li>-u：更新原压缩包中的文件<blockquote>
-<p>一些可选指令更在后面即可</p>
-</blockquote>
-</li>
-<li>-z：有gzip属性的</li>
-<li>-j：有bz2属性的</li>
-<li>-Z：有compress属性的</li>
-<li>-v：显示所有过程</li>
-<li>-O：将文件解开到标准输出</li>
-<li>-f: 使用档案名字，<strong>必须放在最后</strong><blockquote>
-<p>操作 压缩</p>
-</blockquote>
-</li>
-<li><code>tar -cvf &lt;tarName&gt;.tar *.jpg</code> 进所有jpg压缩进tarName.tar</li>
-<li><code>tar –czf &lt;tarName&gt;.tar.gz *.jpg</code> 打成gz包</li>
-<li><code>tar –cjf &lt;tarName&gt;.tar.bz2 *.jpg</code> 打成bz2包（bz2压缩比高一些）</li>
-<li><code>tar –cZf jpg.tar.Z *.jpg</code> 打成Z包<blockquote>
-<p>操作 解压</p>
-</blockquote>
-</li>
-<li><code>tar –xvf &lt;fileName&gt;.tar</code> 解压tar包</li>
-<li><code>tar -xzvf &lt;fileName&gt;.tar.gz</code> 解压tar.gz</li>
-<li><code>tar -xjvf file.tar.bz2</code> 解压 tar.bz2</li>
-<li><code>tar –xZvf file.tar.Z</code>解压tar.Z<br>&lt;!–<br>暂时有一些问题</li>
-</ul>
-</li>
-<li>文件权限的修改<ul>
-<li><code>r</code>读权限 <code>w</code>写权限 <code>x</code> 操作权限</li>
-<li><code>chmod u=--- g=--- o=--- &lt;fileName&gt;</code>修改文件的权限，要分三组来看</li>
-</ul>
-</li>
-</ul>
-<p>–&gt;</p>
-<ul>
-<li>系统管理命令<ul>
-<li>查看时间<code>date</code> 设置时间<code>date -s &quot;yyyy-MM-dd HH:mm:ss&quot;</code></li>
-<li>查看分区情况 <code>df</code>查看xxG或者xxM <code>df -h</code></li>
-<li>显示内存 <code>free</code> 查看xxG或者xxM <code>free -h</code></li>
-<li>清屏 <code>clear</code></li>
-<li>显示登录日志信息 <code>who</code></li>
-<li>显示主机名称 <code>hostname</code></li>
-<li>系统信息 <code>uname</code> 详细信息 <code>uname -a</code></li>
-</ul>
-</li>
-<li>其他一些指令<ul>
-<li><code>pwd</code> 查看当前文件目录</li>
-<li><code>grep &lt;keyword&gt; &lt;fileName&gt; --color</code>在fileName中查看keyword关键字并且高亮</li>
-<li><code>ps -ef</code>查看当前的进程</li>
-<li><code>kill -9 &lt;pId&gt;</code>干掉进程</li>
-<li><code>netstat -an</code>查看端口的使用情况</li>
-</ul>
-</li>
-<li>命令的逻辑<ul>
-<li><code>&amp;&amp;</code>和编程中一样，逻辑与 <code>&lt;command1&gt; &amp;&amp; &lt;command2&gt;</code> <ul>
-<li>命令1执行成功 后执行 命令2</li>
-<li>命令1执行失败 不执行 命令2</li>
-</ul>
-</li>
-<li><code>||</code>和编程中类似有短路效果<code>&lt;command1&gt; || &lt;command2&gt;</code><ul>
-<li>命令1执行成功 不执行 命令2</li>
-<li>命令1执行失败 后执行 命令2</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>创建一个公共的文件夹 供Vm共享的文件夹</p>
-<ol>
-<li>打开Vm中的共享文件夹</li>
-<li><strong>根目录下</strong><code>mnt/hgfs/</code>可看到我们刚刚设置的公共文件夹</li>
-</ol>
-</li>
-<li><p>服务</p>
-<ul>
-<li><code>rpm -qa | grep &lt;keywords&gt;</code> 查看服务</li>
-<li><code>rpm -e --nodeps &lt;name&gt;</code> 删除相关服务</li>
-</ul>
-</li>
-</ul>
-<h2 id="安装JDK的操作"><a href="#安装JDK的操作" class="headerlink" title="安装JDK的操作"></a>安装JDK的操作</h2><ul>
-<li><code>rpm -qa | grap java</code>查询是否安装了jdk</li>
-<li>解压jdk <code>tar -zxvf &lt;jdkName.tar.gz&gt;</code></li>
-<li>配置 <em>/etc/profile</em>中文件<code>vi /etc/profile</code></li>
-<li>添加如下的操作，注意此处的/usr/java/xxx/jdkxxx(下一层就有bin了，同时这个文件夹也是刚刚解压出来的)<blockquote>
-<ul>
-<li><code>#java environment</code></li>
-<li><code>export JAVA_HOME=/usr/java/&lt;directoryName&gt;</code></li>
-<li><code>export CLASSPATH=.:${JAVA_HOME}/jre/lib/rt.jar:${JAVA_HOME}/lib/dt.jar:</code>${JAVA_HOME}/lib/tools.jar`</li>
-<li><code>export PATH=$PATH:${JAVA_HOME}/bin</code></li>
-</ul>
-</blockquote>
-</li>
-<li>最后<code>source /etc/profile</code></li>
-</ul>
-<h2 id="安装MySQL的操作-一定要注意路径的修改-software-文件-data-数据库"><a href="#安装MySQL的操作-一定要注意路径的修改-software-文件-data-数据库" class="headerlink" title="安装MySQL的操作(一定要注意路径的修改 software/文件,data/数据库)"></a>安装MySQL的操作(一定要注意路径的修改 <code>software/文件</code>,<code>data/数据库</code>)</h2><ul>
-<li>创建文件夹(可根据需求定制)<ul>
-<li>新建文件夹 <code>xxx/mysql/software/</code>MySQL程序</li>
-<li>新建文件夹 <code>xxx/mysql/data/</code>数据库文件</li>
-</ul>
-</li>
-<li>复制文件过去 <code>cp 指令</code>并解压<code>tar指令</code></li>
-<li>创建用户和组<ul>
-<li><code>groupadd mysql</code></li>
-<li><code>useradd -r -g mysql mysql</code></li>
-</ul>
-</li>
-<li>关联myql用户到mysql用户组中<ul>
-<li><code>#chown -R mysql:mysql  /software/mysql/</code></li>
-<li><code>#chown -R mysql:mysql  /data/mysql/</code></li>
-<li><code>#chown -R mysql  /software/mysql/</code></li>
-<li><code>#chown -R mysql  /data/mysql</code></li>
-</ul>
-</li>
-<li>更改mysql安装文件夹mysql/的权限 <code>chmod -R 755 /software/mysql/</code></li>
-<li>注意根据需要 安装libaio<code>yum install libaio</code></li>
-<li>进行数据库的初始化工作<code>./mysqld --user=mysql --basedir=/software/mysql --datadir=/data/mysql --initialize</code><blockquote>
-<p>注意root@localhost: <strong>(oiwsWz7-dhc</strong>这里的初始密码！切记！切记！</p>
-</blockquote>
-</li>
-<li>修改mysql配置文件<code>vim /software/mysql/support-files/mysql.server</code>保存退出后拷过去<code>cp /software/mysql/support-files/mysql.server  /etc/init.d/mysqld</code>，并添加权限<code>chmod 755 /etc/init.d/mysqld</code><blockquote>
-<p>if test -z “$basedir”<br>then<br>bindir=/software/mysql/bin<br>if test -z “$datadir”<br>then<br>datadir=/data/mysql<br>fi<br>sbindir=/software/mysql/bin<br>libexecdir=/software/mysql/bin<br>else<br>bindir=”$basedir/bin”<br>if test -z “$datadir”<br>then<br>datadir=”$basedir/data”<br>fi<br>sbindir=”$basedir/sbin”<br>libexecdir=”$basedir/libexec”<br>fi</p>
-</blockquote>
-</li>
-<li>修改my.cnf文件<code>vim /etc/my.cnf</code><blockquote>
-<p>[client]</p>
-<pre><code>no-beep
-socket =/software/mysql/mysql.sock
-</code></pre></blockquote>
-<pre><code># pipe
-# socket=0.0
-port=3306
-[mysql]
-default-character-set=utf8
-[mysqld]
-basedir=/software/mysql
-datadir=/data/mysql
-port=3306
-pid-file=/software/mysql/mysqld.pid
-#skip-grant-tables
-skip-name-resolve
-socket = /software/mysql/mysql.sock
-character-set-server=utf8
-default-storage-engine=INNODB
-explicit_defaults_for_timestamp = true
-# Server Id.
-server-id=1
-max_connections=2000
-query_cache_size=0 
-table_open_cache=2000 
-tmp_table_size=246M 
-thread_cache_size=300 
-#限定用于每个数据库线程的栈大小。默认设置足以满足大多数应用 
-thread_stack = 192k 
-key_buffer_size=512M 
-read_buffer_size=4M 
-read_rnd_buffer_size=32M 
-innodb_data_home_dir = /data/mysql 
-innodb_flush_log_at_trx_commit=0 
-innodb_log_buffer_size=16M 
-innodb_buffer_pool_size=256M 
-innodb_log_file_size=128M 
-innodb_thread_concurrency=128 
-innodb_autoextend_increment=1000 
-innodb_buffer_pool_instances=8 
-innodb_concurrency_tickets=5000 
-innodb_old_blocks_time=1000 
-innodb_open_files=300 
-innodb_stats_on_metadata=0 
-innodb_file_per_table=1 
-innodb_checksum_algorithm=0 
-back_log=80 
-flush_time=0 
-join_buffer_size=128M 
-max_allowed_packet=1024M 
-max_connect_errors=2000 
-open_files_limit=4161 
-query_cache_type=0 
-sort_buffer_size=32M 
-table_definition_cache=1400 
-binlog_row_event_max_size=8K 
-sync_master_info=10000 
-sync_relay_log=10000 
-sync_relay_log_info=10000
-#批量插入数据缓存大小，可以有效提高插入效率，默认为8M 
-bulk_insert_buffer_size = 64M 
-interactive_timeout = 120 
-wait_timeout = 120 
-log-bin-trust-function-creators=1 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES&lt;br/
-#
-# include all files from the config directory
-#
-!includedir /etc/my.cnf.d
-</code></pre></li>
-<li>启动<code>/etc/init.d/mysqld start</code></li>
-<li>登录mysql<code>/software/mysql/bin/mysql -u root –p</code><blockquote>
-<p>p 为上一步的临时密码 (oiwsWz7-dhc</p>
-</blockquote>
-</li>
-<li>最后进入mysql修改初始密码即可<code>ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;新密码&#39;</code><br>##Tomcat的安装##</li>
-<li>解压tomcat并放到所需的文件夹下</li>
-<li>打开防火墙的8080端口（也可打开80端口）<ul>
-<li><code>firewall-cmd --zone=public --add-port=8080/tcp --permanent</code> 8080port</li>
-<li><code>firewall-cmd --zone=public --add-port=80/tcp --permanent</code> 80port</li>
-<li><code>firewall-cmd --reload</code>重启防火墙</li>
-</ul>
-</li>
-<li>打开服务器即可 <strong>tomcat/bin</strong>目录下的<ul>
-<li>开启<code>./startup.sh</code></li>
-<li>关闭 <code>./shutdown.sh</code></li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1354,7 +1237,7 @@ log-bin-trust-function-creators=1 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_T
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-count">128</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

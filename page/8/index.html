@@ -188,6 +188,375 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/redux与react-redux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/07/05/redux与react-redux/" class="post-title-link" itemprop="url">redux与react-redux</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-05 09:07:08" itemprop="dateCreated datePublished" datetime="2019-07-05T09:07:08+08:00">2019-07-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><blockquote>
+<p>redux并不是为react而出，他可以运用到jQuery, vue等项目中</p>
+</blockquote>
+<p>统一的状态管理，将所有的状态值放在一起，通过对Reducer发送dispatch来达到统一管理<br><code>用户 -&gt; reducer</code>  <code>reducer -&gt; 数据</code> 类似一种中介者的模式</p>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><ul>
+<li>组件之间通信</li>
+<li>数据临时缓存(即localstore的功能)，性能优化</li>
+</ul>
+<h4 id="主要流程"><a href="#主要流程" class="headerlink" title="主要流程"></a>主要流程</h4><p>用户发出修改，<code>dispatch</code> -&gt; reducer, 接收到数据，到<code>reducer</code>中进行匹配查找，<br>修改成功后，执行之前订阅过的方法 <code>subscribe</code>。<em>用户在订阅事件中进行了setState,触发视图更新</em></p>
+<h4 id="主要方法"><a href="#主要方法" class="headerlink" title="主要方法"></a>主要方法</h4><ol>
+<li><p>创建一个reducer </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> reducer = (state, action) &#123;</span><br><span class="line">  <span class="comment">// .... action.type 为dispatch的type类型</span></span><br><span class="line">  <span class="keyword">return</span> state <span class="comment">// 返回最终的数据仓库</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建出数据仓库store</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore &#125; <span class="keyword">from</span> <span class="string">'redux '</span></span><br><span class="line"><span class="keyword">let</span> store = createStore(reducer)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对需要的数据进行取出(<code>getState</code>)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123;getState&#125; = store</span><br><span class="line"><span class="comment">// let &#123;xx&#125; = getState()</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>订阅事件(<code>subscribe</code>)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123; subscribe &#125; = store</span><br><span class="line">subscribe(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// .... setState() 一般调用setState可以触发render更新</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取消订阅</span></span><br><span class="line"><span class="keyword">let</span> unSubscribute = subscribe()</span><br><span class="line">unSubscribute()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>触发事件(<code>dispatch</code>)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123; dispatch &#125; = store</span><br><span class="line">dispatch(&#123;</span><br><span class="line">  type: XXX_XXX <span class="comment">//一般使用大写字母</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="react-redux"><a href="#react-redux" class="headerlink" title="react-redux"></a>react-redux</h2><p>是react对redux的进一步封装，让其操作更简洁</p>
+<h4 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h4><ol>
+<li><p>根组件上提供<code>Provider</code>,并且使用其包围起来，并传入store</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Provider store=&#123;store&#125;&gt;<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>....<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><span class="xml"><span class="tag">&lt;/<span class="name">Provider</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>构造组件为connect组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Head extends React.Component&#123; ... &#125;</span><br><span class="line">mapStateToProps = (state) =&gt; &#123; return &#123;...state.xxx &#125; &#125;</span><br><span class="line">mapDispatchToProps = (dispatch) =&gt; &#123; return todo () &#123;...&#125; &#125;</span><br><span class="line">export default connect(mapStateToProps, mapDispatchToProps)(Head)</span><br><span class="line"></span><br><span class="line">// mapStateToProps，mapDispatchToProps两个方法都是讲数据挂在到Props上</span><br><span class="line">// 其余均内部按照正常，到时候改编数据 = 改变状态 触发componentWillReceiveProps</span><br><span class="line">// 完成重新渲染，并且会根据使用的数据自动绑定subscribe上去</span><br><span class="line"></span><br><span class="line">// 即所有的state,dispatch方法从this.props上解构即可</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从props上解构</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123; n &#125; = <span class="keyword">this</span>.props</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h6 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h6><ol>
+<li>使用导出的组件进行jsx语法编写</li>
+<li>如果传入的props与redux转换后的属性冲突后，会发生覆盖</li>
+</ol>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><ul>
+<li><p>Provider<br>Provider 仅仅是将store放入上下文路径中，为了以后可以更好使用，直接渲染子元素即可</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">render () &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.props.children</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>connect<br>该方法最终还是渲染Conponent, 直接在render()中渲染即可</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">render () &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Componenet</span> &#123;<span class="attr">...this.state</span>&#125; &#123;<span class="attr">...this.props</span>&#125;/&gt;</span></span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol>
+<li><p>将所有的state，或者dispatch中函数挂在到props<br>本质是挂载到自己的state上，方便后续<code>setState(...)</code> 来触发重新渲染，然而给下一层的时候，就是<code>&lt;Component {...state}/&gt;</code>，<br>也即将属性传递，从而在子组件中可以直接通过this获取到</p>
+</li>
+<li><p>自动订阅<br>由于他自己是以state的形式存储的，所以在<code>ComponentDidMount</code>中就订阅当数据发生改变，重新渲染，所以给子组件的Props改变，<br>会触发<code>componentWillReceiveProps</code>, 并且接下来会触发一系列的更新事件，从而达到了自动更新的目的。</p>
+</li>
+</ol>
+<h4 id="工程化目录"><a href="#工程化目录" class="headerlink" title="工程化目录"></a>工程化目录</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">|-store</span><br><span class="line">| |-action          // 总的action目录</span><br><span class="line">|   |-personal.js</span><br><span class="line">|   |-vote.js</span><br><span class="line">|   |-index.js      // 汇总导出 import Action .... from '.../store/action'</span><br><span class="line">| |-reducer         // 存放reducer</span><br><span class="line">|   |-personal.js</span><br><span class="line">|   |-vote.js</span><br><span class="line">|   |-index.js      // 汇总导出的 import Reducer .... from '.../store/reducer'</span><br><span class="line">| |-action-types.js // 存放的所有action个中type类型常量 import * as TYPE from '.../store/action-types'</span><br><span class="line">| |-index.js        // 汇总reduce 并且创建出store,导出即可</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>reducer<br>个项的reducer还是以之前的方式，合并reducer考虑到重复的问题，所以进行了一层对象空间命名</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"><span class="keyword">let</span> reducer = combineReducers(&#123;</span><br><span class="line">  personal,</span><br><span class="line">  vote</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取数据的时候</span></span><br><span class="line"><span class="keyword">let</span> &#123; name, age &#125; = Store.getStore().personal</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>action<br>action中,返回值是之前dispatch的参数，这里只是为了统一管理，其实还是之前的原理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vote = &#123;</span><br><span class="line">  support () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">type</span>: TYPE.VOTE_SUPPORT &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用的时候</span></span><br><span class="line">Store.dispatch(Action.vote.support())</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h4><ul>
+<li><p>使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> store = createStore(reducer, applyMiddleware(xxx中间件<span class="number">1</span>，xxx中间件<span class="number">2.</span>..) )</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>redux-logger: 用于在控制台清晰显示出当前的REDUX的操作信息，以及修改后的状态信息</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">直接使用，无需配置，控制台会打印出相应的操作过程</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>redux-thunk: 处理异步Dispatch派发任务</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">addCustom (payload) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(&#123;</span><br><span class="line">        type: TYPE.ADD_CUSTOM,</span><br><span class="line">        payload</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;, <span class="number">3000</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">dispatch ( Action.custom.addCustom(payload) )</span><br><span class="line"><span class="comment">// 原理，第一次发出 action为undefined，并将state原样返回，获取到数据，再发一次正常的</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>redux-promise: 处理异步Dispatch派发任务,支持promise操作</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">addCustom (payload) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: TYPE.ADD_CUSTOM,</span><br><span class="line">    payload: <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        resolve(payload)</span><br><span class="line">      &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">dispatch ( Action.custom.addCustom(payload) )</span><br><span class="line"><span class="comment">// 原理，第一次发出正常的，当发现接收到的数据为Promise，则不进行改变state(即不存储state),</span></span><br><span class="line"><span class="comment">// 后续完成后，再发一次正常的，并改变state</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/react组件使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/07/05/react组件使用/" class="post-title-link" itemprop="url">react组件使用</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-05 09:06:59" itemprop="dateCreated datePublished" datetime="2019-07-05T09:06:59+08:00">2019-07-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="jsx的使用"><a href="#jsx的使用" class="headerlink" title="jsx的使用"></a>jsx的使用</h2><ol>
+<li>不建议将JSX直接渲染到dom中，一般都是渲染到一个DIV中（可能会频繁跟换，div比较适合）</li>
+<li><code>{}</code>内是js，表达式，但是一定要存在返回值才可以，for 与 if 都不可以，不能直接放一个对象（<ul>
+<li>除了给style赋值</li>
+<li>除了React.element对象</li>
+</ul>
+</li>
+<li>一般循环创建JSX元素都是采用map方法来完成，注意使用key={}来绑定key的值</li>
+</ol>
+<h2 id="React的流程"><a href="#React的流程" class="headerlink" title="React的流程"></a>React的流程</h2><ol>
+<li>使用Babel将JSX语法规则 解析成React.createElement(type, props, children),仅仅是形式，也就是将JSX语法表述出来，但是此时并没有执行。</li>
+<li><p>React.createElement(type, props, children) 执行，创建一个虚拟DOM，主要包含一下的部分</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  type: <span class="string">'xxx'</span>, <span class="comment">// 创建的元素标签名称</span></span><br><span class="line">  props: &#123; <span class="attr">key</span>: value, children&#125;, <span class="comment">// 用于标签上的属性， 并且将children放入</span></span><br><span class="line">  ref: xxx,</span><br><span class="line">  key: xxx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RenderDOM.render(obj, container, callback) 渲染这个虚拟dom</p>
+<ul>
+<li>创建obj中的type -&gt; dom 元素 document.createElement()</li>
+<li>根据属性，给dom标签上加属性，并且只循环自身属性（<code>hasOwnProperty</code>） 特殊属性要注意，比如className, style,</li>
+<li>挂载dom节点到Container上， container.appendChild(dom)</li>
+</ul>
+</li>
+</ol>
+<h2 id="React申明组件的方式-基于函数"><a href="#React申明组件的方式-基于函数" class="headerlink" title="React申明组件的方式-基于函数"></a>React申明组件的方式-基于函数</h2><ul>
+<li>所有的组件都是以函数的方式声明出去 <code>export default function Component (props) { ... }</code></li>
+<li>要在该页面中引入 React才可以正常的使用，因为要使用React.createElement 来创建出元素</li>
+<li>经过babel处理后，所有的属性都会以props对象的形式存在起来，所以函数的形参位置就是接受的函数</li>
+</ul>
+<h2 id="React申明组件的方式-基于组件Component"><a href="#React申明组件的方式-基于组件Component" class="headerlink" title="React申明组件的方式-基于组件Component"></a>React申明组件的方式-基于组件Component</h2><ul>
+<li>基于JSX来craeate-element来转换为对象</li>
+<li>继承React.component并且在构造器中要调用 super</li>
+<li>组件中关于props的使用<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.super中传入props，因为是实例到对象上了，所以可以使用this.来进行访问</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">constructor</span> (props) &#123; </span><br><span class="line">  <span class="keyword">super</span>(props)</span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 这里可以正常的访问到元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render ()&#123; </span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 这里可以正常的访问到元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.不传入，在constructor中是无法使用的，其他地方react做了默认关联</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">constructor</span> () &#123;</span><br><span class="line">  <span class="keyword">super</span>()</span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 不可以访问到元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render ()&#123; </span><br><span class="line">  <span class="keyword">this</span>.props <span class="comment">// 这里可以正常的访问到元素</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="React申明组件-函数式-和-组件式异同"><a href="#React申明组件-函数式-和-组件式异同" class="headerlink" title="React申明组件 函数式 和 组件式异同"></a>React申明组件 函数式 和 组件式异同</h2><h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><ul>
+<li>都是通过JSX转换执行</li>
+</ul>
+<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
+<li>函数式（静态组件） -&gt; 普通函数执行 其中 this为undefined<ul>
+<li>操作较简单</li>
+<li>适合简单调取的方式</li>
+</ul>
+</li>
+<li>组件式 （动态组件）-&gt; 调用new来创建， 其中this为创建的虚拟元素<ul>
+<li>较为复杂</li>
+<li>能够使用生命周期函数</li>
+<li>能够使用一些状态来动态更新内容 </li>
+</ul>
+</li>
+</ul>
+<h2 id="组件中的状态"><a href="#组件中的状态" class="headerlink" title="组件中的状态"></a>组件中的状态</h2><p>只有基于类的组件，有状态，可以使用生命周期函数</p>
+<ul>
+<li>属性只读（别人给的）</li>
+<li>状态读写（自己设定）</li>
+</ul>
+<h4 id="模拟双向数据绑定"><a href="#模拟双向数据绑定" class="headerlink" title="模拟双向数据绑定"></a>模拟双向数据绑定</h4><p>可以在input的onchange事件中绑定setState()<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123;text&#125; = <span class="keyword">this</span>.state</span><br><span class="line">&lt;input type=<span class="string">"text"</span> onchange=&#123;ev =&gt; &#123;</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    text: ev.target.value</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;&#125; value=&#123;text&#125; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;div&gt;&#123;text&#125;&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="组件生命周期"><a href="#组件生命周期" class="headerlink" title="组件生命周期"></a>组件生命周期</h2><h4 id="组件第一次创建的生命周期"><a href="#组件第一次创建的生命周期" class="headerlink" title="组件第一次创建的生命周期"></a>组件第一次创建的生命周期</h4><ul>
+<li><p>static defaultProps{} (默认参数，非正式的第一步，需安装组件 prop-types 才可配置)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> defaultProps = &#123;</span><br><span class="line">  speed: <span class="number">300</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">  speed: PropTypes.number</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>constructor()<br>组件的构造函数</p>
+</li>
+<li>componentWillMount()<br>组件挂载之间</li>
+<li>render()<br>渲染中</li>
+<li>componentDidMount()<br>组件渲染完成后，一般将请求数据放到此处</li>
+</ul>
+<h4 id="改变状态的生命周期"><a href="#改变状态的生命周期" class="headerlink" title="改变状态的生命周期"></a>改变状态的生命周期</h4><ul>
+<li>shouldComponentUpdate(nextProps, nextState)<br>钩子函数，必需返回true,才能够出发更新，一般做性能优化使用</li>
+<li>componentWillUpdate(nextProps, nextState)<br>更新之前，此时的props, state还是之前的数据，可以理解为栈，此时还没有压栈</li>
+<li>render<br>渲染中</li>
+<li>componentDidUpdate()<br>更新完成后</li>
+</ul>
+<h4 id="传入的属性发生变化"><a href="#传入的属性发生变化" class="headerlink" title="传入的属性发生变化"></a>传入的属性发生变化</h4><ul>
+<li>componentWillReceiveProps(nextProps, nextState)<br>传入的属性发生了变化，接下来执行改变状态生命周期的一系列</li>
+</ul>
+<h4 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h4><ul>
+<li>componentWillUnmount()<br>该组件被卸载之前，并不是销毁，组件还在</li>
+</ul>
+<h2 id="setState-注意"><a href="#setState-注意" class="headerlink" title="setState() 注意"></a>setState() 注意</h2><p>改变状态的这个方法是一个异步执行的方法，一定要慎用 <code>n: this.state.n++</code> 这类操作,最好使用<code>n: this.state.n+1</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.state = &#123;</span><br><span class="line">  n: <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.state.n)</span><br><span class="line"><span class="keyword">this</span>.setState(&#123;</span><br><span class="line">  n: <span class="keyword">this</span>.state.n++</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.state.n)</span><br><span class="line"><span class="comment">// ======= 运行情况 (注意++ 是先赋值，后自增1)</span></span><br><span class="line"><span class="comment">//  主线程                       等待队列</span></span><br><span class="line">    <span class="number">1.</span> log(<span class="number">0</span>)</span><br><span class="line">                                <span class="number">2.</span> set <span class="keyword">this</span>.state.n = <span class="number">0</span> (此时还没到++)</span><br><span class="line">    <span class="number">3.</span> <span class="keyword">this</span>.state.n = <span class="number">1</span> (此时已经给他++了)</span><br><span class="line">    <span class="number">4.</span> log(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">执行情况 <span class="number">1</span> -&gt; <span class="number">3</span> -&gt; <span class="number">4</span> -&gt; <span class="number">2</span> 最终结束后 <span class="keyword">this</span>.state.n = <span class="number">0</span></span><br><span class="line">所以执行到下一个生命周期的时候，把n=<span class="number">0</span>带了过去</span><br></pre></td></tr></table></figure></p>
+<h2 id="组件之间通信"><a href="#组件之间通信" class="headerlink" title="组件之间通信"></a>组件之间通信</h2><h4 id="属性传递-只读"><a href="#属性传递-只读" class="headerlink" title="属性传递 (只读)"></a>属性传递 (只读)</h4><p>通过props进行传递，父亲给儿子， 儿子设置给孙子<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index</span></span><br><span class="line">&lt;Parent n=&#123;<span class="number">1</span>&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Parent</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Parent</span></span><br><span class="line">&lt;Son n=&#123;<span class="keyword">this</span>.props.n&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Son</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Son</span></span><br><span class="line">&lt;div&gt;&#123;<span class="keyword">this</span>.props.n&#125;&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="上下文传递-可二次修改，不影响其他组件"><a href="#上下文传递-可二次修改，不影响其他组件" class="headerlink" title="上下文传递 (可二次修改，不影响其他组件)"></a>上下文传递 (可二次修改，不影响其他组件)</h4><p>父组件先把需要给后代元素（包括孙子），全都设置好，后代组件需要信息，直接去调取即可（不需要儿子转递了）<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ==父组件==</span></span><br><span class="line"><span class="comment">// 设置上下文类型</span></span><br><span class="line"><span class="keyword">static</span> childContextTypes = &#123;</span><br><span class="line">  n: PropTypes.number,</span><br><span class="line">  m: PropTypes.number</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 向上下文传递数据</span></span><br><span class="line">getChildContext () &#123;</span><br><span class="line">  <span class="keyword">let</span> &#123;n, m&#125; <span class="comment">// 得到需要放置的值</span></span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="comment">// 传递下去</span></span><br><span class="line">    n,</span><br><span class="line">    m</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==子组件==</span></span><br><span class="line"><span class="comment">// 子组件需要主动接受的信息</span></span><br><span class="line"><span class="keyword">static</span> contextTypes = &#123;</span><br><span class="line">  n: PropTypes.number</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.context.n)</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/js设计模式总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/25/js设计模式总结/" class="post-title-link" itemprop="url">js设计模式总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-25 16:41:47" itemprop="dateCreated datePublished" datetime="2019-06-25T16:41:47+08:00">2019-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="单例设计模式"><a href="#单例设计模式" class="headerlink" title="单例设计模式"></a>单例设计模式</h4><p>js中由于没有类的概念，所以单例不需要特别设计，只要保证一个引用即可，但是保存到全局对象又容易造成污染，<br>所以要结合闭包。注意：对象创建与单例的管理要分开。</p>
+<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p>将算法的使用 与 算法的设计 分离开， 可以看成可变的函数调用<br>主要是解决if else分支过多的问题</p>
+<h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p>客户不方便直接访问某个对象的时候，提供一个对象来控制对这个对象的访问， 客户 -&gt; 代理 -&gt; 本体<br>虚拟代理 代理对象和实体之间应该是一致的，方便调用或者替换<br>缓存代理 访问某个对象之前，通过闭包看一下之前有没有缓存过，没有则执行并放入缓存 return cache[args] = fn()</p>
+<h4 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h4><p>将迭代的过程抽离开，只关心最后的结果，并不关心迭代的过程<br>内部迭代器 调用方便，更适合看结果，js已经实现了内部迭代器forEach<br>外部迭代器 需要手动控制迭代过程，可自定义化比较高 （数据库resultMap类似，.next() 下一位）</p>
+<h4 id="发布-订阅（观察者）-模式"><a href="#发布-订阅（观察者）-模式" class="headerlink" title="发布-订阅（观察者） 模式"></a>发布-订阅（观察者） 模式</h4><p>将 多个订阅者 放到 一个发布者存储起来（<em>尤其是对多个事件的异步执行</em>），当这个发布者发布对象的时候，会调用其所有订阅者的方法执行，<br>订阅者只需要按照规定订阅其发布者规定的方法即可，主要是事件的解耦，类似dom中的事件绑定</p>
+<h4 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h4><p>这里主要是针对绑定事件的解耦性， 将 <code>onclick = function () { xxx }</code> 分离开，变成约定好的固定模式,<br>用了一个第三者 （命令者）连接了起来， 做到了解耦性<br><code>onclick = commandObj.execute()</code> + <code>commandObj.execute = function () { xxx }</code></p>
+<p>注意：<br>命令模式中的：”聪明模式”由于没有receiver，从代码结构上与 策略模式 接近，但是从用途上区分他们<br>命令模式，范围广，对什么执行什么命令<br>策略模式，指定范围，采用什么样的方法解决</p>
+<p>“傻瓜模式”： 由receiver做execute,所以命令其实啥都不知道，就是得到命令，调execute<br>“聪明模式”： 直接在command中执行功能，不做转接，中间层直接执行代码</p>
+<h4 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h4><p>树形结构，只需要对树根发出指令，便会依此遍历所有的叶子方法的execute,是在命令模式的宏命令中延申而来<br>类似一个深度遍历， 如果是组合节点-&gt; 遍历执行所有的叶节点的 execute, 如果是叶子节点，直接执行其代码即可</p>
+<h4 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h4><p>算法的框架由模板定义好，子类只需要按照一定的规则去实现一些细节的实现即可，有点类似于与java中的抽象类，接口类<br>他是一种原型继承的方式</p>
+<h4 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h4><p>区分外部状态与内部状态其实就是找出变化的和不变化的，精髓是创建一个对象，依次改变其内部的属性，是一种<br>典型的 以时间换空间的例子， 对象池也类似享元模式虽然没有体现状态分离，但是有共享的体现</p>
+<h4 id="职责链模式"><a href="#职责链模式" class="headerlink" title="职责链模式"></a>职责链模式</h4><p>用来简化if else的相关操作，每个方法只需要处理自己的那一片，处理不了就往后抛，直到有相应的<br>职责者可以处理即可。一般用字符串<code>&#39;nextSuccessor&#39;</code>表示传递给下一个职责对象，或者手动调用下去<br>一般最后一个链都要放一个接锅侠，要不就被放走了</p>
+<h4 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h4><p>对象之间的引用过于复杂的时候，通常可以引入中介者，将每个人的关系都扯到中介者身上，这样会减少对象之间关系维护<br>的困扰，但是所有的关系都是由中介者来维护的，中介者一般会较大，处理逻辑较为复杂，但是其他类都是类似透明的，所有<br>关系都有中介者来维护，类之间是不知道自己是否与别人有关联(导致本身的关联不被关注)，折中使用<br>只需要维护中介者 就完成了类之间的关系维护</p>
+<h4 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h4><p>主要是为了在不改动原函数的情况下，进行拓展，最主要的运用是在函数之前<code>.before</code>，函数之后<code>.after</code><br>使用了AOP编程的思想，让功能之间的耦合度下降，并且装配性变强，可以根据不同的需求去装配不同的功能</p>
+<p>注意：（两者代码结构相似，但是要从目的来进行区分）<br>装饰者模式： 通常会添加一连串的装饰者，给他拓展之外的一些功能。<br>代理模式： 通常只有一个代理对象，而他的目的是增强原有的功能</p>
+<h4 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h4><p>根据不同的场景来解决不同的问题，主要是在不同状态下表现出的方法不一样，将各个事件绑定到状态中<br>定义且切换状态的方式，省去了大部分if else 的逻辑结构,其实就是鸭子类型，进行替换调这个替换对象中的方法</p>
+<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p>主要是在不改动原有代码的情况下 进行修改，在代码的编写阶段是不会有的，肯定是在对接老项目的时候，<br>修改了某些接口，从而进行变通的一种方式，或是为了兼容其他的API,或者是做方法之间的转换的</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>JavaScript中的设计模式，很多都是采用了高阶函数的一种变形， 其中大量充斥着闭包的概念<br>很多设计模式看似相同，结构也是大部分一样的，但是主要是思想上的不同，他们所针对，所解决的问题不一致<br>而不能单单从形式结构上区分它们，以及JavaScript是没有类的概念的，所以需要灵活的使用鸭子模式来达到<br>不同的设计</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/14适配器模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -639,201 +1008,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/07组合模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/07组合模式/" class="post-title-link" itemprop="url">07组合模式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:32:24" itemprop="dateCreated datePublished" datetime="2019-06-25T16:32:24+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">  组合模式</span></span><br><span class="line"><span class="comment">  更加强大的 宏命令,其优点是可以一次性的执行方法不需要if else 判断哪些要执行，哪些要遍历</span></span><br><span class="line"><span class="comment">  打开空调</span></span><br><span class="line"><span class="comment">  打开电视机和音响</span></span><br><span class="line"><span class="comment">  关门，开电脑，登录QQ</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> MacroCommand = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 宏命令 也即组合模式的根节点</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    commandList: [],</span><br><span class="line">    add: <span class="function"><span class="keyword">function</span> (<span class="params">command</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.commandList.push(command)</span><br><span class="line">    &#125;,</span><br><span class="line">    execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, command; command = <span class="keyword">this</span>.commandList[i++]; ) &#123;</span><br><span class="line">        command.execute()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 打开空调指令 */</span></span><br><span class="line"><span class="keyword">var</span> openAcCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开空调'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 打开电视机和音响指令 */</span></span><br><span class="line"><span class="keyword">var</span> openTVCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开电视机'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> openSoundCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开音响'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 组合命令</span></span><br><span class="line"><span class="keyword">var</span> macroCommand1 = MacroCommand()</span><br><span class="line">macroCommand1.add(openTVCommand)</span><br><span class="line">macroCommand1.add(openSoundCommand)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 关门，开电脑，登录QQ指令 */</span></span><br><span class="line"><span class="keyword">var</span> closeDoorCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'关门'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> openPCCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开电脑'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> openQQCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开QQ'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 组合命令</span></span><br><span class="line"><span class="keyword">var</span> macroCommand2 = MacroCommand()</span><br><span class="line">macroCommand2.add(closeDoorCommand)</span><br><span class="line">macroCommand2.add(openPCCommand)</span><br><span class="line">macroCommand2.add(openQQCommand)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 组合三个事件 */</span></span><br><span class="line"><span class="keyword">var</span> macroCommand = MacroCommand()</span><br><span class="line">macroCommand.add(openAcCommand)</span><br><span class="line">macroCommand.add(macroCommand1)</span><br><span class="line">macroCommand.add(macroCommand2)</span><br><span class="line"><span class="comment">// 执行命令</span></span><br><span class="line">macroCommand.execute()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 由于其执行的透明性的原因</span></span><br><span class="line"><span class="comment">  很有可能会误对叶子节点 调用add,此时可以抛出相应的异常来解决</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> openAcCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开空调'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  add: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'叶子对象不能再添加子节点'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 使用命令模式模拟一个 扫描文件夹的实例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Folder = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123; </span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.files = []</span><br><span class="line">&#125;</span><br><span class="line">Folder.prototype.add = <span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.files.push(file) </span><br><span class="line">&#125;</span><br><span class="line">Folder.prototype.scan = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'开始扫描文件夹: '</span> + <span class="keyword">this</span>.name)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, file; file = <span class="keyword">this</span>.files[i++]; ) &#123;</span><br><span class="line">    file.scan()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> File = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">File.prototype.add = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'文件下面不能再添加文件'</span>)</span><br><span class="line">&#125;</span><br><span class="line">File.prototype.scan = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'开始扫描文件: '</span> + <span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> folder = <span class="keyword">new</span> Folder(<span class="string">'学习资料'</span>)</span><br><span class="line"><span class="keyword">var</span> folder1 = <span class="keyword">new</span> Folder(<span class="string">'JavaScript'</span>)</span><br><span class="line"><span class="keyword">var</span> folder2 = <span class="keyword">new</span> Folder(<span class="string">'jQuery'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> file1 = <span class="keyword">new</span> File(<span class="string">'JavaSccript设计模式'</span>)</span><br><span class="line"><span class="keyword">var</span> file2 = <span class="keyword">new</span> File(<span class="string">'精通jQuery'</span>)</span><br><span class="line"><span class="keyword">var</span> file3 = <span class="keyword">new</span> File(<span class="string">'重构与模式'</span>)</span><br><span class="line"></span><br><span class="line">folder1.add(file1)</span><br><span class="line">folder2.add(file2)</span><br><span class="line"></span><br><span class="line">folder.add(folder1)</span><br><span class="line">folder.add(folder2)</span><br><span class="line">folder.add(file3)</span><br><span class="line"></span><br><span class="line">folder.scan()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 增加父节点，就可以做到组合模式的删除 */</span></span><br><span class="line"><span class="keyword">var</span> Folder = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.parent = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">this</span>.files = []</span><br><span class="line">&#125;</span><br><span class="line">Folder.prototype.add = <span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">  file.parent = <span class="keyword">this</span></span><br><span class="line">  <span class="keyword">this</span>.files.push(file)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> File = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.parent = <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当做删除的时候</span></span><br><span class="line">File.prototype.remove = Folder.prototype.remove = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.parent) &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> files = <span class="keyword">this</span>.parent.files, l = files.length; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">    <span class="keyword">var</span> file = files[i]</span><br><span class="line">    <span class="keyword">if</span> (file = <span class="keyword">this</span>) &#123;</span><br><span class="line">      files.splice(l, <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/06命令模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/06命令模式/" class="post-title-link" itemprop="url">06命令模式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:31:39" itemprop="dateCreated datePublished" datetime="2019-06-25T16:31:39+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 命令模式</span></span><br><span class="line"><span class="comment"> 模拟给按钮绑定一个刷新事件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 真实刷新逻辑 </span></span><br><span class="line"><span class="keyword">var</span> MenuBar = &#123;</span><br><span class="line">  refresh: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'刷新了页面'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 刷新命令 (中间商命令者)</span></span><br><span class="line"><span class="keyword">var</span> RefreshMenuBarCommand = <span class="function"><span class="keyword">function</span> (<span class="params"> recevier </span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      recevier.refresh()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置命令</span></span><br><span class="line"><span class="keyword">var</span> setCommand = <span class="function"><span class="keyword">function</span> (<span class="params"> button, command</span>) </span>&#123;</span><br><span class="line">  button.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    command.execute()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> button1 = &#123;&#125; <span class="comment">// 这里模拟button1按钮</span></span><br><span class="line"><span class="keyword">var</span> refreshMenuBarCommand = RefreshMenuBarCommand ( MenuBar ) <span class="comment">// 获取命令</span></span><br><span class="line">setCommand( button1, refreshMenuBarCommand)</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 宏命令，可以执行一批命令，就是把命令放入数组中，一批执行</span></span><br><span class="line"><span class="comment"> 关门 -&gt; 打开电脑 -&gt; 登录QQ</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> closeDoorCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'关门'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> openPCCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开电脑'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> openQQCommand = &#123;</span><br><span class="line">  execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'打开QQ'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> MacroCommand = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    commandList: [],</span><br><span class="line">    add: <span class="function"><span class="keyword">function</span> (<span class="params"> command </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.commandList.push(command)</span><br><span class="line">    &#125;,</span><br><span class="line">    execute: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, command; command = <span class="keyword">this</span>.commandList[i++]; ) &#123;</span><br><span class="line">        command.execute()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> marcroCommand = MacroCommand()</span><br><span class="line">marcroCommand.add (closeDoorCommand )</span><br><span class="line">marcroCommand.add (openPCCommand )</span><br><span class="line">marcroCommand.add (openQQCommand )</span><br><span class="line">marcroCommand.execute()</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 基于命令模式的撤销/重做（可重做的命令）</span></span><br><span class="line"><span class="comment"> 把历史命令全部保存起来，之后全部命令重做，直到所需要的前一步</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> commandStack = [] <span class="comment">// 历史命令队列</span></span><br><span class="line"></span><br><span class="line">command() <span class="comment">// 执行命令</span></span><br><span class="line">commandStack.push(command) <span class="comment">// 放入历史命令</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 重做任务 replay 把任务队列中的任务重新做一遍</span></span><br><span class="line"><span class="keyword">var</span> replay = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> command</span><br><span class="line">  <span class="keyword">while</span> (command = commandStack.shift()) &#123;</span><br><span class="line">    command()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 撤销命令一般为 undo</span></span><br><span class="line"><span class="keyword">var</span> undo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> <span class="comment">// commandStack.pop()</span></span><br><span class="line"> <span class="comment">// 之后根据逻辑进行操作</span></span><br><span class="line"> </span><br><span class="line"> <span class="comment">// 或者重做到上一步</span></span><br><span class="line"> commandStack.pop() <span class="comment">// 弹出上一步</span></span><br><span class="line"> replay() <span class="comment">// 重做所有</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/05订阅者模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/05订阅者模式/" class="post-title-link" itemprop="url">05订阅者模式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:30:53" itemprop="dateCreated datePublished" datetime="2019-06-25T16:30:53+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 订阅，发布者</span></span><br><span class="line"><span class="comment"> 模拟售楼部的情况</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> salesOffices = &#123; <span class="comment">// 售楼部</span></span><br><span class="line">  clientList: &#123;&#125;, <span class="comment">// 订阅的列表</span></span><br><span class="line">  </span><br><span class="line">  listen: <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 订阅者：订阅事件</span></span><br><span class="line">    <span class="keyword">if</span> ( !<span class="keyword">this</span>.clientList[ key ] ) &#123; <span class="comment">// 如果还没有订阅过，先初始化一下</span></span><br><span class="line">      <span class="keyword">this</span>.clientList[ key ] = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.clientList[ key ].push( fn ) <span class="comment">// 订阅消息添加进缓存列表</span></span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  trigger: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 发布者: 发布消息</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ), <span class="comment">// 消息类型</span></span><br><span class="line">      fns = <span class="keyword">this</span>.clientList[ key ] <span class="comment">// 订阅该消息的所有方法</span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span>) &#123; <span class="comment">// 没有人订阅</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123; <span class="comment">// 执行订阅</span></span><br><span class="line">      fn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123; <span class="comment">// 订阅squareMeter88事件</span></span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;)</span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter100'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123; <span class="comment">// 订阅squareMeter100事件</span></span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'squareMeter100 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span>) <span class="comment">// 发布squareMeter88事件</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter100'</span>, <span class="number">3000000</span>) <span class="comment">// 发布squareMeter100事件</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 通用的订阅者事件（增加remove） </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> event = &#123;</span><br><span class="line">  clientList: &#123;&#125;,</span><br><span class="line">  listen: <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 订阅功能</span></span><br><span class="line">    <span class="keyword">if</span> ( !<span class="keyword">this</span>.clientList[ key ]) &#123;</span><br><span class="line">      <span class="keyword">this</span>.clientList[ key ] = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.clientList[ key ].push( fn )</span><br><span class="line">  &#125;,</span><br><span class="line">  remove: <span class="function"><span class="keyword">function</span>(<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 取消事件的订阅</span></span><br><span class="line">    <span class="keyword">var</span> fns = <span class="keyword">this</span>.clientList[ key ]</span><br><span class="line">    <span class="keyword">if</span> ( !fns ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( !fn ) &#123; <span class="comment">// 没有指定 默认去除所有</span></span><br><span class="line">      fns &amp;&amp; ( fns.length = <span class="number">0</span> )</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">for</span> ( <span class="keyword">var</span> l = fns.length - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">         <span class="keyword">var</span> _fn = fns[ l ]</span><br><span class="line">         <span class="keyword">if</span> ( _fn === fn ) &#123;</span><br><span class="line">           fns.splice( l, <span class="number">1</span>)</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  trigger: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 发布功能</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ),</span><br><span class="line">      fns = <span class="keyword">this</span>.clientList[ key ]</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span> ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123;</span><br><span class="line">      fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> installEvent = <span class="function"><span class="keyword">function</span> (<span class="params"> obj </span>) </span>&#123; <span class="comment">// 安装事件</span></span><br><span class="line">  <span class="keyword">for</span> ( <span class="keyword">var</span> key <span class="keyword">in</span> event) &#123;</span><br><span class="line">    obj[ key ] = event[ key ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> salesOffices = &#123;&#125;</span><br><span class="line">installEvent(salesOffices) <span class="comment">// 安装发布者模块</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> handleSquareMeter88Fn1 = <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'fn1得知 squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> handleSquareMeter88Fn2 = <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'fn2得知 squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn1 ) <span class="comment">// fn1订阅squareMeter88事件</span></span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn2 ) <span class="comment">// fn2订阅squareMeter88事件</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span> )</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'==========================='</span>)</span><br><span class="line">salesOffices.remove( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn1 ) <span class="comment">// 取消fn1对squareMeter88事件的订阅</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span> )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 然而现实中不需要为特定的对象专门注册这一个发布订阅， 共用一个即可 */</span></span><br><span class="line"><span class="keyword">var</span> Event = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> clientList = &#123;&#125;,</span><br><span class="line">    listen,</span><br><span class="line">    trigger,</span><br><span class="line">    remove</span><br><span class="line">    </span><br><span class="line">    listen = <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> ( !clientList[ key ]) &#123;</span><br><span class="line">        clientList[ key ] = []</span><br><span class="line">      &#125;</span><br><span class="line">      clientList[ key ].push( fn )</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    remove = <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> fns = clientList[ key ]</span><br><span class="line">      <span class="keyword">if</span> ( !fns ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> ( !fn ) &#123;</span><br><span class="line">        fns &amp;&amp; (fns.length = <span class="number">0</span>)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> ( <span class="keyword">var</span> l = fns.length - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">          <span class="keyword">var</span> _fn = fns[ l ]</span><br><span class="line">          <span class="keyword">if</span> ( _fn === fn ) &#123;</span><br><span class="line">            fns.splice( l, <span class="number">1</span> )</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    trigger = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ),</span><br><span class="line">        fns = clientList[ key ]</span><br><span class="line">      <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123;</span><br><span class="line">        fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 简单实现到这里， 完整的发布者 订阅者模式还需要提供如下两个方面的能力</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 1.全局事件命名冲突 </span></span><br><span class="line"><span class="comment"> 比如都发布了一个 squareMeter88 无法确定具体是那一个 事件发布出来的，可能事件重名，不便于管理</span></span><br><span class="line"><span class="comment"> 这里可以引入 namespace 在每一个命名空间内进行事件的订阅</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 可以显示创建命名空间后在内部调用</span></span><br><span class="line"><span class="comment"> 默认情况下不申明，就在自己申明的'_default'环境中</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 2.离线时间的发布</span></span><br><span class="line"><span class="comment"> 有的事件发布出来，可能订阅者还没来得及订阅，这里可以使用一个离线的cache,等待何时的时机发布出去</span></span><br><span class="line"><span class="comment"> 离线事件只能发布一次，不能重复发布，不然就没有了发布的意义（它只是当时没发布，等到事宜的时机再将事件发布出去）</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 在触发的时候，判定有离线事件队列，就先别真触发，先放入离线事件队列中</span></span><br><span class="line"><span class="comment"> 当触发监听listen时 如果有离线事件队列，就把离线事件队列调出来运行一次</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -905,7 +1079,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">126</span>
+          <span class="site-state-item-count">128</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
