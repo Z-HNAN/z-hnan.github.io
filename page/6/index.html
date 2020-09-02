@@ -188,6 +188,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/20/关于webpack中proxy跨域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/20/关于webpack中proxy跨域/" class="post-title-link" itemprop="url">关于webpack中proxy跨域</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-20 13:03:48" itemprop="dateCreated datePublished" datetime="2019-10-20T13:03:48+08:00">2019-10-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>主流跨域3中方式<br>1.jsonp<br>2.服务端配合cros<br>3.服务器反向代理<br>主要讨论第三种，反向代理的方式</p>
+</blockquote>
+<h4 id="情景"><a href="#情景" class="headerlink" title="情景"></a>情景</h4><ul>
+<li>API-cgi <code>www.api.com</code></li>
+<li>后端服务器 <code>www.rd.com</code></li>
+<li>前端服务器 <code>www.fe.com</code></li>
+</ul>
+<p>我们的目的是通过，<code>www.fe.com</code>去拿取<code>www.api.com</code>上的资源，但由于跨域，我们需要后端服务器帮我们抓取一下，做一次转发（同源策略只是浏览器制定的）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">发请求： www.fe.com -&gt; www.rd.com -&gt; www.api.com</span><br><span class="line">得响应： www.api.com -&gt; www.rd.com -&gt; www.fe.com</span><br></pre></td></tr></table></figure>
+<h4 id="在devServer中配置代理"><a href="#在devServer中配置代理" class="headerlink" title="在devServer中配置代理"></a>在devServer中配置代理</h4><ul>
+<li>API-cgi <code>www.api.com</code></li>
+<li>前端服务器 <code>www.fe.com</code></li>
+</ul>
+<p>我们使用devServer来搭建一个代理服务器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config  devServer</span></span><br><span class="line"></span><br><span class="line">devServer: &#123;</span><br><span class="line">  proxy: &#123;</span><br><span class="line">    <span class="string">'/api'</span>: &#123;</span><br><span class="line">      target: <span class="string">'http://www.api.com'</span>,</span><br><span class="line">      <span class="comment">/* 表示重发的请求去除api,此字段是我们加的 */</span></span><br><span class="line">      pathRewrite: &#123;<span class="string">'^/api'</span> : <span class="string">''</span>&#125;,</span><br><span class="line">      changeOrigin: <span class="literal">true</span>,</span><br><span class="line">      <span class="comment">/* 如果有https, 可配置此项 */</span></span><br><span class="line">      secure: <span class="literal">false</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h4 id="修改发送的请求"><a href="#修改发送的请求" class="headerlink" title="修改发送的请求"></a>修改发送的请求</h4><p>由于我们在开发的时候devServer，所以前端服务器也是假设在devServer，而我们的proxy也是假设在devServer上的，所以我们需要去请求我们的proxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 本意</span><br><span class="line">发请求： www.fe.com -&gt; www.api.com</span><br><span class="line">得响应： www.api.com -&gt; www.fe.com</span><br><span class="line"></span><br><span class="line"># 修改后</span><br><span class="line">发请求： www.fe.com -&gt; www.fe.com/api</span><br><span class="line">得响应： www.fe.com/api -&gt; www.fe.com</span><br></pre></td></tr></table></figure>
+<p>其实我们请求了fe上的proxy，他会去真正请求<code>www.api.com</code>,之后拿到数据在返还给我们，而我们是不知道的，由于<code>前后都是www.fe.com</code>所以是属于同源的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/20/引入eslint/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -895,80 +978,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/04/devServer实现局域网内访问/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/10/04/devServer实现局域网内访问/" class="post-title-link" itemprop="url">devServer实现局域网内访问</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-10-04 22:06:06" itemprop="dateCreated datePublished" datetime="2019-10-04T22:06:06+08:00">2019-10-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>在react项目中，经常会使用到devServer, 此时如果设备在同一局域网下应该是可以胡同的（同一wifi环境）</p>
-</blockquote>
-<ol>
-<li><p>检查本机防火墙设置</p>
-</li>
-<li><p>开启devServer相关配置（重点）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">devServer: &#123;</span><br><span class="line">  port: <span class="number">8080</span>,</span><br><span class="line">  disableHostCheck: <span class="literal">true</span>,</span><br><span class="line">  host: <span class="string">'0.0.0.0'</span>,</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1040,7 +1049,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-count">129</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

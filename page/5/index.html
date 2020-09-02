@@ -188,6 +188,147 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/26/总结题1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/26/总结题1/" class="post-title-link" itemprop="url">总结题1</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-26 18:00:33" itemprop="dateCreated datePublished" datetime="2019-12-26T18:00:33+08:00">2019-12-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="call-与-apply-的区别-性能相关"><a href="#call-与-apply-的区别-性能相关" class="headerlink" title="call 与 apply 的区别, 性能相关"></a>call 与 apply 的区别, 性能相关</h1><p>call, apply均为function原型上的方法，他们的作用都是改变this指向，唯一不同的就是传递参数的方式</p>
+<p>fn.call(obj, 10, 20, 30)<br>fn.apply(obj, [10, 20, 30])</p>
+<p>call的性能要比apply好一些(尤其是传递给函数的参数超过3个的时候)，推荐call</p>
+<p>基于es6对象展开符，可以使用call代替apply</p>
+<p>fn.apply(obj, arr)<br>fn.call(obj, …arr)</p>
+<p>性能：测试网站，一定要注明环境，个人测试只能作为参考</p>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>console.time(‘A’)<br>// …code<br>console.timeEnd(‘A’)</p>
+<h1 id="实例调取方法，链式调用，-5-add-3-minus-2"><a href="#实例调取方法，链式调用，-5-add-3-minus-2" class="headerlink" title="实例调取方法，链式调用，(5).add(3).minus(2)"></a>实例调取方法，链式调用，(5).add(3).minus(2)</h1><p>原型上的写法，原型链拓展<br>数字要加括号才可以进行拓展</p>
+<h1 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h1><ol>
+<li>箭头函数很简洁</li>
+<li>箭头函数，没有this指向，使用call等也无法改变其this的指向</li>
+<li>箭头函数没有<code>arguments</code>，可以使用申明式args <code>let fn = (...args) =&gt; {}</code></li>
+</ol>
+<h2 id="new的过程"><a href="#new的过程" class="headerlink" title="new的过程"></a>new的过程</h2><p>创建一个空对象，把原型挂上来，(构造器内)之后进行相关this赋值，返回该this</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Obj1</span> (<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="number">123</span> &#125;</span><br><span class="line"><span class="comment">// new Obj1 =&gt; obj1实例</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Obj3</span> (<span class="params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="comment">// new Obj3 =&gt; obj3实例</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Obj2</span> (<span class="params"></span>) </span>&#123; <span class="keyword">return</span> &#123;<span class="attr">name</span>: <span class="string">'z'</span>&#125; &#125;</span><br><span class="line"><span class="comment">// new Obj2 =&gt;  &#123; name: 'z' &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="不适合箭头函数"><a href="#不适合箭头函数" class="headerlink" title="不适合箭头函数"></a>不适合箭头函数</h2><p>没有this指向,但是情境下又需要有this指向的功能,<strong>需要使用到this时才有问题</strong></p>
+<ol>
+<li>字面量对象内部</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  sum1: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;, <span class="comment">// OK</span></span><br><span class="line">  sum2 () &#123;&#125;, <span class="comment">// OK</span></span><br><span class="line">  sum3: <span class="function"><span class="params">()</span> =&gt;</span> &#123; &#125;, <span class="comment">// ERROR</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>原型上的方法</p>
+</li>
+<li><p>回调函数，使用到this的</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">button.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="keyword">this</span>.focus() &#125; )</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>构造函数</li>
+</ol>
+<h2 id="重新replace-REG-CALLBACK"><a href="#重新replace-REG-CALLBACK" class="headerlink" title="重新replace([REG], [CALLBACK])"></a>重新replace([REG], [CALLBACK])</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span>.prototype.myReplace = <span class="function"><span class="keyword">function</span> (<span class="params">reg, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> destStr = <span class="keyword">this</span></span><br><span class="line">  <span class="comment">// 首次检验是否匹配</span></span><br><span class="line">  <span class="keyword">let</span> regResult = reg.exec(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(regResult) &#123;</span><br><span class="line">    <span class="comment">// 得到匹配结果，并进行回调，并用返回值修改原str</span></span><br><span class="line">    <span class="keyword">let</span> replaceStr = callback.call(destStr, regResult)</span><br><span class="line">    destStr = destStr.replace(regResult[<span class="number">0</span>], replaceStr)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行下一次匹配</span></span><br><span class="line">    regResult = reg.exec(destStr)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> destStr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="内部迭代"><a href="#内部迭代" class="headerlink" title="内部迭代"></a>内部迭代</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> each = <span class="function">(<span class="params">arr, callback</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, item; item = arr[i++]; ) &#123;</span><br><span class="line">    <span class="keyword">let</span> flag = callback.call(arr, item, i, arr)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (flag === <span class="literal">false</span>) &#123; <span class="keyword">break</span>; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="indexOf-正则匹配去进行查找字符串"><a href="#indexOf-正则匹配去进行查找字符串" class="headerlink" title="indexOf,正则匹配去进行查找字符串"></a>indexOf,正则匹配去进行查找字符串</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span>.prototype.myIndexOf = <span class="function"><span class="keyword">function</span> (<span class="params">reg</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(reg)</span><br><span class="line">  <span class="keyword">const</span> res = reg.exec(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果没有匹配到则返回-1 否则直接调用正则匹配结果的res.index,即首次出现的位置 </span></span><br><span class="line">  <span class="keyword">return</span> res === <span class="literal">null</span> ? <span class="number">-1</span> : res.index</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="关于对象中key，键的相关"><a href="#关于对象中key，键的相关" class="headerlink" title="关于对象中key，键的相关"></a>关于对象中key，键的相关</h1><h2 id="对象的键默认都是一个字符串"><a href="#对象的键默认都是一个字符串" class="headerlink" title="对象的键默认都是一个字符串"></a>对象的键默认都是一个字符串</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;, a = <span class="string">'123'</span>, b = <span class="number">123</span></span><br><span class="line"></span><br><span class="line">obj[a] = <span class="string">'a'</span>; obj[b] = <span class="string">'b'</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终obj[a] = 'b' 因为obj[123] = obj['123']</span></span><br></pre></td></tr></table></figure>
+<h2 id="对象中key使用一个symbol来创建"><a href="#对象中key使用一个symbol来创建" class="headerlink" title="对象中key使用一个symbol来创建"></a>对象中key使用一个symbol来创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;, a = <span class="built_in">Symbol</span>(<span class="number">123</span>), b = <span class="built_in">Symbol</span>(<span class="number">123</span>);</span><br><span class="line"></span><br><span class="line">obj[a] = <span class="string">'a'</span>; obj[b] = <span class="string">'b'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终obj[a] = 'a' 因为Smbol(123) !== Smbol(123)</span></span><br></pre></td></tr></table></figure>
+<p><code>Symbol.for()</code> 会在Symbol池中寻找或创建放入symbol池</p>
+<ul>
+<li><code>Symbol(123) !== Symbol(123)</code></li>
+<li><code>Symbol.for(123) === Symbol.for(123)</code></li>
+</ul>
+<h2 id="对象中key使用一个应用值来创建"><a href="#对象中key使用一个应用值来创建" class="headerlink" title="对象中key使用一个应用值来创建"></a>对象中key使用一个应用值来创建</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">arr = [<span class="number">12</span>,<span class="number">34</span>]; obj[arr] = <span class="string">'arr'</span>;</span><br><span class="line"><span class="comment">// &#123;12,34: 'arr' &#125;</span></span><br><span class="line"></span><br><span class="line">o1 = &#123; <span class="attr">name</span>: <span class="string">'z'</span> &#125;; obj[o1] = <span class="string">'o1'</span>;</span><br><span class="line"><span class="comment">// &#123;[object Object]: 'o1' &#125;</span></span><br></pre></td></tr></table></figure>
+<p>会调用对象的<code>toString</code>方法来当成key值传递进去。</p>
+<h2 id="判断对象构造器的方式"><a href="#判断对象构造器的方式" class="headerlink" title="判断对象构造器的方式"></a>判断对象构造器的方式</h2><ul>
+<li>typeof， <code>typeof &#39;str&#39;</code></li>
+</ul>
+<p>只能判断，boolean, number, string, undefined, function, object(null + object + array)</p>
+<ul>
+<li><code>Object.prototype.toString.call(obj)</code></li>
+</ul>
+<p>能够针对与object对象进行更细致一层的判</p>
+<ol>
+<li>[object Undefined]</li>
+<li>[object Number]</li>
+<li>[object Date]</li>
+<li>[object Array]</li>
+<li>[object String]<br>… [object Xxx]</li>
+</ol>
+<ul>
+<li>只能进行原型判断了， <code>Object.getPrototypeOf(obj) === Person.prototype</code></li>
+</ul>
+<p>直接比较是否时原型对象（注意<code>__proto__</code>非标准，es推荐使用<code>Object.getPrototypeOf(obj)</code>来获取）</p>
+<h1 id="正则匹配网址"><a href="#正则匹配网址" class="headerlink" title="正则匹配网址"></a>正则匹配网址</h1><ul>
+<li><code>?:</code> 不进行分组</li>
+<li><code>?</code> 可有可无，所以内部需要的只需要+即可</li>
+<li><code>\w</code> 数字，字母，下划线</li>
+<li>开头结尾</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/^(?:(http|https|ftp):\/\/)?((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^\/#?]*)+)?(\?[^#]+)?(#.+)?$/i</span><br></pre></td></tr></table></figure>
+<h3 id="匹配协议"><a href="#匹配协议" class="headerlink" title="匹配协议"></a>匹配协议</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/(?:(http|https|ftp):\/\/)?<span class="regexp">/i</span></span><br></pre></td></tr></table></figure>
+<h3 id="匹配域名"><a href="#匹配域名" class="headerlink" title="匹配域名"></a>匹配域名</h3><p>匹配<code>www.</code> <code>baidu.</code> <code>12306.</code><br>后匹配 <code>xxx</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/((?:[\w-]+\.)+[a-z0<span class="number">-9</span>]+)/i</span><br></pre></td></tr></table></figure>
+<h3 id="匹配地址"><a href="#匹配地址" class="headerlink" title="匹配地址"></a>匹配地址</h3><p><code>/xxx.html</code>  <code>/xxx</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/((?:\/[^\/#?]*)+)?/i</span><br></pre></td></tr></table></figure>
+<h3 id="匹配查询参数"><a href="#匹配查询参数" class="headerlink" title="匹配查询参数"></a>匹配查询参数</h3><p><code>?a=b</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/(\?[^#]+)?/i</span><br></pre></td></tr></table></figure>
+<h3 id="匹配hash"><a href="#匹配hash" class="headerlink" title="匹配hash"></a>匹配hash</h3><p><code>#sda任意</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/(#.+)?/i</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/18/在typescript中使用eslint/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -997,89 +1138,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/20/关于webpack中proxy跨域/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/10/20/关于webpack中proxy跨域/" class="post-title-link" itemprop="url">关于webpack中proxy跨域</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-10-20 13:03:48" itemprop="dateCreated datePublished" datetime="2019-10-20T13:03:48+08:00">2019-10-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>主流跨域3中方式<br>1.jsonp<br>2.服务端配合cros<br>3.服务器反向代理<br>主要讨论第三种，反向代理的方式</p>
-</blockquote>
-<h4 id="情景"><a href="#情景" class="headerlink" title="情景"></a>情景</h4><ul>
-<li>API-cgi <code>www.api.com</code></li>
-<li>后端服务器 <code>www.rd.com</code></li>
-<li>前端服务器 <code>www.fe.com</code></li>
-</ul>
-<p>我们的目的是通过，<code>www.fe.com</code>去拿取<code>www.api.com</code>上的资源，但由于跨域，我们需要后端服务器帮我们抓取一下，做一次转发（同源策略只是浏览器制定的）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">发请求： www.fe.com -&gt; www.rd.com -&gt; www.api.com</span><br><span class="line">得响应： www.api.com -&gt; www.rd.com -&gt; www.fe.com</span><br></pre></td></tr></table></figure>
-<h4 id="在devServer中配置代理"><a href="#在devServer中配置代理" class="headerlink" title="在devServer中配置代理"></a>在devServer中配置代理</h4><ul>
-<li>API-cgi <code>www.api.com</code></li>
-<li>前端服务器 <code>www.fe.com</code></li>
-</ul>
-<p>我们使用devServer来搭建一个代理服务器</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config  devServer</span></span><br><span class="line"></span><br><span class="line">devServer: &#123;</span><br><span class="line">  proxy: &#123;</span><br><span class="line">    <span class="string">'/api'</span>: &#123;</span><br><span class="line">      target: <span class="string">'http://www.api.com'</span>,</span><br><span class="line">      <span class="comment">/* 表示重发的请求去除api,此字段是我们加的 */</span></span><br><span class="line">      pathRewrite: &#123;<span class="string">'^/api'</span> : <span class="string">''</span>&#125;,</span><br><span class="line">      changeOrigin: <span class="literal">true</span>,</span><br><span class="line">      <span class="comment">/* 如果有https, 可配置此项 */</span></span><br><span class="line">      secure: <span class="literal">false</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<h4 id="修改发送的请求"><a href="#修改发送的请求" class="headerlink" title="修改发送的请求"></a>修改发送的请求</h4><p>由于我们在开发的时候devServer，所以前端服务器也是假设在devServer，而我们的proxy也是假设在devServer上的，所以我们需要去请求我们的proxy</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 本意</span><br><span class="line">发请求： www.fe.com -&gt; www.api.com</span><br><span class="line">得响应： www.api.com -&gt; www.fe.com</span><br><span class="line"></span><br><span class="line"># 修改后</span><br><span class="line">发请求： www.fe.com -&gt; www.fe.com/api</span><br><span class="line">得响应： www.fe.com/api -&gt; www.fe.com</span><br></pre></td></tr></table></figure>
-<p>其实我们请求了fe上的proxy，他会去真正请求<code>www.api.com</code>,之后拿到数据在返还给我们，而我们是不知道的，由于<code>前后都是www.fe.com</code>所以是属于同源的。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1151,7 +1209,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-count">129</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
