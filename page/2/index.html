@@ -188,6 +188,160 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/10/前端跨域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/10/前端跨域/" class="post-title-link" itemprop="url">前端跨域</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-10 10:28:56" itemprop="dateCreated datePublished" datetime="2020-06-10T10:28:56+08:00">2020-06-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="为什么会有跨域"><a href="#为什么会有跨域" class="headerlink" title="为什么会有跨域"></a>为什么会有跨域</h1><p>只要协议、域名、端口有任何一个不同，都被当作是不同的域。</p>
+<p>浏览器为了安全考虑，随便使用他人的资源可能会发生安全问题，所以会有跨域问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">URL                      说明       是否允许通信</span><br><span class="line">http://www.a.com/a.js</span><br><span class="line">http://www.a.com/b.js     同一域名下   允许</span><br><span class="line"></span><br><span class="line">http://www.a.com/lab/a.js</span><br><span class="line">http://www.a.com/script/b.js 同一域名下不同文件夹 允许</span><br><span class="line"></span><br><span class="line">http://www.a.com:8000/a.js</span><br><span class="line">http://www.a.com/b.js     同一域名，不同端口  不允许</span><br><span class="line"></span><br><span class="line">http://www.a.com/a.js</span><br><span class="line">https://www.a.com/b.js 同一域名，不同协议 不允许</span><br><span class="line"></span><br><span class="line">http://www.a.com/a.js</span><br><span class="line">http://70.32.92.74/b.js 域名和域名对应ip 不允许</span><br><span class="line"></span><br><span class="line">http://www.a.com/a.js</span><br><span class="line">http://script.a.com/b.js 主域相同，子域不同 不允许（cookie这种情况下也不允许访问）</span><br><span class="line"></span><br><span class="line">http://www.a.com/a.js</span><br><span class="line">http://a.com/b.js 同一域名，不同二级域名（同上） 不允许（cookie这种情况下也不允许访问）</span><br><span class="line"></span><br><span class="line">http://www.cnblogs.com/a.js</span><br><span class="line">http://www.a.com/b.js 不同域名 不允许</span><br></pre></td></tr></table></figure>
+<h1 id="遇到跨域问题的情况"><a href="#遇到跨域问题的情况" class="headerlink" title="遇到跨域问题的情况"></a>遇到跨域问题的情况</h1><h2 id="操作不同域的DOM"><a href="#操作不同域的DOM" class="headerlink" title="操作不同域的DOM"></a>操作不同域的DOM</h2><p>使用iframe的时候，外部iframe如果和里面源src不一样，操作起来可能会有问题</p>
+<h2 id="获取网页的存储信息，cookie-localStorage"><a href="#获取网页的存储信息，cookie-localStorage" class="headerlink" title="获取网页的存储信息，cookie, localStorage"></a>获取网页的存储信息，cookie, localStorage</h2><p>在<code>www.baidu.com</code>做了登录，信息是在<code>www.baidu.com</code>但是在<code>yun.baidu.com</code>也可以获取到相应的登录信息。</p>
+<h2 id="获取数据操作"><a href="#获取数据操作" class="headerlink" title="获取数据操作"></a>获取数据操作</h2><p>数据地址与前端页面不在一个域下，可以发送数据，单出于同源考虑，浏览器不会使用数据</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="操作不同域的DOM-1"><a href="#操作不同域的DOM-1" class="headerlink" title="操作不同域的DOM"></a>操作不同域的DOM</h2><p>只需要能保证能够通过父子页面中，直接操作到其html的内容即可</p>
+<p>父获取子，可以获取到iframe后<code>iframe.contentWindow</code></p>
+<p>子获取父，可以直接访问parent<code>parent</code>即为父的window。（子的<code>window.parent</code>是父元素<code>window</code>）</p>
+<h3 id="使用document-domain"><a href="#使用document-domain" class="headerlink" title="使用document.domain"></a>使用<code>document.domain</code></h3><p><strong>修改document.domain的方法只适用于不同子域的框架间的交互。</strong></p>
+<p>浏览器中不同域的框架之间是不能进行js的交互操作的。不同的框架之间是可以获取window对象的，但却无法获取相应的属性和方法。比如，有一个页面，它的地址是<a href="http://www.damonare.cn/a.html" target="_blank" rel="noopener">http://www.damonare.cn/a.html</a> ， 在这个页面里面有一个iframe，它的src是<a href="http://damonare.cn/b.html" target="_blank" rel="noopener">http://damonare.cn/b.html</a>, 很显然，这个页面与它里面的iframe框架是不同域的，所以我们是无法通过在页面中书写js代码来获取iframe中的东西的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> iframe = <span class="built_in">document</span>.getElementById(<span class="string">'ifame'</span>);</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> win = iframe.contentWindow;<span class="comment">//可以获取到iframe里的window对象，但该window对象的属性和方法几乎是不可用的</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> doc = win.document;<span class="comment">//这里获取不到iframe里的document对象</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> name = win.name;<span class="comment">//这里同样获取不到window对象的name属性</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span> = <span class="string">"iframe"</span> <span class="attr">src</span>=<span class="string">"http://damonare.cn/b.html"</span> <span class="attr">onload</span> = <span class="string">"test()"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>只要把<a href="http://www.damonare.cn/a.html" target="_blank" rel="noopener">http://www.damonare.cn/a.html</a> 和 damonare.cn/b.html 这两个页面的document.domain都设成相同的域名就可以了。但要注意的是，document.domain的设置是有限制的，我们只能把document.domain设置成自身或更高一级的父域，且主域必须相同。</p>
+<p>在页面<a href="http://www.damonare.cn/a.html" target="_blank" rel="noopener">http://www.damonare.cn/a.html</a> 中设置document.domain:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span> = <span class="string">"iframe"</span> <span class="attr">src</span>=<span class="string">"http://damonare.cn/b.html"</span> <span class="attr">onload</span> = <span class="string">"test()"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.domain = <span class="string">'damonare.cn'</span>;<span class="comment">//设置成主域</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        alert(<span class="built_in">document</span>.getElementById(<span class="string">'iframe'</span>).contentWindow);<span class="comment">//contentWindow 可取得子窗口的 window 对象</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在页面<a href="http://damonare.cn/b.html" target="_blank" rel="noopener">http://damonare.cn/b.html</a> 中也设置document.domain:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.domain = <span class="string">'damonare.cn'</span>;<span class="comment">//在iframe载入这个页面也设置document.domain，使之与主页面的document.domain相同</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="获取网页的存储信息，cookie-localStorage-1"><a href="#获取网页的存储信息，cookie-localStorage-1" class="headerlink" title="获取网页的存储信息，cookie, localStorage"></a>获取网页的存储信息，cookie, localStorage</h2><blockquote>
+<p><a href="http://www.baidu域名下面登录了，发现yun.baidu域名下面也自然而然登录了；淘宝登录了，发现天猫也登录了，淘宝和天猫是完全不一样的2个域名。" target="_blank" rel="noopener">www.baidu域名下面登录了，发现yun.baidu域名下面也自然而然登录了；淘宝登录了，发现天猫也登录了，淘宝和天猫是完全不一样的2个域名。</a></p>
+</blockquote>
+<p>用来传递信息的，因为有跨域不能去拿其他页面存储的内容，所以可以在目标页面生成一个iframe，匹配存储内容的src，之后拿到数据发回主页面即可。</p>
+<h3 id="使用location-hash来跨域"><a href="#使用location-hash来跨域" class="headerlink" title="使用location.hash来跨域"></a>使用location.hash来跨域</h3><p>hash是明文存储的，存在直接暴露在url中，数据容量和类型都有限等的问题。</p>
+<blockquote>
+<p>URL有一部分被称为hash，就是#号及其后面的字符，它一般用于浏览器锚点定位，Server端并不关心这部分，应该说HTTP请求过程中不会携带hash，所以这部分的修改不会产生HTTP请求，但是会产生浏览器历史记录。</p>
+</blockquote>
+<p>假如父页面是baidu.com/a.html,iframe嵌入的页面为google.com/b.html（此处省略了域名等url属性），要实现此两个页面间的通信可以通过以下方法。</p>
+<ul>
+<li>a.html传送数据到b.html<ul>
+<li>a.html下修改iframe的src为google.com/b.html#paco</li>
+<li>b.html监听到url发生变化，触发相应操作</li>
+</ul>
+</li>
+<li>b.html传送数据到a.html，由于两个页面不在同一个域下IE、Chrome不允许修改parent.location.hash的值，所以要借助于父窗口域名下的一个代理iframe<ul>
+<li>b.html下创建一个隐藏的iframe，此iframe的src是baidu.com域下的，并挂上要传送的hash数据，如src=”<a href="http://www.baidu.com/proxy.html#…&quot;" target="_blank" rel="noopener">www.baidu.com/proxy.html#…&quot;</a></li>
+<li>proxy.html监听到url发生变化，修改a.html的url（因为a.html和proxy.html同域，所以proxy.html可修改a.html的url hash）</li>
+<li>a.html监听到url发生变化，触发相应操作</li>
+</ul>
+</li>
+</ul>
+<p>子页面b.html关键如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">    parent.location.hash = <span class="string">'data'</span>;  </span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;  </span><br><span class="line">    <span class="comment">// ie、chrome的安全机制无法修改parent.location.hash，  </span></span><br><span class="line">    <span class="keyword">var</span> ifrproxy = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);  </span><br><span class="line">    ifrproxy.style.display = <span class="string">'none'</span>;  </span><br><span class="line">    ifrproxy.src = <span class="string">"http://www.baidu.com/proxy.html#data"</span>;  </span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(ifrproxy);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>proxy.html关键如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//因为parent.parent（即baidu.com/a.html）和baidu.com/proxy.html属于同一个域，所以可以改变其location.hash的值  </span></span><br><span class="line">parent.parent.location.hash = self.location.hash.substring(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="使用document-domain-1"><a href="#使用document-domain-1" class="headerlink" title="使用document.domain"></a>使用<code>document.domain</code></h3><p>如果两个面主域名完全相同，则使用该方法就可以，和上面介绍的方法一样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// www.a.com</span></span><br><span class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// yun.a.com</span></span><br><span class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用postMessage"><a href="#使用postMessage" class="headerlink" title="使用postMessage"></a>使用<code>postMessage</code></h3><p>如果两个域名完全不相同，可以用postMessage和iframe相结合的方法。postMessage(data,origin)方法允许来自不同源的脚本采用异步方式进行通信。</p>
+<p>postMessage的使用方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">otherWindow.postMessage(message, targetOrigin);</span><br><span class="line"></span><br><span class="line">otherWindow:指目标窗口，也就是给哪个<span class="built_in">window</span>发消息，是 <span class="built_in">window</span>.frames 属性的成员或者由 <span class="built_in">window</span>.open 方法创建的窗口</span><br><span class="line">message:   是要发送的消息，类型为 <span class="built_in">String</span>、<span class="built_in">Object</span> (IE8、<span class="number">9</span> 不支持)</span><br><span class="line">targetOrigin:   是限定消息接收范围，不限制请使用 <span class="string">'*'</span></span><br></pre></td></tr></table></figure>
+<p>比如damonare.cn域的A页面通过iframe嵌入了一个google.com域的B页面，可以通过以下方法实现A和B的通信。</p>
+<h4 id="A-gt-B发送数据"><a href="#A-gt-B发送数据" class="headerlink" title="A-&gt;B发送数据"></a>A-&gt;B发送数据</h4><p>使用A页面通过postMessage发送数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">    <span class="keyword">var</span> ifr = <span class="built_in">document</span>.getElementById(<span class="string">'ifr'</span>);  </span><br><span class="line">    <span class="keyword">var</span> targetOrigin = <span class="string">"http://www.google.com"</span>;  </span><br><span class="line">    ifr.contentWindow.postMessage(<span class="string">'hello world!'</span>, targetOrigin);  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>B页面通过message事件监听并接受消息:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;  </span><br><span class="line">  <span class="keyword">var</span> data = event.data;<span class="comment">//消息  </span></span><br><span class="line">  <span class="keyword">var</span> origin = event.origin;<span class="comment">//消息来源地址  </span></span><br><span class="line">  <span class="keyword">var</span> source = event.source;<span class="comment">//源Window对象  </span></span><br><span class="line">  <span class="keyword">if</span>(origin==<span class="string">"http://www.baidu.com"</span>)&#123;  </span><br><span class="line">    <span class="built_in">console</span>.log(data);<span class="comment">//hello world!  </span></span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理兼容，绑定事件</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">window</span>.addEventListener != <span class="string">'undefined'</span>) &#123;  </span><br><span class="line">  <span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>, onmessage, <span class="literal">false</span>);  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">window</span>.attachEvent != <span class="string">'undefined'</span>) &#123;  </span><br><span class="line">  <span class="comment">//for ie  </span></span><br><span class="line">  <span class="built_in">window</span>.attachEvent(<span class="string">'onmessage'</span>, onmessage);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="B-gt-A发送数据"><a href="#B-gt-A发送数据" class="headerlink" title="B-&gt;A发送数据"></a>B-&gt;A发送数据</h4><p>与A-&gt;B发送数据是相同的</p>
+<p>在子页面B中，要在B内操作逻辑，<code>parent</code>即为父元素A的window</p>
+<p>B元素发送时<code>parent.postMessage(data, target)</code></p>
+<p>A元素接收时<code>window.addEventListener(&#39;message&#39;, handle)</code>即可。</p>
+<h2 id="与服务端拉取数据的"><a href="#与服务端拉取数据的" class="headerlink" title="与服务端拉取数据的"></a>与服务端拉取数据的</h2><p>前端环境部署的服务器地址，与后端环境的数据地址并不在同一个地方，所以浏览器在访问时就会遇到跨域的问题。</p>
+<h3 id="使用反向代理"><a href="#使用反向代理" class="headerlink" title="使用反向代理"></a>使用反向代理</h3><blockquote>
+<p>前端开发时，可以配置webpack的代理。多用于开发环境</p>
+</blockquote>
+<p>跨域是浏览器端的，服务端并无此问题，我们可以使用开发时的node中转一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mmodule.exports = &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  devServer: &#123;</span><br><span class="line">      proxy: &#123;</span><br><span class="line">          <span class="string">'/api'</span>: <span class="string">'http://localhost:3000'</span></span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>fetch(&#39;/api/xxx&#39;)</code>也就是对自己发出访问，通过代理走一层。</p>
+<p>请求到 /api/xxx 现在会被代理到请求 <a href="http://localhost:3000/api/xxx" target="_blank" rel="noopener">http://localhost:3000/api/xxx</a>, 例如 /api/user 现在会被代理到请求 <a href="http://localhost:3000/api/user" target="_blank" rel="noopener">http://localhost:3000/api/user</a></p>
+<h3 id="使用jsonp"><a href="#使用jsonp" class="headerlink" title="使用jsonp"></a>使用jsonp</h3><blockquote>
+<p>jsonp和ajax并无关系，是两种不一样的东西，只是jQuery做了封装，使得<code>$.ajax</code>可以做jsonp</p>
+</blockquote>
+<p>jsonp需要后端来配合,只能使用一些简单的请求。<strong>依赖后端配合</strong></p>
+<p>我们定义了使用这个数据的方法，等到这个数据请求成功后，返回结果就是调用方法，并且参数已经是我们想要的结果了。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">dosomething</span>(<span class="params">jsondata</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//处理获得的json数据</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://example.com/data.php?callback=dosomething"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>  </span><br><span class="line"><span class="comment">&lt;!-- 返回结果，dosomething(['a','b','c']);上述函数会被直接触发 --&gt;</span></span><br></pre></td></tr></table></figure>
+<p>jQuery中的处理方法，其实他在内部也是一样的，他创建了个临时方法，并且在使用完毕之后立即销毁了</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    $.getJSON(<span class="string">'http://example.com/data.php?callback=?,function(jsondata)'</span>)&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//处理获得的json数据</span></span></span><br><span class="line"><span class="undefined">    &#125;);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用CORS"><a href="#使用CORS" class="headerlink" title="使用CORS"></a>使用CORS</h3><p>这也是目前使用最主流的方式,<strong>依赖后端配合</strong>。</p>
+<blockquote>
+<p>CORS（Cross-Origin Resource Sharing）跨域资源共享，定义了必须在访问跨域资源时，浏览器与服务器应该如何沟通。CORS背后的基本思想就是使用自定义的HTTP头部让浏览器与服务器进行沟通，从而决定请求或响应是应该成功还是失败。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。<a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="noopener">跨域资源共享 CORS 详解</a></p>
+</blockquote>
+<p>也就是说浏览器用了各种原因限制了我们，我们用各种方法绕过跨域检查，也可以从正面走，就是让浏览器知道这个源，我跨域了，但是他就是我想要的，他是安全的，而且服务端返回的地址里，也有客户端的地址，是开发人员指定的，我们发送请求和之前并无异样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.open(<span class="string">"GET"</span>, <span class="string">"http://segmentfault.com/u/trigkit4/"</span>,<span class="literal">true</span>);</span><br><span class="line">xhr.send();</span><br></pre></td></tr></table></figure>
+<p>如果前端要发送凭证(携带<code>cookie</code>)时，设置<code>withCredentials: true</code></p>
+<blockquote>
+<p>如果要使用<code>withCredentials</code>，服务端请求头<code>Access-Control-Allow-Origin: 不能为*</code></p>
+</blockquote>
+<ul>
+<li>xhr：<code>xhr.withCredentials = true</code></li>
+<li>fetch: <code>fetch(url, {credentials: &#39;include&#39;});</code></li>
+</ul>
+<p>服务端要配置<code>CORS</code>相关头</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://juejin.im/post/5815f4abbf22ec006893b431" target="_blank" rel="noopener">https://juejin.im/post/5815f4abbf22ec006893b431</a></p>
+<p><a href="https://www.cnblogs.com/xjy20170907/p/11772416.html" target="_blank" rel="noopener">https://www.cnblogs.com/xjy20170907/p/11772416.html</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/09/BFC块状格式化区域/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -945,89 +1099,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/js对首屏渲染的问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/12/js对首屏渲染的问题/" class="post-title-link" itemprop="url">js对首屏渲染的问题</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-12 23:41:38" itemprop="dateCreated datePublished" datetime="2020-05-12T23:41:38+08:00">2020-05-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="浏览器发出请求后，接收流程"><a href="#浏览器发出请求后，接收流程" class="headerlink" title="浏览器发出请求后，接收流程"></a>浏览器发出请求后，接收流程</h2><ol>
-<li>Bytes, <code>(3C 62 5F 49 ....)</code></li>
-<li>Characters, <code>&lt;html&gt;&lt;head&gt;....&lt;/head&gt;..</code></li>
-<li>Tokens, <code>StartTag: html, StartTag: head, ... Hello .... EndTag: html</code></li>
-<li>Nodes, <code>html, head, meta, body, p, Hello</code></li>
-<li>DOM, <code>生成最终DOM树， HTML - head, body(树结构)</code></li>
-</ol>
-<h2 id="浏览器渲染流程"><a href="#浏览器渲染流程" class="headerlink" title="浏览器渲染流程"></a>浏览器渲染流程</h2><p>HTML生成为DOM对象，CSS生成为CSSOM对象，两者进行Attached操作后，即可生成一个render tree，通过layout（reflow）计算其在浏览器上的样式，最终进行paint绘制到浏览器上</p>
-<h3 id="在没有JS的情况"><a href="#在没有JS的情况" class="headerlink" title="在没有JS的情况"></a>在没有JS的情况</h3><p>DOM对象和CSSOM对象同步生成，待CSSOM对象生成完毕后(如果之后的CSS对之前的样式进行修改，浏览器会发生多次重绘和回流，要等CSSOM生成完毕后在进行渲染)，之后从上到下显示页面，直到整个DOM渲染完成。</p>
-<h3 id="JS对浏览器渲染引擎的影响"><a href="#JS对浏览器渲染引擎的影响" class="headerlink" title="JS对浏览器渲染引擎的影响"></a>JS对浏览器渲染引擎的影响</h3><p>因为JS可以操作DOM, CSS所以，js可能会修改之前的内容，使浏览器发生重绘，影响性能，浏览器此时需要阻塞当前线程，转而去运行js内容，运行完后，继续进行之后的渲染逻辑。</p>
-<p>注意：如果script标签是异步拉取的，那么拉取之后到本地，当运行JS时，线程依然会阻塞</p>
-<h3 id="HTML-CSS-JS存在的渲染情况"><a href="#HTML-CSS-JS存在的渲染情况" class="headerlink" title="HTML,CSS,JS存在的渲染情况"></a>HTML,CSS,JS存在的渲染情况</h3><p>浏览器接收到内容后，开始解析，先去匹配一下script标签，有的话就会匹配到也给tcp，去进行下载（并非执行到才回去加载，只是提前下载）,浏览器DOM,CSSOM，生成renderTree,之后绘制到浏览器，一旦遇到script标签后，阻塞当前线程，去运行script标签内的东西（也就是script内的操作之前的DOM结构，后面的还没有生成），如果后面还有内容，则不会渲染，严重情况可能会出现页面渲染了一半的情况。</p>
-<h2 id="首屏渲染时间，页面加载完成时间"><a href="#首屏渲染时间，页面加载完成时间" class="headerlink" title="首屏渲染时间，页面加载完成时间"></a>首屏渲染时间，页面加载完成时间</h2><p>FP（First Paint）：首屏渲染，这里是首页需要显示的内容（部分是不需要被首次渲染出来的）</p>
-<p>DCL(DOM Content Loaded)： 页面加载完成 (所有的js执行完成，触发DOMContentLoaded事件，window.onLoad)</p>
-<p>我们关心的是首屏渲染事件，如果首屏渲染到一半，中间插入了js，如果该js占用较长时间，或加载问题，会造成页面被截断，只能显示一部分页面，所以我们关心的是这个部分。</p>
-<h2 id="为什么js放到body最后"><a href="#为什么js放到body最后" class="headerlink" title="为什么js放到body最后"></a>为什么js放到body最后</h2><p>js放到最后也会下载，但是由于他在最后，并不会影响之前首屏内容的渲染，也就是说js文件放到前面还是后面，DOMContentLoad是不会改变的，但是不同的位置会影响FP,这里肯定是先让用户看到页面最好，所以一般js请求会放到最后面</p>
-<blockquote>
-<p>其实浏览器发现有js存在，会去开启下载，那么必然会占用那么一丢丢浏览资源，包括CPU</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1099,7 +1170,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -188,6 +188,139 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/07/浏览器缓存策略/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/07/浏览器缓存策略/" class="post-title-link" itemprop="url">浏览器缓存策略</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-07 17:58:58" itemprop="dateCreated datePublished" datetime="2020-03-07T17:58:58+08:00">2020-03-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>浏览时，会通过一下几种方式访问资源</p>
+<ol>
+<li>(新标签)地址栏回车</li>
+<li>链接跳转</li>
+<li>前进、后退</li>
+<li>从收藏栏打开链接</li>
+<li>(window.open)新开窗口</li>
+<li>刷新（Command + R / F5）</li>
+<li>强制刷新（Command + Shift + R / Ctrl + F5）</li>
+</ol>
+<p>其中1-5会通过访问一系列的缓存策略</p>
+<p>是否有缓存-&lt;过期策略&gt;-&lt;协商策略&gt;-&gt; 的方式进行缓存</p>
+<p>当拿到资源时又会通过&lt;存储策略&gt;响应内容存入缓存当中</p>
+<p>如果刷新的方式，则会直接进行&lt;协商策略&gt;，如果是强制刷新，则会全部拿资源</p>
+<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><ul>
+<li>过期策略，通过本地缓存的文件，验证是否过去，是否应用缓存，又<code>Expires</code>,<code>Cache-control</code></li>
+<li>协商策略，通过询问远端的服务器，是否需要抓取新的资源，是否需要重新获取，有<code>ETag</code>,<code>Last-Modified</code></li>
+<li>存储策略，响应内容存入缓存中</li>
+</ul>
+<h2 id="Expires-Cache-Control"><a href="#Expires-Cache-Control" class="headerlink" title="Expires,Cache-Control"></a><code>Expires</code>,<code>Cache-Control</code></h2><p>其中都属于&lt;过期策略&gt;的内容</p>
+<h3 id="Expires"><a href="#Expires" class="headerlink" title="Expires"></a>Expires</h3><p>存储的时过期的时间，如果本地时间后于某一时刻，那么就称之为过期了</p>
+<p><code>Expires: Sat Oct 20 2018 00:00:00 GMT+0800 (CST)</code></p>
+<h3 id="Cache-control"><a href="#Cache-control" class="headerlink" title="Cache-control"></a>Cache-control</h3><p>是一系列<code>cache-directive（缓存指令）</code>值，中间使用<code>,</code>隔开</p>
+<ul>
+<li>可缓存性相关<ul>
+<li><code>public</code> 在客户端和代理服务器缓存（公共资源适用）</li>
+<li><code>private</code> 在客户端缓存，代理服务器不缓存（用户个人资源）</li>
+<li><code>no-cache</code> 不进行过期策略，直接走协商策略（no-cache走协商策略，no-store是完全不缓存）</li>
+</ul>
+</li>
+<li>过期相关<ul>
+<li><code>max-age=&lt;seconds&gt;</code> 多少秒后过期，如果和Expires同时设置，则Expires失效</li>
+</ul>
+</li>
+<li>其他<ul>
+<li><code>no-store</code> 完全不缓存</li>
+</ul>
+</li>
+</ul>
+<p>仅列举了部分资源</p>
+<h2 id="ETag-Last-Modified"><a href="#ETag-Last-Modified" class="headerlink" title="ETag,Last-Modified"></a><code>ETag</code>,<code>Last-Modified</code></h2><h3 id="Last-Modified"><a href="#Last-Modified" class="headerlink" title="Last-Modified"></a><code>Last-Modified</code></h3><p>存储的格式为，<code>Last-Modified: &lt;day-name&gt;，&lt;day&gt; &lt;month&gt; &lt;year&gt; &lt;hour&gt;:&lt;minute&gt;:&lt;second&gt; GMT</code>,表示上一次修改的时间，该修改只会精确到秒，会向服务端询问是否发生了更改。</p>
+<p>下次一次刷新的时候，会带有<code>If-Modifued-Sience: xxx</code> 就是上一次获取的last-modified,去和服务器做对比，如果请求过去，发现是上一次为修改过，则会返回304</p>
+<h3 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a><code>ETag</code></h3><p>文件修改，则会改变该值，如果文件未发生改变，则返回304，<code>ETag: &quot;e6sda124q84ds4&quot;</code></p>
+<h2 id="四种方式优缺点"><a href="#四种方式优缺点" class="headerlink" title="四种方式优缺点"></a>四种方式优缺点</h2><ul>
+<li>Expires<ul>
+<li>优点：http1.0, 简单易用，通过绝对时间标识</li>
+<li>缺点：服务器时间和本地时间不一致的问题，如果资源过期前对其进行了修改，客户端是无法知道的</li>
+</ul>
+</li>
+<li>Cache-Control<ul>
+<li>优点：http1.1内容，相对时间标识，较安全，可配置的指令也很多</li>
+<li>缺点：http1.1才适用，不适用之前1.0版本，如果资源过期前进行了修改，客户端也是无法更改的</li>
+</ul>
+</li>
+<li>Last-Modified<ul>
+<li>优点：不存在版本问题，没过期直接返回304</li>
+<li>缺点：精确到秒，不适用多次重复修改，如果资源并未发生实质性的修改，则也会重新返回</li>
+</ul>
+</li>
+<li>ETag<ul>
+<li>优点：不存在版本问题，没过期直接返回304，可以识别一秒内多次修改，如果资源修改，并未发生实质内容，则ETag值可以不做改变</li>
+<li>缺点：计算ETag会有一定的性能开销，如果分布式服务器计算ETag不同,验证不会通过</li>
+</ul>
+</li>
+</ul>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
+<li>适用很大的Cache-Control:max-age, 和Expires，适用ETag进行校验</li>
+<li>适用业务逻辑，比如<code>xxx/js/index.js?s84vcxzc</code>添加hash或者，timestamp</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/07/浏览器工作原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1116,101 +1249,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/26/总结题2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/26/总结题2/" class="post-title-link" itemprop="url">总结题2</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-12-26 18:00:51" itemprop="dateCreated datePublished" datetime="2019-12-26T18:00:51+08:00">2019-12-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="图片懒加载-delay-load"><a href="#图片懒加载-delay-load" class="headerlink" title="图片懒加载 delay load"></a>图片懒加载 <code>delay load</code></h1><p>主要核心</p>
-<h2 id="懒加载，不要给他img的src赋值"><a href="#懒加载，不要给他img的src赋值" class="headerlink" title="懒加载，不要给他img的src赋值"></a>懒加载，不要给他img的src赋值</h2><p>适当的时候，再将img的地址赋值给src,这样可以做到按需加载，<code>&lt;img src=&quot;&quot; data-src=&quot;xxx&quot;/&gt;</code>,等到合适的时机进行替换即可</p>
-<h2 id="懒加载处理时机"><a href="#懒加载处理时机" class="headerlink" title="懒加载处理时机"></a>懒加载处理时机</h2><p>懒加载的对象已经完全出现在了视口内，即当前视口的<strong>底端距离window（height + scrollTop）</strong>,必须要&gt;= 该<strong>对象距离顶部的距离img（height + offset.Top）</strong></p>
-<h2 id="事件相关"><a href="#事件相关" class="headerlink" title="事件相关"></a>事件相关</h2><p>委托给window事件，图片加载完成的事件,<code>img.addEventListener(&#39;onLoad&#39;, handle)</code></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="undefined">      width: 410px;</span></span><br><span class="line"><span class="undefined">      margin: 0 auto;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.imgBox</span> &#123;</span></span><br><span class="line"><span class="undefined">      height: 180px;</span></span><br><span class="line"><span class="undefined">      margin-bottom: 20px;</span></span><br><span class="line"><span class="css">      <span class="selector-tag">background-color</span>: <span class="selector-id">#BBB</span>;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.imgBox</span> <span class="selector-tag">img</span> &#123;</span></span><br><span class="line"><span class="undefined">      display: none;</span></span><br><span class="line"><span class="undefined">      height: 100%;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../node_modules/jquery/dist/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./delayLoad.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $container = $(<span class="string">'.container'</span>);</span><br><span class="line"><span class="keyword">const</span> $<span class="built_in">window</span> = $(<span class="built_in">window</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态创建图片</span></span><br><span class="line"><span class="keyword">let</span> str = <span class="string">''</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">20</span>).fill(<span class="literal">null</span>).forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">  str += <span class="string">`&lt;div class="imgBox"&gt;</span></span><br><span class="line"><span class="string">      &lt;img src="" data-img="https://i0.hdslb.com/bfs/archive/a84e5a2751c81ddf51ecb7267eb118284da6c4b7.jpg@1100w_484h_1c_100q.jpg"/&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;`</span></span><br><span class="line">&#125;)</span><br><span class="line">$container.html(str)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取每一个imgBox</span></span><br><span class="line">$imgBoxs = $container.children(<span class="string">'.imgBox'</span>)</span><br><span class="line"><span class="built_in">console</span>.log($imgBoxs);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 懒加载</span></span><br><span class="line"><span class="comment"> * 计算视口（当前显示的位置）底部 &gt;= 该图片底部到顶部的距离</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> handleDeladyLoad = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 获取视口底部到顶部的距离</span></span><br><span class="line">  <span class="keyword">let</span> viewPortTop = $<span class="built_in">window</span>.outerHeight() + $<span class="built_in">window</span>.scrollTop()</span><br><span class="line"></span><br><span class="line">  $imgBoxs.each(<span class="function">(<span class="params">index, item</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> $item = $(item);</span><br><span class="line">    <span class="keyword">let</span> $img = $item.children(<span class="string">'img'</span>)</span><br><span class="line">    <span class="keyword">let</span> isLoad = $item.attr(<span class="string">'isLoad'</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取图片到顶部的距离</span></span><br><span class="line">    <span class="keyword">let</span> imgTop = $item.outerHeight() + $item.offset().top</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否需要加载出图片</span></span><br><span class="line">    <span class="keyword">if</span> (imgTop &lt;= viewPortTop &amp;&amp; isLoad !== <span class="string">'true'</span>) &#123;</span><br><span class="line">      <span class="comment">// 标记加载完成</span></span><br><span class="line">      $item.attr(<span class="string">'isLoad'</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 设置图片src字段，并加载图片</span></span><br><span class="line">      $img.attr(<span class="string">'src'</span>, $img.attr(<span class="string">'data-img'</span>))</span><br><span class="line">      $img.on(<span class="string">'load'</span>, () =&gt; $img.fadeIn())</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 挂载加载完成，和滚动事件</span></span><br><span class="line">$<span class="built_in">window</span>.on(<span class="string">'load scroll'</span>, handleDeladyLoad)</span><br></pre></td></tr></table></figure>
-<h1 id="数组扁平化"><a href="#数组扁平化" class="headerlink" title="数组扁平化"></a>数组扁平化</h1><h2 id="ES6方法flat"><a href="#ES6方法flat" class="headerlink" title="ES6方法flat"></a>ES6方法flat</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.flat(<span class="literal">Infinity</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="使用ES6的set进行存储"><a href="#使用ES6的set进行存储" class="headerlink" title="使用ES6的set进行存储"></a>使用ES6的set进行存储</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>(arr))</span><br></pre></td></tr></table></figure>
-<h2 id="使用toString，再分割"><a href="#使用toString，再分割" class="headerlink" title="使用toString，再分割"></a>使用toString，再分割</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.toString().split(<span class="string">','</span>).map(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Number</span>(item))</span><br></pre></td></tr></table></figure>
-<h2 id="使用stringify去除"><a href="#使用stringify去除" class="headerlink" title="使用stringify去除[,]"></a>使用stringify去除<code>[</code>,<code>]</code></h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(arr).replace(<span class="regexp">/(\[|\])/g</span>, <span class="string">''</span>).split(<span class="string">','</span>).map(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Number</span>(item))</span><br></pre></td></tr></table></figure>
-<h2 id="手动扁平化"><a href="#手动扁平化" class="headerlink" title="手动扁平化"></a>手动扁平化</h2><p>检测元素中是否含有数组，有则继续展下去</p>
-<h3 id="concat是将传入的参数，合并到数组中去，"><a href="#concat是将传入的参数，合并到数组中去，" class="headerlink" title="concat是将传入的参数，合并到数组中去，"></a><code>concat</code>是将传入的参数，合并到数组中去，</h3><p>比如concat(1, [2, 3], [4, [5], 6])</p>
-<ul>
-<li><code>1</code>, 直接放入 [x, 1]</li>
-<li><code>[2,3]</code>， 直接合并 [x, 2, 3]</li>
-<li><code>[4, [5], 6]</code>, 合并每一项 [x, 4, [5], 6]</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(arr.some(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Array</span>.isArray(item))) &#123;</span><br><span class="line">  <span class="comment">// 将该数组每一项拆开合并进去</span></span><br><span class="line">  arr = [].concat(...arr)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="手动递归"><a href="#手动递归" class="headerlink" title="手动递归"></a>手动递归</h2><h3 id="实现方法一"><a href="#实现方法一" class="headerlink" title="实现方法一"></a>实现方法一</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFlat</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = []</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 循环每一项，不是数组的存储起来</span></span><br><span class="line">  <span class="keyword">const</span> put = <span class="function"><span class="params">arr</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, item; item = arr[i++]; ) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(item)) &#123;</span><br><span class="line">        put(item)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      result.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  put(arr)</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="实现方法二"><a href="#实现方法二" class="headerlink" title="实现方法二"></a>实现方法二</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFlat</span> (<span class="params">arr</span>)  </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, item; item = arr[i++];) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(item)) &#123;</span><br><span class="line">      <span class="comment">// 当前每一项是否是数组</span></span><br><span class="line">      <span class="comment">// result = [...result, ...myFlat(item)]</span></span><br><span class="line">      result = result.concat(myFlat(item))</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 如果是数据，直接push</span></span><br><span class="line">      result.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="英文字母组成字符串前后添加空格"><a href="#英文字母组成字符串前后添加空格" class="headerlink" title="英文字母组成字符串前后添加空格"></a>英文字母组成字符串前后添加空格</h1><p>正则匹配，<code>\b</code>表示单词边界，不仅是一个空格</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'这里是HDU，你好HDUer未来一起努力'</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\b[a-z]+\b/ig</span></span><br><span class="line">str = str.replace(reg, value =&gt; <span class="string">` <span class="subst">$&#123;value&#125;</span> `</span>).trim()</span><br></pre></td></tr></table></figure>
-<h1 id="自定义的-attr-要求可以进行获取标签中的任何元素任意位置"><a href="#自定义的-attr-要求可以进行获取标签中的任何元素任意位置" class="headerlink" title="自定义的$attr,要求可以进行获取标签中的任何元素任意位置"></a>自定义的$attr,要求可以进行获取标签中的任何元素任意位置</h1><p>获取所有的标签，<code>document.getElementByTagName(&#39;*&#39;)</code></p>
-<h1 id="正则中，无论是字符串还是模板字符串，-都要注意转义符的存在，比如-b-regExp正则中new-RegExp-b"><a href="#正则中，无论是字符串还是模板字符串，-都要注意转义符的存在，比如-b-regExp正则中new-RegExp-b" class="headerlink" title="正则中，无论是字符串还是模板字符串，\都要注意转义符的存在，比如/\b/, regExp正则中new RegExp(\b)"></a>正则中，无论是字符串还是模板字符串，<code>\</code>都要注意转义符的存在，比如<code>/\b/</code>, regExp正则中<code>new RegExp(</code>\b<code>)</code></h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box aa'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-count</span>=<span class="string">'666'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box clearfix'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-count</span>=<span class="string">'123'</span> <span class="attr">data-type</span>=<span class="string">'QQ'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-type</span>=<span class="string">'QQ'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'clearfix'</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">$attr('data-count', '123') -&gt; [<span class="tag">&lt;<span class="name">div</span> <span class="attr">data-count</span>=<span class="string">'123'</span> <span class="attr">data-type</span>=<span class="string">'QQ'</span> /&gt;</span>]</span><br><span class="line">$attr('class', 'box') -&gt; [<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box aa'</span> /&gt;</span>, <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box clearfix'</span> /&gt;</span>]</span><br></pre></td></tr></table></figure>
-<h2 id="实现，主要是要注意其特殊性，class属性可多选"><a href="#实现，主要是要注意其特殊性，class属性可多选" class="headerlink" title="实现，主要是要注意其特殊性，class属性可多选"></a>实现，主要是要注意其特殊性，class属性可多选</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">$attr</span> (<span class="params">property, value</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 获取页面所有的元素</span></span><br><span class="line">  <span class="keyword">let</span> elements = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'*'</span>)</span><br><span class="line">  <span class="keyword">const</span> arr = []</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 转换为数组形式</span></span><br><span class="line">  elements = <span class="built_in">Array</span>.from(elements)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 依此寻找</span></span><br><span class="line">  elements.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> itemPropertyValue = item.getAttribute(property)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 特殊处理class, 正则匹配内部元素</span></span><br><span class="line">    <span class="keyword">if</span> (property === <span class="string">'class'</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`\\b<span class="subst">$&#123;value&#125;</span>\\b`</span>)</span><br><span class="line">      <span class="keyword">if</span> (reg.test(itemPropertyValue)) &#123; arr.push(item) &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理其他值，直接判断是否相同</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (itemPropertyValue === value) &#123; arr.push(item) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="实现一个内置的new方法"><a href="#实现一个内置的new方法" class="headerlink" title="实现一个内置的new方法"></a>实现一个内置的new方法</h1><ol>
-<li>创建原型对象</li>
-<li>调用构造函数</li>
-<li>返回构造函数</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myNew</span> (<span class="params">Fn, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 手动创建字面量对象， 并进行挂载</span></span><br><span class="line">  <span class="comment">// const obj = &#123;&#125;</span></span><br><span class="line">  <span class="comment">// Object.setPrototypeOf(Fn.prototype)</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Object.create以某个原型挂载一个对象</span></span><br><span class="line">  <span class="keyword">const</span> obj = <span class="built_in">Object</span>.create(Fn.prototype)</span><br><span class="line">  Fn.call(obj, ...args)</span><br><span class="line">  <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1282,7 +1320,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
