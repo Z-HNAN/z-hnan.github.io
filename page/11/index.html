@@ -188,6 +188,108 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/23/Apache2的安装与配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/05/23/Apache2的安装与配置/" class="post-title-link" itemprop="url">Apache2的安装与配置</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-23 23:21:44" itemprop="dateCreated datePublished" datetime="2019-05-23T23:21:44+08:00">2019-05-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>当前环境Centos7</p>
+</blockquote>
+<ol>
+<li><p>安装Apache</p>
+<ul>
+<li><code>yum install httpd</code></li>
+</ul>
+</li>
+<li><p>httpd 启动</p>
+<ul>
+<li><code>service httpd start</code></li>
+</ul>
+</li>
+<li><p>httpd 状态查看</p>
+<ul>
+<li><code>service httpd status</code></li>
+</ul>
+</li>
+<li><p>httpd 停止</p>
+<ul>
+<li><code>service httpd stop</code></li>
+</ul>
+</li>
+<li><p>安装目录介绍</p>
+<ul>
+<li><p>Apache默认将网站的根目录指向/var/www/html</p>
+</li>
+<li><p>默认的主配置文件/etc/httpd/conf/httpd.conf</p>
+</li>
+<li><p>配置存储在的/etc/httpd/conf.d/目录</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>如果出现外部设备无法访问的情况，应该调试相关的防火墙配置</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/20/45天的诞生/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -956,159 +1058,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/06/node中文件操作路径问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/06/node中文件操作路径问题/" class="post-title-link" itemprop="url">node中文件操作路径问题</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-03-06 17:15:23" itemprop="dateCreated datePublished" datetime="2019-03-06T17:15:23+08:00">2019-03-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="文件分隔符"><a href="#文件分隔符" class="headerlink" title="文件分隔符"></a>文件分隔符</h4><blockquote>
-<p><code>/</code> 左-&gt; 正斜杠，<code>\</code> 右 -&gt; 反斜杠</p>
-</blockquote>
-<ul>
-<li>在mac, linux, unix 使用 <code>/</code> 分隔符</li>
-<li>在win 使用 <code>\</code> 作为分隔符， 由于<code>\</code>存在转义的效果，一般会使用<code>\\</code><ul>
-<li>win中也可以使用<code>/</code></li>
-</ul>
-</li>
-</ul>
-<h4 id="介绍path相关"><a href="#介绍path相关" class="headerlink" title="介绍path相关"></a>介绍path相关</h4><ul>
-<li>path.basename<ul>
-<li>获取一个路径的文件名（默认包含拓展名）</li>
-<li>path.basename(‘c:/a/b.js’)  -&gt; b.js</li>
-<li>path.basename(‘c:/a/b.js’, ‘.js’)  -&gt; b</li>
-</ul>
-</li>
-<li>path.dirname<ul>
-<li>获取一个路径中的目录部分</li>
-</ul>
-</li>
-<li>path.parse<ul>
-<li>把一个路径转换为对象<ul>
-<li>root 根目录</li>
-<li>dir 目录</li>
-<li>base 包含后缀名的文件名</li>
-<li>ext后缀名</li>
-<li>name 不包含后缀名的文件名</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>path.join<ul>
-<li>需要进行路径拼接的时候推荐使用这个方法（极其智能）</li>
-<li>path.join(‘c:/a/b’, ‘c’)  -&gt; c:/a/b/c</li>
-<li>path.join(‘c:/a/b’, ‘/c’)  -&gt; c:/a/b/c</li>
-<li>path.join(‘c:/a/b’, ‘./c’)  -&gt; c:/a/b/c</li>
-<li>path.join(‘c:/a/b’, ‘../c’)  -&gt; c:/a/c</li>
-</ul>
-</li>
-<li>path.isAbsolute<ul>
-<li>判断是否是一个绝对路径</li>
-<li>path.isAbsolute(‘c://a’)  -&gt; true</li>
-<li>path.isAbsolute(‘/a’)  -&gt; true (/为根目录)</li>
-</ul>
-</li>
-</ul>
-<h4 id="dirname-与-filename"><a href="#dirname-与-filename" class="headerlink" title="__dirname 与 __filename"></a><code>__dirname</code> 与 <code>__filename</code></h4><blockquote>
-<p>均是动态的获取, 他们是比较特殊的成员</p>
-</blockquote>
-<ul>
-<li><code>__dirname</code> 文件所属<strong>目录</strong>的绝对路径 c://a/b</li>
-<li><code>__filename</code> 所属<strong>文件</strong>的绝对路径 c://a/b/c.js</li>
-</ul>
-<h4 id="fs模块中的相对路径"><a href="#fs模块中的相对路径" class="headerlink" title="fs模块中的相对路径"></a>fs模块中的相对路径</h4><blockquote>
-<p>fs.readFile(‘./a.txt’, fn)</p>
-</blockquote>
-<ul>
-<li>其中的路径’./a.txt’ 并不是文件所在目录为寻找</li>
-<li>是以终端，即node运行文件时目录<ul>
-<li>c://a/b&gt; node a.js</li>
-<li>c://a/&gt; b/node a.js</li>
-</ul>
-</li>
-<li>虽然他们 看似相同，由于node运行目录不相同，fs.readFile时寻找不一样<ul>
-<li>c://a/b/a.txt</li>
-<li>c://a/a.txt</li>
-</ul>
-</li>
-<li>这是专门的一种设计，并不是一种bug,所以建议修改目录为<ul>
-<li><code>fs.readFile(path.join(__dirname, &#39;./a.txt&#39;), fn)</code><ul>
-<li>这样每次都是动态获取的，所以不会造成目录问题</li>
-<li>注意引入<code>path</code>模块，一般，<strong><code>fs</code>,<code>path</code>都是成对引入</strong></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="require中的相对路径"><a href="#require中的相对路径" class="headerlink" title="require中的相对路径"></a>require中的相对路径</h4><ul>
-<li><strong>在<code>require</code>中，不存在上述问题，还是引入即可， require(‘./a’)</strong><ul>
-<li>省略模块后缀.js</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1175,7 +1129,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">131</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

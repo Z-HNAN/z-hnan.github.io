@@ -188,6 +188,106 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/26/总结题3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/26/总结题3/" class="post-title-link" itemprop="url">总结题3</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-26 18:00:59" itemprop="dateCreated datePublished" datetime="2019-12-26T18:00:59+08:00">2019-12-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="排序问题，自己添加排序项，后续再删除"><a href="#排序问题，自己添加排序项，后续再删除" class="headerlink" title="排序问题，自己添加排序项，后续再删除"></a>排序问题，自己添加排序项，后续再删除</h1><p><code>String.prototype.localeCompare()</code>,类似于调用字母顺序比较</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr1 = [ <span class="string">'A1'</span>,<span class="string">'A2'</span>, <span class="string">'B1'</span>, <span class="string">'B2'</span>, <span class="string">'C1'</span>, <span class="string">'C2'</span> ]</span><br><span class="line"><span class="keyword">let</span> arr2 = [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>]</span><br><span class="line"><span class="comment">// arr = [ 'A1','A2', 'A', 'B1', 'B2', 'B', 'C1', 'C2', 'C']</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 简单调用sort方法，使用localeCompare,返回结果是字母顺寻 [A, A1, A2, ....]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 先对arr2处理一下</span></span><br><span class="line">arr2 = arr2.map(<span class="function"><span class="params">item</span> =&gt;</span> item + <span class="string">'啦啦'</span>)</span><br><span class="line"><span class="keyword">let</span> arr = arr1.concat(arr2)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 汉字顺序要滞后与字母</span></span><br><span class="line">arr = arr</span><br><span class="line">  .sort(<span class="function">(<span class="params">prev, next</span>) =&gt;</span> prev.localeCompare(next))</span><br><span class="line">  .map(<span class="function"><span class="params">item</span> =&gt;</span> item.replace(<span class="string">'啦啦'</span>, <span class="string">''</span>))</span><br></pre></td></tr></table></figure>
+<h1 id="异步编程"><a href="#异步编程" class="headerlink" title="异步编程"></a>异步编程</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i)</span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 整个方法闭包</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>) </span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(i)</span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回调函数闭包</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  setTimeout(<span class="function">(<span class="params">i =&gt; (</span>) =&gt;</span> <span class="built_in">console</span>.log(i))(i), <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用let块级作用域"><a href="#使用let块级作用域" class="headerlink" title="使用let块级作用域"></a>使用let块级作用域</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i)</span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用bind预处理"><a href="#使用bind预处理" class="headerlink" title="使用bind预处理"></a>使用bind预处理</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = <span class="function"><span class="params">i</span> =&gt;</span> <span class="built_in">console</span>.log(i)</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">  setTimeout(fn.bind(<span class="literal">null</span>, i), <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="匿名函数名称问题"><a href="#匿名函数名称问题" class="headerlink" title="匿名函数名称问题"></a>匿名函数名称问题</h1><p>匿名函数不能为其申明名称，但是如果申请后，是不许与在重新赋值</p>
+<blockquote>
+<p><code>&#39;use strict&#39;</code>模式下，会直接报错，非严格模式下，不会报错。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// b = 20;  无效</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>作为一个块级内部变量(参数)可以做修改所用</p>
+<p>匿名函数的命名本来就是不被推荐的，如果有形参重名，那么以形参为准</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> b = <span class="number">20</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params">b</span>) </span>&#123;</span><br><span class="line">  b = <span class="number">10</span></span><br><span class="line">  consoel.log(b) <span class="comment">// 10</span></span><br><span class="line">&#125;)()</span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// 20</span></span><br></pre></td></tr></table></figure>
+<h1 id=""><a href="#" class="headerlink" title="==, ==="></a><code>==</code>, <code>===</code></h1><h2 id="值和类型完全一致，严格"><a href="#值和类型完全一致，严格" class="headerlink" title="=== 值和类型完全一致，严格"></a><code>===</code> 值和类型完全一致，严格</h2><h2 id="值相等即可，其判别的依据如下"><a href="#值相等即可，其判别的依据如下" class="headerlink" title="== 值相等即可，其判别的依据如下"></a><code>==</code> 值相等即可，其判别的依据如下</h2><p>类型相同的情况下，会直接比较</p>
+<p>类型不相同,会转换类型进行比较</p>
+<ol>
+<li>{}=={}, 两个对象进行比较，是比较堆内存的地址</li>
+<li>null==undefined 相等， / null !== undefined</li>
+<li>NaN != NaN</li>
+<li>[12] = ‘12’, 调用toString后，在进行字符串的比较</li>
+<li>其余情况都是进行数字的比较<ul>
+<li>boolean true=1, false=0</li>
+<li>number = number</li>
+<li>string = Number(‘str’), 如果有非数字则会变为NaN</li>
+<li>undefined = NaN</li>
+<li>Object(object - Number(obj.toString()), null - NaN)</li>
+</ul>
+</li>
+</ol>
+<h2 id="保证成立"><a href="#保证成立" class="headerlink" title="保证成立"></a>保证成立</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (obj == <span class="number">1</span> &amp;&amp; obj == <span class="number">2</span> &amp;&amp; obj == <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'OK'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="覆盖toString"><a href="#覆盖toString" class="headerlink" title="覆盖toString"></a>覆盖<code>toString</code></h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  n: <span class="number">0</span>,</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="keyword">return</span> ++<span class="keyword">this</span>.n</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="keyword">return</span> arr.shift()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="覆盖defineProperty"><a href="#覆盖defineProperty" class="headerlink" title="覆盖defineProperty"></a>覆盖defineProperty</h2><p>将<code>a</code>,作为<code>window</code>的一个变量即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(<span class="built_in">window</span>, <span class="string">'obj'</span>, &#123;</span><br><span class="line">  get() &#123;</span><br><span class="line">    <span class="keyword">return</span> arr.shift()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="模拟push"><a href="#模拟push" class="headerlink" title="模拟push,"></a>模拟push,</h1><h2 id="push的简易实现"><a href="#push的简易实现" class="headerlink" title="push的简易实现"></a>push的简易实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.push = <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 默认插入，到尾部</span></span><br><span class="line">  <span class="keyword">this</span>[<span class="keyword">this</span>.length] = value</span><br><span class="line"></span><br><span class="line">  <span class="comment">// length长度严格意义是浏览器对其控制增减操作 </span></span><br><span class="line">  <span class="keyword">this</span>.length++</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.length</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  <span class="number">2</span>: <span class="number">3</span>, <span class="comment">// this[2] = 1 2: 1</span></span><br><span class="line">  <span class="number">3</span>: <span class="number">4</span>, <span class="comment">// this[3] = 2 3:2</span></span><br><span class="line">  length: <span class="number">2</span>, <span class="comment">// 2 -&gt; 3 -&gt; 4</span></span><br><span class="line">  push: <span class="built_in">Array</span>.prototype.push</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj.push(<span class="number">1</span>)</span><br><span class="line">obj.push(<span class="number">2</span>)</span><br><span class="line"><span class="built_in">console</span>.log(obj) <span class="comment">// &#123; 2:1, 3:2, length: 4 ...&#125;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/26/总结题2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1049,92 +1149,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/01/React的Render-Prop技术/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/01/React的Render-Prop技术/" class="post-title-link" itemprop="url">React的Render-Prop技术</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-01 12:59:05" itemprop="dateCreated datePublished" datetime="2019-11-01T12:59:05+08:00">2019-11-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Render Prop是一种组件使用porps提供的方法去渲染children,外部方便共享内部数据</p>
-<h2 id="传统方式"><a href="#传统方式" class="headerlink" title="传统方式"></a>传统方式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单渲染子组件</span></span><br><span class="line"><span class="keyword">const</span> LinkerWrapper = <span class="function">(<span class="params">Component</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">Proxy</span> = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Component link=&#123;currentLink&#125; &#123;...props&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Outer = LinkerWrapper(Nav)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 此时Outer中就是有link属性的了</span></span><br></pre></td></tr></table></figure>
-<p>这种方法在声明的时候，就已经确定了高阶组件要拓展什么属性</p>
-<h2 id="使用Render-Prop"><a href="#使用Render-Prop" class="headerlink" title="使用Render Prop"></a>使用Render Prop</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.render(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为link属性增加值</span></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    render=&#123;(link) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">link</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 为href属性增加值</span></span><br><span class="line"><span class="xml">const Outer = (</span></span><br><span class="line">  &lt;Linker</span><br><span class="line">    render=&#123;(link) =&gt; (&lt;Nav href=&#123;link&#125;/&gt;) &#125;</span><br><span class="line">  /&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>这种方式的好处是比较简单，所有的组装都是用的时候才根据需要进行组装，并没有用到其他的特性，就是将一个porps的方法指定为他的子组件渲染的方法</p>
-<h3 id="不一定是Render"><a href="#不一定是Render" class="headerlink" title="不一定是Render"></a>不一定是Render</h3><p>这里仅仅是直观，让人可以一次了解到，这个属性就是将来要渲染的时候，使用的porp方式，也可以使用其他的属性名,仅仅是传递一个方法做children的生成函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.componentRender(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    componentRender=&#123;(currentLink) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">href</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br></pre></td></tr></table></figure>
-<h2 id="使用children属性"><a href="#使用children属性" class="headerlink" title="使用children属性"></a>使用children属性</h2><p>children属性比较特殊了，它既可以作为porps传递，也可以直接作子元素传递</p>
-<ul>
-<li>porps传递 <code>&lt;Button childre={&#39;click me&#39;} /&gt;</code></li>
-<li>子元素传递 <code>&lt;Button&gt;click me&lt;/Button&gt;</code></li>
-</ul>
-<p>所以可以使用children作为Render Prop的一种形式，更加直观，<em>其实会自动将子元素最为children属性传递下去</em></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.children(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正常作为props属性</span></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    children=&#123;(currentLink) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">href</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 作为特殊的props属性</span></span><br><span class="line"><span class="xml">const Outer = (</span></span><br><span class="line">  &lt;Linker&gt;</span><br><span class="line">    &#123;link =&gt; (&lt;Nav href=&#123;link&#125;/&gt;) &#125;</span><br><span class="line">  &lt;/Linker&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h3 id="最好使用PropTypes声明出来"><a href="#最好使用PropTypes声明出来" class="headerlink" title="最好使用PropTypes声明出来"></a>最好使用PropTypes声明出来</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linker.propTypes = &#123;</span><br><span class="line">  childre: PropTypes.func.isRequire</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="相同children的顺序问题"><a href="#相同children的顺序问题" class="headerlink" title="相同children的顺序问题"></a>相同children的顺序问题</h3><p>子元素会覆盖children属性</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;button children=&#123;<span class="string">'props'</span>&#125; /&gt; =&gt; <span class="xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>props<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;button&gt;children&lt;<span class="regexp">/button&gt; =&gt; &lt;button&gt;children&lt;/</span>button&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 两者都声明的情况下， 最终显示效果为</span></span><br><span class="line">&lt;button children=&#123;<span class="string">'props'</span>&#125;&gt;children&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;button&gt;children&lt;/</span>button&gt;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1201,7 +1220,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">131</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

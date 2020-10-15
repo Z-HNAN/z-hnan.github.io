@@ -188,6 +188,154 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/06/node中文件操作路径问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/06/node中文件操作路径问题/" class="post-title-link" itemprop="url">node中文件操作路径问题</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-06 17:15:23" itemprop="dateCreated datePublished" datetime="2019-03-06T17:15:23+08:00">2019-03-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="文件分隔符"><a href="#文件分隔符" class="headerlink" title="文件分隔符"></a>文件分隔符</h4><blockquote>
+<p><code>/</code> 左-&gt; 正斜杠，<code>\</code> 右 -&gt; 反斜杠</p>
+</blockquote>
+<ul>
+<li>在mac, linux, unix 使用 <code>/</code> 分隔符</li>
+<li>在win 使用 <code>\</code> 作为分隔符， 由于<code>\</code>存在转义的效果，一般会使用<code>\\</code><ul>
+<li>win中也可以使用<code>/</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="介绍path相关"><a href="#介绍path相关" class="headerlink" title="介绍path相关"></a>介绍path相关</h4><ul>
+<li>path.basename<ul>
+<li>获取一个路径的文件名（默认包含拓展名）</li>
+<li>path.basename(‘c:/a/b.js’)  -&gt; b.js</li>
+<li>path.basename(‘c:/a/b.js’, ‘.js’)  -&gt; b</li>
+</ul>
+</li>
+<li>path.dirname<ul>
+<li>获取一个路径中的目录部分</li>
+</ul>
+</li>
+<li>path.parse<ul>
+<li>把一个路径转换为对象<ul>
+<li>root 根目录</li>
+<li>dir 目录</li>
+<li>base 包含后缀名的文件名</li>
+<li>ext后缀名</li>
+<li>name 不包含后缀名的文件名</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>path.join<ul>
+<li>需要进行路径拼接的时候推荐使用这个方法（极其智能）</li>
+<li>path.join(‘c:/a/b’, ‘c’)  -&gt; c:/a/b/c</li>
+<li>path.join(‘c:/a/b’, ‘/c’)  -&gt; c:/a/b/c</li>
+<li>path.join(‘c:/a/b’, ‘./c’)  -&gt; c:/a/b/c</li>
+<li>path.join(‘c:/a/b’, ‘../c’)  -&gt; c:/a/c</li>
+</ul>
+</li>
+<li>path.isAbsolute<ul>
+<li>判断是否是一个绝对路径</li>
+<li>path.isAbsolute(‘c://a’)  -&gt; true</li>
+<li>path.isAbsolute(‘/a’)  -&gt; true (/为根目录)</li>
+</ul>
+</li>
+</ul>
+<h4 id="dirname-与-filename"><a href="#dirname-与-filename" class="headerlink" title="__dirname 与 __filename"></a><code>__dirname</code> 与 <code>__filename</code></h4><blockquote>
+<p>均是动态的获取, 他们是比较特殊的成员</p>
+</blockquote>
+<ul>
+<li><code>__dirname</code> 文件所属<strong>目录</strong>的绝对路径 c://a/b</li>
+<li><code>__filename</code> 所属<strong>文件</strong>的绝对路径 c://a/b/c.js</li>
+</ul>
+<h4 id="fs模块中的相对路径"><a href="#fs模块中的相对路径" class="headerlink" title="fs模块中的相对路径"></a>fs模块中的相对路径</h4><blockquote>
+<p>fs.readFile(‘./a.txt’, fn)</p>
+</blockquote>
+<ul>
+<li>其中的路径’./a.txt’ 并不是文件所在目录为寻找</li>
+<li>是以终端，即node运行文件时目录<ul>
+<li>c://a/b&gt; node a.js</li>
+<li>c://a/&gt; b/node a.js</li>
+</ul>
+</li>
+<li>虽然他们 看似相同，由于node运行目录不相同，fs.readFile时寻找不一样<ul>
+<li>c://a/b/a.txt</li>
+<li>c://a/a.txt</li>
+</ul>
+</li>
+<li>这是专门的一种设计，并不是一种bug,所以建议修改目录为<ul>
+<li><code>fs.readFile(path.join(__dirname, &#39;./a.txt&#39;), fn)</code><ul>
+<li>这样每次都是动态获取的，所以不会造成目录问题</li>
+<li>注意引入<code>path</code>模块，一般，<strong><code>fs</code>,<code>path</code>都是成对引入</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="require中的相对路径"><a href="#require中的相对路径" class="headerlink" title="require中的相对路径"></a>require中的相对路径</h4><ul>
+<li><strong>在<code>require</code>中，不存在上述问题，还是引入即可， require(‘./a’)</strong><ul>
+<li>省略模块后缀.js</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/05/node中连接数据库/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1050,112 +1198,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/18/loading过渡动画的使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/01/18/loading过渡动画的使用/" class="post-title-link" itemprop="url">loading过渡动画的使用</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-01-18 15:32:34" itemprop="dateCreated datePublished" datetime="2019-01-18T15:32:34+08:00">2019-01-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="使用loading相关插件优化用户体验"><a href="#使用loading相关插件优化用户体验" class="headerlink" title="使用loading相关插件优化用户体验"></a>使用loading相关插件优化用户体验</h4><blockquote>
-<p>在使用ajax刷新数据的时候，中间的间隔可以使用一些过渡动画增加用户体验</p>
-</blockquote>
-<ol>
-<li><p>首先选用一些动画插件 比如此处的<a href="http://loading.awesomes.cn/" target="_blank" rel="noopener">http://loading.awesomes.cn/</a>找到要使用的样式</p>
-</li>
-<li><p>插入相关的代码，这里可以单独列出文件整合起来</p>
-</li>
-</ol>
-<ul>
-<li><p>html代码</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--loading动画--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"ball-pulse-sync"</span> <span class="attr">style</span>=<span class="string">"display: none"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>css代码</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"> 	<span class="comment">/*loading动画的样式表*/</span></span><br><span class="line"><span class="selector-class">.ball-pulse-sync</span> &#123;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.ball-pulse-sync</span> &gt; <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(1)</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-animation</span>: ball-pulse-sync <span class="number">0.6s</span> -<span class="number">0.14s</span> infinite ease-in-out;</span><br><span class="line">  <span class="attribute">animation</span>: ball-pulse-sync <span class="number">0.6s</span> -<span class="number">0.14s</span> infinite ease-in-out;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.ball-pulse-sync</span> &gt; <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(2)</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-animation</span>: ball-pulse-sync <span class="number">0.6s</span> -<span class="number">0.07s</span> infinite ease-in-out;</span><br><span class="line">  <span class="attribute">animation</span>: ball-pulse-sync <span class="number">0.6s</span> -<span class="number">0.07s</span> infinite ease-in-out;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.ball-pulse-sync</span> &gt; <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(3)</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-animation</span>: ball-pulse-sync <span class="number">0.6s</span> <span class="number">0s</span> infinite ease-in-out;</span><br><span class="line">  <span class="attribute">animation</span>: ball-pulse-sync <span class="number">0.6s</span> <span class="number">0s</span> infinite ease-in-out;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.ball-pulse-sync</span> &gt; <span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">15px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">15px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">2px</span>;</span><br><span class="line">  <span class="attribute">-webkit-animation-fill-mode</span>: both;</span><br><span class="line">  <span class="attribute">animation-fill-mode</span>: both;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">keyframes</span> ball-pulse-sync &#123;</span><br><span class="line">  33% &#123;</span><br><span class="line">  <span class="attribute">-webkit-transform</span>: <span class="built_in">translateY</span>(10px);</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translateY</span>(10px);</span><br><span class="line">  &#125;</span><br><span class="line">  66% &#123;</span><br><span class="line">    <span class="attribute">-webkit-transform</span>: <span class="built_in">translateY</span>(-10px);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateY</span>(-10px);</span><br><span class="line">  &#125;</span><br><span class="line">  100% &#123;</span><br><span class="line">    <span class="attribute">-webkit-transform</span>: <span class="built_in">translateY</span>(0);</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translateY</span>(0);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ol start="3">
-<li>设置其元素显示的时机，这里提供一种可以居中的方式</li>
-</ol>
-<ul>
-<li><p>css代码</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ball-pulse-sync</span>&#123;</span><br><span class="line">  	<span class="attribute">display</span>: flex;				<span class="comment">/*使用flex布局*/</span></span><br><span class="line">  	<span class="attribute">align-items</span>: center;		<span class="comment">/*居中*/</span></span><br><span class="line">  	<span class="attribute">justify-content</span>: center;	<span class="comment">/*居中*/</span></span><br><span class="line">  	<span class="attribute">position</span>: fixed;			<span class="comment">/*固定于浏览器*/</span></span><br><span class="line">  	<span class="attribute">z-index</span>: <span class="number">1001</span>;				<span class="comment">/*设定层级*/</span></span><br><span class="line">  	<span class="attribute">background</span>: <span class="built_in">rgba</span>(0,0,0,.7);	<span class="comment">/*背景色*/</span></span><br><span class="line">  	<span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  	<span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line">  	<span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  	<span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>可以使用jquery的 <code>fadeIn()</code>  与 <code>fadeOut()</code> 方法 在<code>&lt;div style=&quot;display:none&quot;&gt;···&lt;/div&gt;</code> 之所以设置<strong>display:none</strong> 是为了淡入淡出可以恢复 display:flew的特性（jQuery默认是display:block）</p>
-</li>
-</ul>
-<ol start="4">
-<li>效果图<img src="/img/2019/01/18/1.png" alt="loading"></li>
-</ol>
-<h4 id="其实使用这种进度条，或是加载函数都是一种表面的东西，其内部是一些函数，会走的越来越慢，当加载完毕的时候一下子走通，造成了一种进度条的感觉，实际是ajax开始一个动作，结束一个动作"><a href="#其实使用这种进度条，或是加载函数都是一种表面的东西，其内部是一些函数，会走的越来越慢，当加载完毕的时候一下子走通，造成了一种进度条的感觉，实际是ajax开始一个动作，结束一个动作" class="headerlink" title="其实使用这种进度条，或是加载函数都是一种表面的东西，其内部是一些函数，会走的越来越慢，当加载完毕的时候一下子走通，造成了一种进度条的感觉，实际是ajax开始一个动作，结束一个动作"></a>其实使用这种进度条，或是加载函数都是一种表面的东西，其内部是一些函数，会走的越来越慢，当加载完毕的时候一下子走通，造成了一种进度条的感觉，实际是ajax开始一个动作，结束一个动作</h4><pre><code class="JavaScript"><span class="comment">// jQuery中的统一ajax</span>
-$(<span class="built_in">document</span>).ajaxStart(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="comment">// ajax开始的代码</span>
-}).ajaxStop(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="comment">// ajax结束的代码</span>
-});
-</code></pre>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1222,7 +1269,7 @@ $(<span class="built_in">document</span>).ajaxStart(<span class="function"><span
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">131</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

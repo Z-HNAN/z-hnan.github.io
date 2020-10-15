@@ -188,6 +188,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/01/React的Render-Prop技术/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/01/React的Render-Prop技术/" class="post-title-link" itemprop="url">React的Render-Prop技术</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-01 12:59:05" itemprop="dateCreated datePublished" datetime="2019-11-01T12:59:05+08:00">2019-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Render Prop是一种组件使用porps提供的方法去渲染children,外部方便共享内部数据</p>
+<h2 id="传统方式"><a href="#传统方式" class="headerlink" title="传统方式"></a>传统方式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单渲染子组件</span></span><br><span class="line"><span class="keyword">const</span> LinkerWrapper = <span class="function">(<span class="params">Component</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">Proxy</span> = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Component link=&#123;currentLink&#125; &#123;...props&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Outer = LinkerWrapper(Nav)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 此时Outer中就是有link属性的了</span></span><br></pre></td></tr></table></figure>
+<p>这种方法在声明的时候，就已经确定了高阶组件要拓展什么属性</p>
+<h2 id="使用Render-Prop"><a href="#使用Render-Prop" class="headerlink" title="使用Render Prop"></a>使用Render Prop</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.render(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为link属性增加值</span></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    render=&#123;(link) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">link</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 为href属性增加值</span></span><br><span class="line"><span class="xml">const Outer = (</span></span><br><span class="line">  &lt;Linker</span><br><span class="line">    render=&#123;(link) =&gt; (&lt;Nav href=&#123;link&#125;/&gt;) &#125;</span><br><span class="line">  /&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这种方式的好处是比较简单，所有的组装都是用的时候才根据需要进行组装，并没有用到其他的特性，就是将一个porps的方法指定为他的子组件渲染的方法</p>
+<h3 id="不一定是Render"><a href="#不一定是Render" class="headerlink" title="不一定是Render"></a>不一定是Render</h3><p>这里仅仅是直观，让人可以一次了解到，这个属性就是将来要渲染的时候，使用的porp方式，也可以使用其他的属性名,仅仅是传递一个方法做children的生成函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.componentRender(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    componentRender=&#123;(currentLink) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">href</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用children属性"><a href="#使用children属性" class="headerlink" title="使用children属性"></a>使用children属性</h2><p>children属性比较特殊了，它既可以作为porps传递，也可以直接作子元素传递</p>
+<ul>
+<li>porps传递 <code>&lt;Button childre={&#39;click me&#39;} /&gt;</code></li>
+<li>子元素传递 <code>&lt;Button&gt;click me&lt;/Button&gt;</code></li>
+</ul>
+<p>所以可以使用children作为Render Prop的一种形式，更加直观，<em>其实会自动将子元素最为children属性传递下去</em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Linker = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentLink = <span class="string">'www.fe.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> props.children(currentLink)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正常作为props属性</span></span><br><span class="line"><span class="keyword">const</span> Outer = (</span><br><span class="line">  &lt;Linker</span><br><span class="line">    children=&#123;(currentLink) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">Nav</span> <span class="attr">href</span>=<span class="string">&#123;link&#125;/</span>&gt;</span>) &#125;</span></span><br><span class="line"><span class="xml">  /&gt;</span></span><br><span class="line"><span class="xml">)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 作为特殊的props属性</span></span><br><span class="line"><span class="xml">const Outer = (</span></span><br><span class="line">  &lt;Linker&gt;</span><br><span class="line">    &#123;link =&gt; (&lt;Nav href=&#123;link&#125;/&gt;) &#125;</span><br><span class="line">  &lt;/Linker&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="最好使用PropTypes声明出来"><a href="#最好使用PropTypes声明出来" class="headerlink" title="最好使用PropTypes声明出来"></a>最好使用PropTypes声明出来</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linker.propTypes = &#123;</span><br><span class="line">  childre: PropTypes.func.isRequire</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="相同children的顺序问题"><a href="#相同children的顺序问题" class="headerlink" title="相同children的顺序问题"></a>相同children的顺序问题</h3><p>子元素会覆盖children属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;button children=&#123;<span class="string">'props'</span>&#125; /&gt; =&gt; <span class="xml"><span class="tag">&lt;<span class="name">button</span>&gt;</span>props<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;button&gt;children&lt;<span class="regexp">/button&gt; =&gt; &lt;button&gt;children&lt;/</span>button&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 两者都声明的情况下， 最终显示效果为</span></span><br><span class="line">&lt;button children=&#123;<span class="string">'props'</span>&#125;&gt;children&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;button&gt;children&lt;/</span>button&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/22/mongoose常用crud/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -937,85 +1018,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/08/关于react中的context的理解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/10/08/关于react中的context的理解/" class="post-title-link" itemprop="url">关于react中的context的理解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-10-08 19:09:33" itemprop="dateCreated datePublished" datetime="2019-10-08T19:09:33+08:00">2019-10-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>本例只是做说明性，具体代码要运行起来，还需要加入些其他元素</p>
-</blockquote>
-<h4 id="主要解决的问题"><a href="#主要解决的问题" class="headerlink" title="主要解决的问题"></a>主要解决的问题</h4><p>在应用中可能会有很多组件会去使用到的组件，并且当使用父子传递这一机制的时候，会显得过于臃肿繁琐，所以要使用上下文的方式来进行传递。</p>
-<h4 id="1-创建一个context"><a href="#1-创建一个context" class="headerlink" title="1.创建一个context"></a>1.创建一个context</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// theme-context.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> ThemeContext = React.createContext(<span class="string">'dark'</span>) <span class="comment">// 默认为dark</span></span><br></pre></td></tr></table></figure>
-<h4 id="2-使用context内容-class"><a href="#2-使用context内容-class" class="headerlink" title="2.使用context内容-class"></a>2.使用context内容-class</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Demo.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; ThemeContext &#125; <span class="keyword">from</span> <span class="string">'./theme-context'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render () &#123;</span><br><span class="line">    <span class="keyword">const</span> theme = <span class="keyword">this</span>.context</span><br><span class="line">    <span class="keyword">return</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;theme&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Demo.contextType = ThemeContext</span><br></pre></td></tr></table></figure>
-<h4 id="2-使用context内容-function"><a href="#2-使用context内容-function" class="headerlink" title="2.使用context内容-function"></a>2.使用context内容-function</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Demo.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; ThemeContext &#125; <span class="keyword">from</span> <span class="string">'./theme-context'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Consumer</span> (<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;ThemeContext.Consumer&gt;</span><br><span class="line">      &#123;theme =&gt; (</span><br><span class="line">        &lt;div&gt;&#123;theme&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">      )&#125;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>ThemeContext.Consumer&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="3-传递启用"><a href="#3-传递启用" class="headerlink" title="3.传递启用"></a>3.传递启用</h4><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; ThemeContext &#125; <span class="keyword">from</span> <span class="string">'./theme-context'</span></span><br><span class="line"><span class="keyword">import</span> Demo <span class="keyword">from</span> <span class="string">'demo'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Wrapper</span> (<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (<span class="xml"><span class="tag">&lt;<span class="name">Demo</span> /&gt;</span>)</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">class App extends React.Component &#123;</span></span><br><span class="line"><span class="xml">  render (</span></span><br><span class="line"><span class="xml">    return (</span></span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;ThemeContext.Provider value="light"&gt;</span><br><span class="line">          &lt;Wrapper /&gt;  // 此时 Wrapper 内的 Demo 使用的是就近的 light</span><br><span class="line">        &lt;/ThemeContext.Provider&gt;</span><br><span class="line">        &lt;Wrapper /&gt;  // 此时 Wrapper 内的 Demo 使用的是默认值 dark</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="在hook中使用context"><a href="#在hook中使用context" class="headerlink" title="在hook中使用context"></a>在hook中使用context</h4><p>父组件还是要使用<code>&lt;MyContext.Provider value={} /&gt;</code>这种方式将上下文对象全局传递出去，不同的就是使用到context的组件，可以使用function组件，来方便的接收<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Demo.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> &#123; ThemeContext &#125; <span class="keyword">from</span> <span class="string">'./theme-context'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Demo</span> (<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> theme = React.useContext(ThemeContext)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ... context中变化时，该组件会同步刷新</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="需要注意的问题"><a href="#需要注意的问题" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h4><p>context会使用参考标识，也就是说，可能value不变的情况下，他会通知使用到context组件重新渲染<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;Provider value=&#123;&#123;<span class="attr">something</span>: <span class="string">'something'</span>&#125;&#125;&gt;</span><br><span class="line">  &lt;Toolbar /&gt;</span><br><span class="line">&lt;<span class="regexp">/Provider&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 此时此组件刷新的时候，他会通知组件 value发生了改变（尽管字面量并没有发生改变）</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 可以将value的值提到state中去存储</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">state = &#123;</span></span><br><span class="line"><span class="regexp">  value: &#123;something: 'something'&#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;Provider value=&#123;this.state.value&#125;&gt;</span></span><br><span class="line"><span class="regexp">  &lt;Toolbar /</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/Provider&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1082,7 +1089,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-count">131</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

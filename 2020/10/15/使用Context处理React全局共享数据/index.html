@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="推荐在FC(function component)中使用，文中基本为FC组件  之前看到过使用Context去优雅的管理全局数据，这里做一些分享与代码组织方式 用Context管理数据，更贴切React原生语法，并且新版ContextAPI性能也得以提升，之前旧版的Context发生改变时，并不能准确的知道具体有哪些子组件需要更新，需要所有组件更新（内部会有小优化去bailout跳过）,新版Co">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Context处理React全局共享数据">
+<meta property="og:url" content="http://yoursite.com/2020/10/15/使用Context处理React全局共享数据/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="推荐在FC(function component)中使用，文中基本为FC组件  之前看到过使用Context去优雅的管理全局数据，这里做一些分享与代码组织方式 用Context管理数据，更贴切React原生语法，并且新版ContextAPI性能也得以提升，之前旧版的Context发生改变时，并不能准确的知道具体有哪些子组件需要更新，需要所有组件更新（内部会有小优化去bailout跳过）,新版Co">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/2020/10/15/1.png">
+<meta property="og:updated_time" content="2020-10-15T07:06:18.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Context处理React全局共享数据">
+<meta name="twitter:description" content="推荐在FC(function component)中使用，文中基本为FC组件  之前看到过使用Context去优雅的管理全局数据，这里做一些分享与代码组织方式 用Context管理数据，更贴切React原生语法，并且新版ContextAPI性能也得以提升，之前旧版的Context发生改变时，并不能准确的知道具体有哪些子组件需要更新，需要所有组件更新（内部会有小优化去bailout跳过）,新版Co">
+<meta name="twitter:image" content="http://yoursite.com/img/2020/10/15/1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/10/15/使用Context处理React全局共享数据/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>使用Context处理React全局共享数据 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/15/使用Context处理React全局共享数据/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Context处理React全局共享数据
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-10-15 15:01:18 / 修改时间：15:06:18" itemprop="dateCreated datePublished" datetime="2020-10-15T15:01:18+08:00">2020-10-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>推荐在FC(<em>function component</em>)中使用，文中基本为FC组件</p>
+</blockquote>
+<p>之前看到过使用<code>Context</code>去优雅的管理全局数据，这里做一些分享与代码组织方式</p>
+<p>用Context管理数据，更贴切React原生语法，并且新版ContextAPI性能也得以提升，之前旧版的Context发生改变时，并不能准确的知道具体有哪些子组件需要更新，需要所有组件更新（内部会有小优化去bailout跳过）,新版ContextAPI更多像是一种依赖收集，将Context改变挂载在该组件中，就可以明确知道这个组件的依赖改变了，去更新他。</p>
+<p><img src="/img/2020/10/15/1.png" alt="ReactFiber内Context依赖"><br>(上图为ReactFiber内Context依赖)</p>
+<h2 id="Context使用回顾"><a href="#Context使用回顾" class="headerlink" title="Context使用回顾"></a>Context使用回顾</h2><p>使用Context实现全局主题</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.jsx</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ThemeContext = React.createContext(<span class="string">'light'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Index = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [theme, setTheme] = React.useState(<span class="string">'light'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;ThemeContext.Provider value=&#123;theme&#125;&gt;</span><br><span class="line">      &lt;App /&gt;</span><br><span class="line">    &lt;<span class="regexp">/ThemeContext.Provider&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>在某一个具体对的<code>button</code>中使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Button.jsx</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="params">props</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 可直接在该Button中应用主题</span></span><br><span class="line">  <span class="keyword">const</span> theme = React.useContext(ThemeContext)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;button &#123;...props&#125; /&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就避免了组件中充满了无用的透传，使代码变得较为简洁。</p>
+<h2 id="通过Context修改全局数据"><a href="#通过Context修改全局数据" class="headerlink" title="通过Context修改全局数据"></a>通过Context修改全局数据</h2><p>我们将状态缓存在最顶部，将<code>state</code>，与<code>setState</code>都传递下去即可，就达到了缓存在自组件内修改全局状态。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CountStateContext.js</span></span><br><span class="line"><span class="keyword">const</span> CountStateContext = React.createContext();</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.jsx</span></span><br><span class="line"><span class="keyword">const</span> Index = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [countState, setCountState] = React.useState(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;CountStateContext.Provider value=&#123;[countState, setCountState]&#125;&gt;</span><br><span class="line">      &lt;App /&gt;</span><br><span class="line">    &lt;<span class="regexp">/CountStateContext.Provider&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ Sub1.jsx</span></span><br><span class="line"><span class="regexp">const Sub1 = () =&gt; &#123;</span></span><br><span class="line"><span class="regexp">  const [countState, setCountState] = React.useContext(CountStateContext)</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">  return (</span></span><br><span class="line"><span class="regexp">    &lt;&gt;</span></span><br><span class="line"><span class="regexp">      &lt;h1&gt;Count: &#123;countState&#125;&lt;/</span>h1&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; &#123;setCountState(<span class="function"><span class="params">c</span> =&gt;</span> c + <span class="number">1</span>)&#125;&#125;&gt;Increment CountState&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Sub2.jsx</span></span><br><span class="line"><span class="keyword">const</span> Sub2 = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [countState] = React.useContext(CountStateContext)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;h1&gt;Count: &#123;countState&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Sub3.jsx</span></span><br><span class="line"><span class="keyword">const</span> Sub3 = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [, setCountState] = React.useContext(CountStateContext)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; &#123;setCountState(<span class="function"><span class="params">c</span> =&gt;</span> c + <span class="number">1</span>)&#125;&#125;&gt;Increment CountState&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Context都传递下去的问题"><a href="#Context都传递下去的问题" class="headerlink" title="Context都传递下去的问题"></a>Context都传递下去的问题</h2><p>将一个顶层状态的<code>state</code>与<code>setState</code>都传递下去，但是不一定在所有的自组件中都会用到这两个数据</p>
+<p>比如某个自组件中可能只是单纯想进行一个数据的修改，但是由于<code>context</code>中同时也依赖了<code>state</code>,所以当顶层组件的<code>state</code>发生改变时，该组件也会进行一次重新的渲染，那这样其实不符合我们的预期的，所以就将Context存储的数据拆分，那我们的核心就是<strong>读写分离！</strong></p>
+<p>可能会发生<code>Context</code>套娃，没关系先把主要问题解决了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CountContext.js</span></span><br><span class="line"><span class="keyword">const</span> CountContext = React.createContext();</span><br><span class="line"><span class="keyword">const</span> SetCountContext = React.createContext();</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.jsx</span></span><br><span class="line"><span class="keyword">const</span> Index = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = React.useState(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;CountContext.Provider value=&#123;count&#125;&gt;</span><br><span class="line">      &lt;SetCountContext.Provider value=&#123;setCount&#125;&gt;</span><br><span class="line">        &lt;App /&gt;</span><br><span class="line">      &lt;<span class="regexp">/SetCountContext.Provider&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>CountContext.Provider&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Sub1.jsx</span></span><br><span class="line"><span class="keyword">const</span> Sub1 = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> count = React.useContext(CountContext)</span><br><span class="line">  <span class="keyword">const</span> setCount = React.useContext(SetCountContext)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;h1&gt;Count: &#123;count&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; &#123;setCount(c =&gt; c + 1)&#125;&#125;&gt;Increment CountState&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ Sub2.jsx</span></span><br><span class="line"><span class="regexp">const Sub2 = () =&gt; &#123;</span></span><br><span class="line"><span class="regexp">  const count = React.useContext(CountContext)</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">  return (</span></span><br><span class="line"><span class="regexp">    &lt;&gt;</span></span><br><span class="line"><span class="regexp">      &lt;h1&gt;Count: &#123;count&#125;&lt;/</span>h1&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ Sub3.jsx</span></span><br><span class="line"><span class="regexp">const Sub3 = () =&gt; &#123;</span></span><br><span class="line"><span class="regexp">  const setCount = React.useContext(SetCountContext)</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">  return (</span></span><br><span class="line"><span class="regexp">    &lt;&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; &#123;setCount(c =&gt; c + 1)&#125;&#125;&gt;Increment CountState&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="将Context存储的数据抽离出来"><a href="#将Context存储的数据抽离出来" class="headerlink" title="将Context存储的数据抽离出来"></a>将Context存储的数据抽离出来</h2><p>目前是将所有的数据都存储在顶层组件中的，我们也可以使用一个自定义<code>Hooks</code>去存储我们的数据，最终附带吐出一个带有<code>Context</code>的组件即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// CountContext.jsx</span></span><br><span class="line"><span class="keyword">const</span> CountContext = React.createContext();</span><br><span class="line"><span class="keyword">const</span> SetCountContext = React.createContext();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useCount</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> React.useContext(CountContext)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">useSetCount</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> React.useContext(SetCountContext)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CountStoreProvider</span>(<span class="params">&#123; children &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = React.useState()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;CountContext.Provider value=&#123;count&#125;&gt;</span><br><span class="line">      &lt;SetCountContext.Provider value=&#123;setCount&#125;&gt;</span><br><span class="line">        &#123;children&#125;</span><br><span class="line">      &lt;<span class="regexp">/SetCountContext.Provider&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>CountContext.Provider&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; useCount, useSetCount, CountStoreProvider &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.jsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; CountStoreProvider &#125; <span class="keyword">from</span> <span class="string">'./CountContext'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Index = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;CountStoreProvider&gt;</span><br><span class="line">      &lt;App /&gt;</span><br><span class="line">    &lt;<span class="regexp">/CountStoreProvider&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ Sub1.jsx</span></span><br><span class="line"><span class="regexp">import &#123; useCount, useSetCount &#125; from './</span>CountContext<span class="string">'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">const Sub1 = () =&gt; &#123;</span></span><br><span class="line"><span class="string">  const count = useCount()</span></span><br><span class="line"><span class="string">  const setCount = useSetCount()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  return (</span></span><br><span class="line"><span class="string">    &lt;&gt;</span></span><br><span class="line"><span class="string">      &lt;h1&gt;Count: &#123;count&#125;&lt;/h1&gt;</span></span><br><span class="line"><span class="string">      &lt;button onClick=&#123;() =&gt; &#123;setCount(c =&gt; c + 1)&#125;&#125;&gt;Increment CountState&lt;/button&gt;</span></span><br><span class="line"><span class="string">    &lt;/&gt;</span></span><br><span class="line"><span class="string">  )</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>最终我们创建了一个类似<code>store</code>的组件，即<code>CountContext</code>,之后便可以方便的修改我们的数据，将此<code>Context</code>内部的数据都封装在自定义Hooks内部，也减少了对外部代码的侵入，使用起来比较简洁。</p>
+<h2 id="配合Reducer使用"><a href="#配合Reducer使用" class="headerlink" title="配合Reducer使用"></a>配合Reducer使用</h2><p>前面一直使用<code>useState</code>,那么将其存储为<code>useReducer</code>使用范围会更广，那么将<code>Context</code>中存储的数据修改为<code>reducer</code>会更加优雅一点，这一部分就留给大家去改造了。</p>
+<blockquote>
+<p><a href="https://codesandbox.io/s/busy-lalande-f60jw" target="_blank" rel="noopener">在线实例</a></p>
+</blockquote>
+<p>另外文中一直尝试的修改数据为同步的，如果有异步的数据修改，是将其在React组件内部处理好，再同步的<code>dispatch</code>出去，还是可以在<code>context</code>组件内部去做更多异步的处理，需要大家自己去实践了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/12/link-npm包/" rel="prev" title="link-npm包">
+      <i class="fa fa-chevron-left"></i> link-npm包
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Context使用回顾"><span class="nav-number">1.</span> <span class="nav-text">Context使用回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过Context修改全局数据"><span class="nav-number">2.</span> <span class="nav-text">通过Context修改全局数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Context都传递下去的问题"><span class="nav-number">3.</span> <span class="nav-text">Context都传递下去的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将Context存储的数据抽离出来"><span class="nav-number">4.</span> <span class="nav-text">将Context存储的数据抽离出来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配合Reducer使用"><span class="nav-number">5.</span> <span class="nav-text">配合Reducer使用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
