@@ -188,6 +188,71 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/11中介者模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/25/11中介者模式/" class="post-title-link" itemprop="url">11中介者模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-25 16:35:11" itemprop="dateCreated datePublished" datetime="2019-06-25T16:35:11+08:00">2019-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">  中介者模式， 所有类之间的关系都有 一个中介者统一维护， 减少了类与类之间的关联，</span></span><br><span class="line"><span class="comment">   这种关系要折中的考虑，如果类之间的关系都取消，等到类多了基本的关联可能都会丢失，中介者会越来越复杂</span></span><br><span class="line"><span class="comment">   例子，统一一处的修改，改变所有的位置</span></span><br><span class="line"><span class="comment">   并且要 选择颜色， 选择数量， 在最后的按钮上做提示信息</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> colortSelect = <span class="built_in">document</span>.getElementById(<span class="string">'colorSelect'</span>)</span><br><span class="line"><span class="keyword">var</span> numberInput = <span class="built_in">document</span>.getElementById(<span class="string">'numberInput'</span>)</span><br><span class="line"><span class="keyword">var</span> colorInfo = <span class="built_in">document</span>.getElementById(<span class="string">'colorInfo'</span>)</span><br><span class="line"><span class="keyword">var</span> numberInfo = <span class="built_in">document</span>.getElementById(<span class="string">'numberInfo'</span>)</span><br><span class="line"><span class="keyword">var</span> nextBtn = <span class="built_in">document</span>.getElementById(<span class="string">'nextBtn'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传统方式 要对colorSelect numberInput 依次绑定事件,其核心业务代码可能是相同的</span></span><br><span class="line"><span class="keyword">var</span> goods = &#123;</span><br><span class="line">  <span class="string">"red"</span>: <span class="number">3</span>,</span><br><span class="line">  <span class="string">"blue"</span>: <span class="number">6</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 颜色框的逻辑  */</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">colortSelect.onchange = function () &#123; </span></span><br><span class="line"><span class="comment">  var color = this.value,</span></span><br><span class="line"><span class="comment">    number = numberInput.value,</span></span><br><span class="line"><span class="comment">    stock = goods[color]</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  colorInfo.innerHTML = color</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  if (!color) &#123;</span></span><br><span class="line"><span class="comment">    nextBtn.disabled = true</span></span><br><span class="line"><span class="comment">    nextBtn.innerHTML = "请选择手机颜色"</span></span><br><span class="line"><span class="comment">    return</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  if (!/^[1-9]\d*$/.test(number)) &#123; // 判断非正整数</span></span><br><span class="line"><span class="comment">    nextBtn.disabled = true</span></span><br><span class="line"><span class="comment">    nextBtn.innerHTML = "请输入正确的购买数量"</span></span><br><span class="line"><span class="comment">    return</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  if (number &gt; stock) &#123;</span></span><br><span class="line"><span class="comment">    nextBtn.disabled = true</span></span><br><span class="line"><span class="comment">    nextBtn.innerHTML = "库存不足"</span></span><br><span class="line"><span class="comment">    return</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">   nextBtn.disabled = false</span></span><br><span class="line"><span class="comment">  nextBtn.innerHTML = "加入购物车"</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/* 输入框的逻辑 */</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">numberInput.oninput = function () &#123;</span></span><br><span class="line"><span class="comment">  var number = this.value,</span></span><br><span class="line"><span class="comment">    color = colortSelect.value,</span></span><br><span class="line"><span class="comment">    stock = goods[color]</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  colorInfo.innerHTML = color</span></span><br><span class="line"><span class="comment">  numberInfo.innerHTML = number</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  if (!color) &#123;</span></span><br><span class="line"><span class="comment">    nextBtn.disabled = true</span></span><br><span class="line"><span class="comment">    nextBtn.innerHTML = "请选择手机颜色"</span></span><br><span class="line"><span class="comment">    return</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  if (!/^[1-9]\d*$/.test(number)) &#123; // 判断非正整数</span></span><br><span class="line"><span class="comment">    nextBtn.disabled = true</span></span><br><span class="line"><span class="comment">    nextBtn.innerHTML = "请输入正确的购买数量"</span></span><br><span class="line"><span class="comment">    return</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  if (number &gt; stock) &#123;</span></span><br><span class="line"><span class="comment">    nextBtn.disabled = true</span></span><br><span class="line"><span class="comment">    nextBtn.innerHTML = "库存不足"</span></span><br><span class="line"><span class="comment">    return</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  nextBtn.disabled = false</span></span><br><span class="line"><span class="comment">  nextBtn.innerHTML = "加入购物车"</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/* 虽然可以把相同的代码抽离出来，可是如果要拓展，或者是加入其它的私有逻辑</span></span><br><span class="line"><span class="comment">  要求修改代码，不符合开闭原则， 所以使用一个中介者管理他们</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 中介者 */</span></span><br><span class="line"><span class="keyword">var</span> mediator = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> colortSelect = <span class="built_in">document</span>.getElementById(<span class="string">'colorSelect'</span>),</span><br><span class="line">    numberInput = <span class="built_in">document</span>.getElementById(<span class="string">'numberInput'</span>),</span><br><span class="line">    colorInfo = <span class="built_in">document</span>.getElementById(<span class="string">'colorInfo'</span>),</span><br><span class="line">    numberInfo = <span class="built_in">document</span>.getElementById(<span class="string">'numberInfo'</span>),</span><br><span class="line">    nextBtn = <span class="built_in">document</span>.getElementById(<span class="string">'nextBtn'</span>)</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    changed: <span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123; <span class="comment">// obj是哪一个对象改变了</span></span><br><span class="line">      <span class="keyword">var</span> color = colortSelect.value,</span><br><span class="line">        number = numberInput.value,</span><br><span class="line">        stock = goods[color]</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (obj === colortSelect) &#123; <span class="comment">// colorSelect 发生改变</span></span><br><span class="line">        colorInfo.innerHTML = color</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj === numberInput) &#123;</span><br><span class="line">        numberInfo.innerHTML = number</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (!color) &#123;</span><br><span class="line">        nextBtn.disabled = <span class="literal">true</span></span><br><span class="line">        nextBtn.innerHTML = <span class="string">"请选择手机颜色"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="regexp">/^[1-9]\d*$/</span>.test(number)) &#123; <span class="comment">// 判断非正整数</span></span><br><span class="line">        nextBtn.disabled = <span class="literal">true</span></span><br><span class="line">        nextBtn.innerHTML = <span class="string">"请输入正确的购买数量"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (number &gt; stock) &#123;</span><br><span class="line">        nextBtn.disabled = <span class="literal">true</span></span><br><span class="line">        nextBtn.innerHTML = <span class="string">"库存不足"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      nextBtn.disabled = <span class="literal">false</span></span><br><span class="line">      nextBtn.innerHTML = <span class="string">'放入购物车'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件函数</span></span><br><span class="line">colortSelect.onchange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  mediator.changed(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">numberInput.oninput = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  mediator.changed(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 颜色框和输入框 完全不知道对方的存在， 由于逻辑都是放在中介者当中的， 所以去掉其他类对整体没什么影响</span></span><br><span class="line"><span class="comment"> 虽然功能之间的耦合减少了， 但由于把逻辑内聚到中介者，业务上没有体现出来 颜色 和 数量 之间的关系 </span></span><br><span class="line"><span class="comment"> 拓展性， 只需要在中介者增加拓展的代码， 即可</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">var mediator = (function ()&#123;</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  var memorySelect = document.getElementById('memorySelect')</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  return &#123;</span></span><br><span class="line"><span class="comment">    changed: function (obj) &#123;</span></span><br><span class="line"><span class="comment">      var memory = memorySelect.value</span></span><br><span class="line"><span class="comment">      // .... 相关逻辑</span></span><br><span class="line"><span class="comment">      </span></span><br><span class="line"><span class="comment">      if (obj === memorySelect) &#123;</span></span><br><span class="line"><span class="comment">        memoryInfo.innerHTML = memory</span></span><br><span class="line"><span class="comment">      &#125;</span></span><br><span class="line"><span class="comment">      </span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">&#125;)()</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/10职责链模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -769,71 +834,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/01单例模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/01单例模式/" class="post-title-link" itemprop="url">01单例模式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:25:40" itemprop="dateCreated datePublished" datetime="2019-06-25T16:25:40+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 注意：单例管理 和 对象创建要分开 */</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">// 返回创建单例的方法</span></span><br><span class="line"><span class="comment">var getSingle = function ( fn ) &#123;</span></span><br><span class="line"><span class="comment">  var result</span></span><br><span class="line"><span class="comment">  return function () &#123;</span></span><br><span class="line"><span class="comment">    return result || (result = fn.apply(this, arguments))</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">// 创建对象的方法</span></span><br><span class="line"><span class="comment">var createSigleIframe = getSingle(function () &#123;</span></span><br><span class="line"><span class="comment">  var iframe = document.createElement('iframe')</span></span><br><span class="line"><span class="comment">  document.body.appendChild(iframe)</span></span><br><span class="line"><span class="comment">  return iframe</span></span><br><span class="line"><span class="comment">&#125;)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line"><span class="comment">document.getElementById( 'loginBtn' ).onclick = function () &#123;</span></span><br><span class="line"><span class="comment">  var loginLayer = createSigleIframe()</span></span><br><span class="line"><span class="comment">  loginLayer.src = 'http://www.baidu.com'</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">document.getElementById( 'loginBtn' ).onclick = function () &#123; // 多次调用不会创建多个iframe</span></span><br><span class="line"><span class="comment">  var loginLayer = createSigleIframe()</span></span><br><span class="line"><span class="comment">  loginLayer.src = 'http://www.google.com'</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/* 模拟小程序中云开发获取db的例子，使用单例 */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> getSingle = <span class="function"><span class="keyword">function</span> (<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> result || (result = fn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> getDB = getSingle(<span class="function"><span class="keyword">function</span> (<span class="params">wx</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> wx.cloud.database()</span><br><span class="line">&#125;) </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 这里保证始终取出了一个db</span></span><br><span class="line"><span class="comment">// var wx = &#123;name: 'wx'&#125;</span></span><br><span class="line"><span class="keyword">var</span> db = getDB(wx)</span><br><span class="line"><span class="comment">// ......</span></span><br><span class="line"><span class="keyword">var</span> db = getDB()</span><br><span class="line"><span class="comment">// ......</span></span><br><span class="line"><span class="keyword">var</span> db = getDB()</span><br><span class="line"><span class="comment">// ......</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -905,7 +905,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-count">132</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

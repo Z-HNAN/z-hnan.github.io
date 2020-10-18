@@ -188,6 +188,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/26/h5语义化标签及其兼容性解决/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/01/26/h5语义化标签及其兼容性解决/" class="post-title-link" itemprop="url">h5语义化标签及其兼容性解决</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-26 21:30:08" itemprop="dateCreated datePublished" datetime="2019-01-26T21:30:08+08:00">2019-01-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>html5的语义化标签确实为我们带来了许多方便，但是如何解决他的兼容性代码也是需要我们去解决的，简单分析一下h5的相关使用</p>
+</blockquote>
+<h4 id="h5带来了哪些好处"><a href="#h5带来了哪些好处" class="headerlink" title="h5带来了哪些好处"></a>h5带来了哪些好处</h4><ul>
+<li>比较利于开发人员使用,不需要去仔细阅读每一个类，就可以较为清楚地分析出网页的整体结构。</li>
+<li>利于SEO-搜索引擎优化,搜索引擎也要分析我们的网页，当时用了h5的时候，他也可以很方便的寻找出网页的重点部分，排名靠前。</li>
+</ul>
+<p><img src="/img/2019/01/26/1.png" alt="h5与传统结构对比">(左为h5 右为传统网页)</p>
+<h4 id="h5带来的问题"><a href="#h5带来的问题" class="headerlink" title="h5带来的问题"></a>h5带来的问题</h4><ul>
+<li><p>最大就是兼容性，在<strong>IE8及其以前</strong>是不支持h5的，并且会将其解析为行间元素，涉及到h5标签(包括h5的相关api)，以及大部分的css3属性</p>
+<ul>
+<li>IE9的显示效果  <img src="/img/2019/01/26/2.png" alt="IE9的显示效果"></li>
+<li>IE8的显示效果，（IE8是将其转换为行间元素进行解析）<img src="/img/2019/01/26/3.png" alt="IE8的显示效果"></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>如何解决兼容性问题<ol>
+<li>首先使用js创建元素，<code>document.createElement(&#39;header&#39;)</code></li>
+<li>设置其css的<code>display：block</code></li>
+<li>在这里可以使用<a href="https://github.com/aFarkas/html5shiv" target="_blank" rel="noopener">html5shiv.js</a>这个插件来帮我们完成,需要注意的一点，此处我们需在网页的最开始引入此js文件</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>如何判断我们是否需要去引入该插件</p>
+<ul>
+<li>因为只有<strong>IE8及其以前</strong>的版本需要处理，那在其他的浏览器下就是不太需要的操作</li>
+<li>（X）使用js的<code>userAgent</code>来进行判断,应为我们需要最开始来加载，所以不能使用js的方式来判断</li>
+<li><p>（√）使用条件注释的方式来进行判断</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--[if lt IE 9]&gt;</span></span><br><span class="line"><span class="comment">	&lt;h1&gt;您的浏览器版本过低，请及时更新您的浏览器&lt;/h1&gt;</span></span><br><span class="line"><span class="comment">&lt;![endif]--&gt;</span></span><br></pre></td></tr></table></figure>
+<p>  (这里 lt&lt; lte&lt;= gt&gt; gte&gt;=)</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>处理兼容性的代码  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--[if lt IE 9]&gt;</span></span><br><span class="line"><span class="comment">	&lt;script src="bower_components/html5shiv/dist/html5shiv.js"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="comment">&lt;![endif]--&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/18/loading过渡动画的使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1162,105 +1265,6 @@ log-bin-trust-function-creators=1 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_T
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/Git的基本本地操作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/10/18/Git的基本本地操作/" class="post-title-link" itemprop="url">Git的基本本地操作</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-10-18 16:48:09" itemprop="dateCreated datePublished" datetime="2018-10-18T16:48:09+08:00">2018-10-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="首先需要了解的就是Git大致仓库的含义"><a href="#首先需要了解的就是Git大致仓库的含义" class="headerlink" title="首先需要了解的就是Git大致仓库的含义"></a>首先需要了解的就是Git大致仓库的含义</h1><p><br></p>
-<blockquote>
-<p>&#160; &#160;&#160; &#160;Git中仓库（.git文件）其实他的含义并不是一个真正的仓库，只是一个存放文件状态的一个位置，真正的文件还是在我们的文件夹中。<br>&#160; &#160;&#160; &#160;那么也就是说他的文件夹存放的时文件状态的一些文件，可以使用这些状态文件，恢复到任何一个版本的文件，也就是达到了所谓的<code>仓库</code>的概念。</p>
-</blockquote>
-<h1 id="为什么使用暂存盘与仓库"><a href="#为什么使用暂存盘与仓库" class="headerlink" title="为什么使用暂存盘与仓库"></a>为什么使用暂存盘与仓库</h1><p><br></p>
-<blockquote>
-<p> &#160; &#160;&#160; &#160;之后需要明确的一点就是 Git中的<strong>暂存盘</strong> 与 <strong>仓库</strong>的区别他是先将文件放到暂存盘中，之后一起拿去做提交更改，很类似公交车拉人的一种感觉，拉满了一车过去，就会提高一些效率。</p>
-</blockquote>
-<h1 id="文件提交的的流程"><a href="#文件提交的的流程" class="headerlink" title="文件提交的的流程"></a>文件提交的的流程</h1><ul>
-<li>先将文件 <code>$ git add a.txt</code> 将a.txt这个文件放到暂存盘中</li>
-<li>再将文件 <code>$ git commit -m &#39;提交了文件a.txt&#39;</code> 将这个a.txt做一次提交，也就是将此次状态保存到了git仓库里。</li>
-</ul>
-<h1 id="文件修改的的流程"><a href="#文件修改的的流程" class="headerlink" title="文件修改的的流程"></a>文件修改的的流程</h1><ul>
-<li>首先已经提交过文件了确保这个文件在git的管理中 <code>$ git add b.txt</code> 将b.txt这个文件放到暂存盘中</li>
-<li>对b.txt这个文件做一些操作，之后文件的状态发生改变,出现没有暂存的修改</li>
-<li>我们需要将这个修改添加到暂存盘中 <code>$ git add b.txt</code>现在他已经在我们的暂存盘中了</li>
-<li>最后一波提交即可<code>$ git commit -m &#39;提交了文件b.txt&#39;</code>现在b.txt文件的状态也已经存储到仓库中了</li>
-</ul>
-<h1 id="文件删除的的流程"><a href="#文件删除的的流程" class="headerlink" title="文件删除的的流程"></a>文件删除的的流程</h1><ul>
-<li>首先已经提交过文件了确保这个文件在git的管理中 <code>$ git add c.txt</code> 将c.txt这个文件放到暂存盘中</li>
-<li>c.txt这个文件删除<code>rm c.txt</code>此时该文件目前是被删除（文件夹中查看是不见的）</li>
-<li>此时我们确定删除，<code>$ git commit -m &#39;删除了c.txt&#39;</code>现在c.txt文件被删除的状态也已经存储到仓库中了</li>
-</ul>
-<h1 id="一些撤销的操作"><a href="#一些撤销的操作" class="headerlink" title="一些撤销的操作"></a>一些撤销的操作</h1><ul>
-<li>当我们<strong>修改/删除</strong>了文件 <strong>没有</strong>提交到暂存盘的时候我们可以使用 <code>$ git checkout --file</code>进行回退操作（这里不加–也是可以的<code>$ git checkout file</code>容易和分支搞混）</li>
-<li>当我们<strong>修改/删除</strong>了文件 <strong>已经</strong>提交到暂存盘的时候我们可以使用 <code>$ git reset file</code>将文件从暂存区撤回（现在相当于修改了未提交），之后进行上面的操作即可</li>
-</ul>
-<h1 id="一些版本回退的操作"><a href="#一些版本回退的操作" class="headerlink" title="一些版本回退的操作"></a>一些版本回退的操作</h1><blockquote>
-<p> 我们可以使用 <code>$ git log</code> 查看历史纪录</p>
-</blockquote>
-<ul>
-<li>也可以使用 <code>$ git reflog</code> 查看历史纪录,此时查询出的历史记录是带一些版本号，便于我们恢复</li>
-<li>git reset –hard HEAD~3`前3步</li>
-<li>我们可以使用<code>$ git reset --hard xxxxx</code>回退到指定的步数 也就是我们在<code>$ git reflog</code>查询出的序列号</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1332,7 +1336,7 @@ log-bin-trust-function-creators=1 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_T
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-count">132</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

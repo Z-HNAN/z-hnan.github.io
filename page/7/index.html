@@ -188,6 +188,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/不适合使用箭头函数的场景/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/10/不适合使用箭头函数的场景/" class="post-title-link" itemprop="url">不适合使用箭头函数的场景</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-10 21:38:38" itemprop="dateCreated datePublished" datetime="2019-10-10T21:38:38+08:00">2019-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>箭头函数无法绑定this<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fn1 = <span class="function">(<span class="params">p</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(p)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn2</span> (<span class="params">p</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(p)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">fn1.apply(&#123;<span class="attr">name</span>: <span class="string">'zzz'</span>&#125;, [<span class="string">'fn1'</span>])  <span class="comment">// fn1 undefined</span></span><br><span class="line">fn2.apply(&#123;<span class="attr">name</span>: <span class="string">'zzz'</span>&#125;, [<span class="string">'fn2'</span>]) <span class="comment">// fn2 &#123; name: 'zzz' &#125;</span></span><br><span class="line"></span><br><span class="line">fn1.call(&#123;<span class="attr">name</span>: <span class="string">'zzz'</span>&#125;, <span class="string">'fn1'</span>)  <span class="comment">// fn1 undefined</span></span><br><span class="line">fn2.call(&#123;<span class="attr">name</span>: <span class="string">'zzz'</span>&#125;, <span class="string">'fn2'</span>) <span class="comment">// fn2 &#123; name: 'zzz' &#125;</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="在对象内使用需要注意的"><a href="#在对象内使用需要注意的" class="headerlink" title="在对象内使用需要注意的"></a>在对象内使用需要注意的</h4><h6 id="定义字面量的方法"><a href="#定义字面量的方法" class="headerlink" title="定义字面量的方法"></a>定义字面量的方法</h6><p>在对象内定义方法的时候，如果该方案使用到了this，那么则需为传统函数的形式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误的使用</span></span><br><span class="line"><span class="keyword">const</span> calculator = &#123;</span><br><span class="line">  array: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">  sum: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// this指向的是外部window对象 </span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.array.reduce(<span class="function">(<span class="params">result, item</span>) =&gt;</span> result + item, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确的使用</span></span><br><span class="line"><span class="keyword">const</span> calculator = &#123;</span><br><span class="line">  array: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">  sum1: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 指向对象本身</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.array.reduce(<span class="function">(<span class="params">result, item</span>) =&gt;</span> result + item, <span class="number">0</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  sum2 () &#123; <span class="comment">// 和上面是一样的</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// 指向对象本身</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.array.reduce(<span class="function">(<span class="params">result, item</span>) =&gt;</span> result + item, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h6 id="定义原型上的方法"><a href="#定义原型上的方法" class="headerlink" title="定义原型上的方法"></a>定义原型上的方法</h6><p>原型上定义的方法，有时目的就是取到对象this，进行操作，也不能使用箭头函数的形式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确的使用方式</span></span><br><span class="line">Cat.prototype.sayCatName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// cat实例</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误的使用方式</span></span><br><span class="line">Cat.prototype.sayCatName = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>); <span class="comment">// =&gt; window</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name; <span class="comment">// 外部取不到就会报错</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="定义事件的回调函数上"><a href="#定义事件的回调函数上" class="headerlink" title="定义事件的回调函数上"></a>定义事件的回调函数上</h4><p>因为回调函数目的是当前的对象，在之后还能调用它，也就是强烈需要this的信息<br>当时用了箭头函数的时候，会丢失this<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="built_in">document</span>.getElementById(<span class="string">'myButton'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误的使用</span></span><br><span class="line">button.addEventListener(<span class="string">'click'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// =&gt; window</span></span><br><span class="line">  <span class="keyword">this</span>.innnerHTML = <span class="string">'new Button Text'</span> <span class="comment">// 报错，此时window无innerHTML属性</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确的使用</span></span><br><span class="line">button.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>) <span class="comment">// =&gt; button</span></span><br><span class="line">  <span class="keyword">this</span>.innnerHTML = <span class="string">'new Button Text'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h4 id="定义构造函数"><a href="#定义构造函数" class="headerlink" title="定义构造函数"></a>定义构造函数</h4><p>箭头函数定义在构造函数中是没有意义的<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误使用</span></span><br><span class="line"><span class="keyword">const</span> Fish = <span class="function">(<span class="params">name</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> Fish(<span class="string">'feifei'</span>)) <span class="comment">// 报错，Fish不是构造函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确使用</span></span><br><span class="line"><span class="keyword">const</span> Dog = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> Dog(<span class="string">'heihei'</span>))</span><br></pre></td></tr></table></figure></p>
+<h4 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h4><p>虽然使用箭头函数可以少去花括号，少去return, 一行完成，但是一定要是在代码可读的情况下，<br>与代码可维护性相比较，过短的代码会影响对其的解读性</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/08/关于react中的context的理解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -931,85 +1003,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/Fragment/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/08/14/Fragment/" class="post-title-link" itemprop="url">React Fragment</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-08-14 20:49:10" itemprop="dateCreated datePublished" datetime="2019-08-14T20:49:10+08:00">2019-08-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>可以理解为,是一个空的jsx标签<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&gt;&lt;/&gt; // 这其实是&lt;React.Fragment&gt;&lt;/React.Fragment&gt;的语法糖</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><p>当前父组件中是一个table中的tr</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;tr&gt; &#123;children&#125; &lt;<span class="regexp">/tr&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>table&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果children是传统上的div,</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;td&gt;Hello&lt;<span class="regexp">/td&gt;</span></span><br><span class="line"><span class="regexp">  &lt;td&gt;World&lt;/</span>td&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>那么最终展示的效果为,展示会出现,显示异常<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">td</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">td</span>&gt;</span>World<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>使用React.Fragment时<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;React.Fragment&gt;</span><br><span class="line">  &lt;td&gt;Hello&lt;<span class="regexp">/td&gt;</span></span><br><span class="line"><span class="regexp">  &lt;td&gt;World&lt;/</span>td&gt;</span><br><span class="line">&lt;<span class="regexp">/React.Fragment&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>那么最终展示的效果为,展示会出现，显示正常<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span>World<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1081,7 +1074,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-count">132</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

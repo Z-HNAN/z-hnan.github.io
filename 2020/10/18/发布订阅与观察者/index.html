@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="发布订阅与观察者模式总是被混淆，不容易分辨，其实这两种模式最初都是同一种，之后进行了一些发展与演变，才有了发布订阅这种解耦的方式，就自己的理解谈一谈这两种方式的具体区别。 两者的区别 发布订阅可以说是观察者模式的一种升级  观察者模式核心是我知道你的存在，当发生了变化时我直接通知大家发生的变化。  发布订阅模式核心是我不知道其他人是否存在，我需要告诉第三方有事件了，第三方负责去通知各个订阅人，同理">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="发布订阅与观察者">
+<meta property="og:url" content="http://yoursite.com/2020/10/18/发布订阅与观察者/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="发布订阅与观察者模式总是被混淆，不容易分辨，其实这两种模式最初都是同一种，之后进行了一些发展与演变，才有了发布订阅这种解耦的方式，就自己的理解谈一谈这两种方式的具体区别。 两者的区别 发布订阅可以说是观察者模式的一种升级  观察者模式核心是我知道你的存在，当发生了变化时我直接通知大家发生的变化。  发布订阅模式核心是我不知道其他人是否存在，我需要告诉第三方有事件了，第三方负责去通知各个订阅人，同理">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/2020/10/18/observer.png">
+<meta property="og:image" content="http://yoursite.com/img/2020/10/18/pub-sub.png">
+<meta property="og:updated_time" content="2020-10-18T15:19:07.950Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="发布订阅与观察者">
+<meta name="twitter:description" content="发布订阅与观察者模式总是被混淆，不容易分辨，其实这两种模式最初都是同一种，之后进行了一些发展与演变，才有了发布订阅这种解耦的方式，就自己的理解谈一谈这两种方式的具体区别。 两者的区别 发布订阅可以说是观察者模式的一种升级  观察者模式核心是我知道你的存在，当发生了变化时我直接通知大家发生的变化。  发布订阅模式核心是我不知道其他人是否存在，我需要告诉第三方有事件了，第三方负责去通知各个订阅人，同理">
+<meta name="twitter:image" content="http://yoursite.com/img/2020/10/18/observer.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/10/18/发布订阅与观察者/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>发布订阅与观察者 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/18/发布订阅与观察者/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          发布订阅与观察者
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-10-18 11:46:25 / 修改时间：23:19:07" itemprop="dateCreated datePublished" datetime="2020-10-18T11:46:25+08:00">2020-10-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>发布订阅与观察者模式总是被混淆，不容易分辨，其实这两种模式最初都是同一种，之后进行了一些发展与演变，才有了发布订阅这种<strong>解耦</strong>的方式，就自己的理解谈一谈这两种方式的具体区别。</p>
+<h2 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h2><blockquote>
+<p>发布订阅可以说是观察者模式的一种升级</p>
+</blockquote>
+<p>观察者模式核心是我知道你的存在，当发生了变化时我直接通知大家发生的变化。</p>
+<p><img src="/img/2020/10/18/observer.png" alt="观察者模式"></p>
+<p>发布订阅模式核心是我不知道其他人是否存在，我需要告诉第三方有事件了，第三方负责去通知各个订阅人，同理各个订阅人也只是订阅了，具体会不会发生这个事件订阅人也不知道。</p>
+<p><img src="/img/2020/10/18/pub-sub.png" alt="发布订阅模式"></p>
+<p><strong>观察者模式是松耦合的，发布订阅是解耦合的。</strong></p>
+<p>解耦合当然是好事情了，但是还是需要去看具体的场景了，如果彻底解耦就需要第三方来帮助我们对接，那么无疑会增加我们的代码</p>
+<p>如果是大型系统的对接，我们就需要使用解耦合的场景，未来我们也不知道会有那些人来使用，会有谁接入进来，所以需要一个第三方平台来管控，是比较便于后续系统的继续拓展的。</p>
+<p>如果是我们自己内部代码，那么松耦合也是可以接受的，我们在编写代码就能掌控到全局，为了代码模块今后的拓展性，采用松耦合的方式也完全是ok的。</p>
+<p><strong>当发生取消操作时（不订阅），观察者模式主体是需要亲自操作的，而发布订阅模式发布者是不需要感知的。</strong></p>
+<h2 id="JS简单实现两种方式"><a href="#JS简单实现两种方式" class="headerlink" title="JS简单实现两种方式"></a>JS简单实现两种方式</h2><blockquote>
+<p>熟悉ts，推荐使用ts去实现，对于理解原理会更好一点。</p>
+</blockquote>
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><h4 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 观察者</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">  update(payload) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件主体</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>._observers = []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  add(observer) &#123;</span><br><span class="line">    <span class="keyword">this</span>._observers.push(observer)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  remove(observer) &#123;</span><br><span class="line">    <span class="keyword">const</span> removeIndex = <span class="keyword">this</span>._observers.indexOf(observer);</span><br><span class="line">    <span class="keyword">if</span> (removeIndex !== <span class="number">-1</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>._observers.splice(removeIndex, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  notify(payload) &#123;</span><br><span class="line">    <span class="keyword">this</span>._observers.forEach(<span class="function"><span class="params">observer</span> =&gt;</span> observer.update(payload));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><p>创建一个前端主题，并创建出多个开发者，最终前端更新主题，直接通知到开发者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FEObserver</span> <span class="keyword">extends</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  update(payload) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;<span class="keyword">this</span>.name&#125;</span>学习了-<span class="subst">$&#123;payload.type&#125;</span>`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> feSubject = <span class="keyword">new</span> Subject&lt;FEPayloadType&gt;();</span><br><span class="line"><span class="keyword">const</span> fe1 = <span class="keyword">new</span> FEObserver(<span class="string">'fe1'</span>);</span><br><span class="line"><span class="keyword">const</span> fe2 = <span class="keyword">new</span> FEObserver(<span class="string">'fe2'</span>);</span><br><span class="line"></span><br><span class="line">feSubject.add(fe1);</span><br><span class="line">feSubject.add(fe2);</span><br><span class="line"></span><br><span class="line">feSubject.notify(&#123; <span class="attr">type</span>: <span class="string">'CSS'</span> &#125;);</span><br><span class="line"><span class="comment">// fe1学习了-CSS</span></span><br><span class="line"><span class="comment">// fe2学习了-CSS</span></span><br><span class="line"></span><br><span class="line">feSubject.remove(fe2);</span><br><span class="line"></span><br><span class="line">feSubject.notify(&#123; <span class="attr">type</span>: <span class="string">'JS'</span> &#125;);</span><br><span class="line"><span class="comment">// fe1学习了-JS</span></span><br></pre></td></tr></table></figure>
+<h3 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h3><h4 id="核心代码-1"><a href="#核心代码-1" class="headerlink" title="核心代码"></a>核心代码</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.c = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 订阅指定的主题</span></span><br><span class="line">  subscribe(topic, ...handlers) &#123;</span><br><span class="line">    <span class="keyword">let</span> topics = <span class="keyword">this</span>.c.get(topic);</span><br><span class="line">    <span class="keyword">if</span> (!topics) &#123;</span><br><span class="line">      <span class="keyword">this</span>.c.set(topic, topics = []);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    topics.push(...handlers);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 取消订阅主题</span></span><br><span class="line">  unsubscribe(topic, handler) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!handler) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.c.delete(topic);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> topics = <span class="keyword">this</span>.c.get(topic);</span><br><span class="line">    <span class="keyword">if</span> (!topics) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> removeIndex = topics.indexOf(handler);</span><br><span class="line">    <span class="keyword">if</span> (removeIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    topics.splice(removeIndex, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (topics.length === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>.c.delete(topic);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 发布主题</span></span><br><span class="line">  publish(topic, ...args) &#123;</span><br><span class="line">    <span class="keyword">const</span> topics = <span class="keyword">this</span>.c.get(topic);</span><br><span class="line">    <span class="keyword">if</span> (!topics) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> topics.map(<span class="function"><span class="params">handler</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> handler(...args);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="built_in">console</span>.error(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用示例-1"><a href="#使用示例-1" class="headerlink" title="使用示例"></a>使用示例</h4><p>创建一个ts学习主题，进行一下订阅，之后统一发布到EventCenter</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> eventCenter = <span class="keyword">new</span> EventEmitter();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> subscriberTs1 = <span class="function">(<span class="params">content</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`subscriberTs1 receive: <span class="subst">$&#123;content&#125;</span>`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> subscriberTs2 = <span class="function">(<span class="params">content</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`subscriberTs2 receive: <span class="subst">$&#123;content&#125;</span>`</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 订阅事件</span></span><br><span class="line">eventCenter.subscribe(<span class="string">'ts'</span>, subscriberTs1);</span><br><span class="line">eventCenter.subscribe(<span class="string">'ts'</span>, subscriberTs2);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件</span></span><br><span class="line">eventCenter.publish(<span class="string">'ts'</span>, <span class="string">'发布了一篇ts文章'</span>);</span><br><span class="line"><span class="comment">// subscriberTs1 receive: 发布了一篇ts文章</span></span><br><span class="line"><span class="comment">// subscriberTs2 receive: 发布了一篇ts文章</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 取消订阅</span></span><br><span class="line">eventCenter.unsubscribe(<span class="string">'ts'</span>, subscriberTs1);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件</span></span><br><span class="line">eventCenter.publish(<span class="string">'ts'</span>, <span class="string">'发布了二篇ts文章'</span>);</span><br><span class="line"><span class="comment">// subscriberTs2 receive: 发布了二篇ts文章</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 取消订阅</span></span><br><span class="line">eventCenter.unsubscribe(<span class="string">'ts'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件</span></span><br><span class="line">eventCenter.publish(<span class="string">'ts'</span>, <span class="string">'发布了三篇ts文章'</span>);</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/15/使用Context处理React全局共享数据/" rel="prev" title="使用Context处理React全局共享数据">
+      <i class="fa fa-chevron-left"></i> 使用Context处理React全局共享数据
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#两者的区别"><span class="nav-number">1.</span> <span class="nav-text">两者的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS简单实现两种方式"><span class="nav-number">2.</span> <span class="nav-text">JS简单实现两种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#观察者模式"><span class="nav-number">2.1.</span> <span class="nav-text">观察者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#核心代码"><span class="nav-number">2.1.1.</span> <span class="nav-text">核心代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用示例"><span class="nav-number">2.1.2.</span> <span class="nav-text">使用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布订阅模式"><span class="nav-number">2.2.</span> <span class="nav-text">发布订阅模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#核心代码-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">核心代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用示例-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用示例</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

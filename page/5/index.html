@@ -188,6 +188,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/27/总结题4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/27/总结题4/" class="post-title-link" itemprop="url">总结题4</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-27 00:22:44" itemprop="dateCreated datePublished" datetime="2019-12-27T00:22:44+08:00">2019-12-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="填充数据处理"><a href="#填充数据处理" class="headerlink" title="填充数据处理"></a>填充数据处理</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  <span class="number">1</span>: <span class="number">111</span>,</span><br><span class="line">  <span class="number">2</span>: <span class="number">222</span>,</span><br><span class="line">  <span class="number">5</span>: <span class="number">555</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = [<span class="literal">null</span>, <span class="literal">null</span>, <span class="number">111</span>, <span class="number">222</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="number">555</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="创建数组，按照index依次放入"><a href="#创建数组，按照index依次放入" class="headerlink" title="创建数组，按照index依次放入"></a>创建数组，按照index依次放入</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">12</span>)</span><br><span class="line">  .fill(<span class="literal">null</span>)</span><br><span class="line">  .map(<span class="function">(<span class="params">item, index</span>) =&gt;</span> obj[index<span class="number">-1</span>] || item)</span><br></pre></td></tr></table></figure>
+<h2 id="利用keys的特性"><a href="#利用keys的特性" class="headerlink" title="利用keys的特性"></a>利用keys的特性</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">12</span>).fill(<span class="literal">null</span>)</span><br><span class="line"><span class="built_in">Object</span>.keys(obj).forEach(<span class="function"><span class="params">item</span> =&gt;</span> arr[item<span class="number">-1</span>] = obj[item])</span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 转换数组后检查</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">加入length属性，模拟成一个类数组，转换过来，不过要对照次序关系</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>js</span><br><span class="line">obj.length = <span class="number">13</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = <span class="built_in">Array</span>.from(obj)</span><br><span class="line">  .slice(<span class="number">1</span>)</span><br><span class="line">  .map(<span class="function"><span class="params">item</span> =&gt;</span> <span class="keyword">typeof</span> item === <span class="string">'undefined'</span> ? <span class="literal">null</span> : item)</span><br></pre></td></tr></table></figure>
+<h1 id="三种排序方式"><a href="#三种排序方式" class="headerlink" title="三种排序方式"></a>三种排序方式</h1><h2 id="冒泡排序-改变该数组"><a href="#冒泡排序-改变该数组" class="headerlink" title="冒泡排序(改变该数组)"></a>冒泡排序(改变该数组)</h2><p>依次比较前后的元素，是否需要交换位置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubble</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; arr.length - i - <span class="number">1</span>; j++) &#123;</span><br><span class="line">      <span class="comment">// 小于则交换</span></span><br><span class="line">      <span class="keyword">if</span> (arr[j] &gt; arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">        <span class="keyword">let</span> temp = arr[j]</span><br><span class="line">        arr[j] = arr[j+<span class="number">1</span>]</span><br><span class="line">        arr[j+<span class="number">1</span>] = temp</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="插入排序-返回一个新数组"><a href="#插入排序-返回一个新数组" class="headerlink" title="插入排序(返回一个新数组)"></a>插入排序(返回一个新数组)</h2><p>直接重新生成一个数组，插入每一项的时候按照顺序插入即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insert</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> result = []</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 默认放入第0个元素</span></span><br><span class="line">  result.push(arr[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> nextValue = arr[i]</span><br><span class="line">    <span class="comment">// 查找需要插入的位置</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = result.length - <span class="number">1</span>; j &gt;= <span class="number">0</span> ; j--) &#123;</span><br><span class="line">      <span class="comment">// 从后往前，找到了比它刚好小的，则放入这个后面即可</span></span><br><span class="line">      <span class="keyword">if</span> (result[j] &lt; nextValue) &#123;</span><br><span class="line">        <span class="comment">// 插入到之后，应该是index+1</span></span><br><span class="line">        result.splice(j+<span class="number">1</span>, <span class="number">0</span>, nextValue)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 比较之后，到了最后的元素,是当前最小的元素</span></span><br><span class="line">      <span class="keyword">if</span> (j === <span class="number">0</span>) &#123;</span><br><span class="line">        result.unshift(nextValue)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>类似一种分治的策略，左边比较一下，右边比较一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">10,3,6,7,5,8,1</span><br><span class="line"></span><br><span class="line">1. 找到7</span><br><span class="line">左侧（小）：3,5,6,1</span><br><span class="line">  2.找到5，</span><br><span class="line">    左侧(小)：3,1</span><br><span class="line">      1,3</span><br><span class="line">    右侧(大): 6</span><br><span class="line">右侧（大）：10,8</span><br><span class="line">  ....</span><br><span class="line"></span><br><span class="line">类似二叉树的中序遍历</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">quick</span> (<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 如果数组只有一项不必要继续下去,有可能一部分是空的，为0</span></span><br><span class="line">  <span class="keyword">if</span> (arr.length &lt;= <span class="number">1</span>)  &#123;</span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 寻找中间项</span></span><br><span class="line">  <span class="keyword">const</span> middleIndex = <span class="built_in">Math</span>.floor(arr.length / <span class="number">2</span>)</span><br><span class="line">  <span class="comment">// 取出中间项(并从原数组剔除)</span></span><br><span class="line">  <span class="comment">// arr = [...arr.slice(0, middleIndex), ...arr.slice(middleIndex+1)]</span></span><br><span class="line">  <span class="keyword">const</span> middleValue = arr.splice(middleIndex, <span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 准备左右数组递归下去</span></span><br><span class="line">  <span class="keyword">const</span> leftArr = []</span><br><span class="line">  <span class="keyword">const</span> rightArr = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    arr[i] &lt; middleValue ? leftArr.push(arr[i]) : rightArr.push(arr[i])</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 左右数组分别进行,并返回</span></span><br><span class="line">  <span class="comment">// return [</span></span><br><span class="line">  <span class="comment">//   ...quick(leftArr),</span></span><br><span class="line">  <span class="comment">//   middleValue,</span></span><br><span class="line">  <span class="comment">//   ...quick(rightArr),</span></span><br><span class="line">  <span class="comment">// ]</span></span><br><span class="line">  <span class="keyword">return</span> quick(leftArr).concat(middleValue, quick(rightArr))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="数组交集，并集，补集"><a href="#数组交集，并集，补集" class="headerlink" title="数组交集，并集，补集"></a>数组交集，并集，补集</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">intersect</span> (<span class="params">arr1, arr2</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// arr1中存在arr2</span></span><br><span class="line">  <span class="keyword">return</span> arr1.filter(<span class="function"><span class="params">v</span> =&gt;</span> arr2.includes(v) === <span class="literal">true</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">union</span> (<span class="params">arr1, arr2</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// arr1全部铺入，arr2铺入不在arr1存在的元素</span></span><br><span class="line">  <span class="keyword">return</span> [...arr1, ...arr2.filter(<span class="function"><span class="params">v</span> =&gt;</span> arr1.includes(v) === <span class="literal">false</span> )]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="数组旋转"><a href="#数组旋转" class="headerlink" title="数组旋转"></a>数组旋转</h1><p>移动数组，[1,2,3,4] -&gt; 2 [3,4,1,2]</p>
+<h2 id="真实移动"><a href="#真实移动" class="headerlink" title="真实移动"></a>真实移动</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">roate</span> (<span class="params">arr, offset</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 偏移中间的位置</span></span><br><span class="line">  <span class="keyword">const</span> middle = arr.length - offset</span><br><span class="line">  <span class="keyword">return</span> [...arr.slice(middle), ...arr.slice(<span class="number">0</span>, middle)]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="模拟队列操作"><a href="#模拟队列操作" class="headerlink" title="模拟队列操作"></a>模拟队列操作</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">roate</span> (<span class="params">arr, offset</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> result = [...arr]</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; offset; i++) &#123;</span><br><span class="line">    result.unshift(result.pop())</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="函数柯里化，实现累加"><a href="#函数柯里化，实现累加" class="headerlink" title="函数柯里化，实现累加"></a>函数柯里化，实现累加</h1><h2 id="指定累加次数，使用递归"><a href="#指定累加次数，使用递归" class="headerlink" title="指定累加次数，使用递归"></a>指定累加次数，使用递归</h2><p>其实是使用递归等待函数，直到凑齐了所有的参数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">currying</span> (<span class="params">fn, argsLength</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 参数数量达到即可执行</span></span><br><span class="line">    <span class="keyword">if</span> (args.length &gt;= argsLength) &#123;</span><br><span class="line">      <span class="keyword">return</span> fn.call(<span class="literal">null</span>, ...args)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为达到参数，继续柯里化</span></span><br><span class="line">    <span class="keyword">return</span> currying(fn.bind(<span class="literal">null</span>, ...args), argsLength - args.length)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span> (<span class="params">...args</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> args.reduce(<span class="function">(<span class="params">sum, current</span>) =&gt;</span> sum + current, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> curryAdd = currying(add, <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(curryAdd(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)) <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(curryAdd(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)) <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(curryAdd(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>)(<span class="number">4</span>)) <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用特殊方法触发累加"><a href="#使用特殊方法触发累加" class="headerlink" title="使用特殊方法触发累加"></a>使用特殊方法触发累加</h2><p><code>toString</code>,在某些特定的状态下时，会自动触发。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span> (<span class="params">...initArgs</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> args = initArgs</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后续函数作用仅仅是增加args</span></span><br><span class="line">  <span class="keyword">const</span> adder = <span class="function">(<span class="params">...currentArgs</span>) =&gt;</span> &#123;</span><br><span class="line">    args.push(...currentArgs)</span><br><span class="line">    <span class="keyword">return</span> adder</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 手动覆盖toString</span></span><br><span class="line">  adder.toString = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> args.reduce(<span class="function">(<span class="params">sum, current</span>) =&gt;</span> sum + current, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> adder</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>).toString()) <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>).toString()) <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>)(<span class="number">4</span>).toString()) <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/26/总结题3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1076,79 +1158,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/01/React错误边界/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/01/React错误边界/" class="post-title-link" itemprop="url">React错误边界</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-01 13:00:26" itemprop="dateCreated datePublished" datetime="2019-11-01T13:00:26+08:00">2019-11-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>在development环境下，会追踪上下文错误执行栈，也即在producetion中，可以看到效果</p>
-</blockquote>
-<h2 id="getDerivedStateFromError"><a href="#getDerivedStateFromError" class="headerlink" title="getDerivedStateFromError"></a>getDerivedStateFromError</h2><p>将当前渲染组件捕获error时，执行此方法，并且返回结果导入到state</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">state = &#123; <span class="attr">hasError</span>: <span class="literal">false</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> getDerivedStateFromError (error) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">hasError</span>: <span class="literal">true</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render () &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.state.hasError) <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Some Thing wrong<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.props.children</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其实就是在render中使用了一个判断，而这个判断的改变是在获取到错误时触发</p>
-<h2 id="componentDidCatch"><a href="#componentDidCatch" class="headerlink" title="componentDidCatch"></a>componentDidCatch</h2><p>当前的组件捕获到错误的时候，会执行此生命周期函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">componentDidCatch (error, info) &#123;</span><br><span class="line">  <span class="comment">// 上报错误信息</span></span><br><span class="line">  logErrorToService(error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="使用try-catch"><a href="#使用try-catch" class="headerlink" title="使用try-catch"></a>使用<code>try-catch</code></h2><p>该错误边际仅仅处理由渲染引发的问题，也即被<code>ErrorBoundary</code>包裹的部分，事件处理器中还是要使用tryCatch</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这种情况发生的错误是无法被错误边际捕获的</span></span><br><span class="line">handleToggleError = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'error'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件处理中还是要使用try-catch自行处理</span></span><br><span class="line">handelToggleError = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'error'</span>)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;button onClick=&#123;handleToggleError&#125;&gt; toggle error &lt;<span class="regexp">/button&gt;</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1220,7 +1229,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">131</span>
+          <span class="site-state-item-count">132</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
