@@ -188,6 +188,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/Git的与远程仓库搭配的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/10/18/Git的与远程仓库搭配的使用/" class="post-title-link" itemprop="url">Git的与远程仓库搭配的使用</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-18 20:25:02" itemprop="dateCreated datePublished" datetime="2018-10-18T20:25:02+08:00">2018-10-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="了解向远程仓库通讯"><a href="#了解向远程仓库通讯" class="headerlink" title="了解向远程仓库通讯"></a>了解向远程仓库通讯</h1><p><br> </p>
+<blockquote>
+<p>&#160; &#160;&#160; &#160;在远端的Git仓库中 比如我们在github中的仓库，会涉及到对文件的<strong>上传</strong>与下载<strong>下载</strong></p>
+</blockquote>
+<h1 id="文件push（推送）到远程仓库-160-git-push"><a href="#文件push（推送）到远程仓库-160-git-push" class="headerlink" title="文件push（推送）到远程仓库&#160;$ git push"></a>文件push（推送）到远程仓库&#160;<code>$ git push</code></h1><p><br></p>
+<blockquote>
+<p> &#160; &#160;&#160; &#160;在向远程的仓库进行提交文件的时候，他会覆盖到原来的一个版本，所以在push之前我们要做好准备。</p>
+</blockquote>
+<h1 id="文件pull（拉取）到本地仓库-160-git-pull"><a href="#文件pull（拉取）到本地仓库-160-git-pull" class="headerlink" title="文件pull（拉取）到本地仓库&#160;$ git pull"></a>文件pull（拉取）到本地仓库&#160;<code>$ git pull</code></h1><p><br></p>
+<blockquote>
+<p> &#160; &#160;&#160; &#160;在向本地仓库拉取文件的时候，很可能会出现 与远程仓库不一致的情况，这个时候与本地合并分支比较类似，他会在本地有冲突的文件做一些提示，我们在本地修改好之后直接提交即可，<strong>注意</strong>这时一定不要忘了 提交<code>$ git add .</code>与<code>$ git commit -m&#39;&#39;</code>与本地保持一致，这个时候本地仓库就已经是与远程仓库相同的情况。</p>
+</blockquote>
+<h1 id="文件远程同步的步骤"><a href="#文件远程同步的步骤" class="headerlink" title="文件远程同步的步骤"></a>文件远程同步的步骤</h1><p><br></p>
+<ul>
+<li>一般情况下 先是从远程仓库 <strong>pull</strong>下来，此时有冲突 也比较好解决</li>
+<li>再解决相应的冲突 即可将代码<strong>push</strong>推送的远程仓库</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/Git的基本本地操作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -422,7 +503,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-count">133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
