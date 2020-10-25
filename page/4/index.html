@@ -188,6 +188,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/12/event对象的几种定位/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/12/event对象的几种定位/" class="post-title-link" itemprop="url">event对象的几种定位</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-12 20:07:13" itemprop="dateCreated datePublished" datetime="2020-03-12T20:07:13+08:00">2020-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>系列均有x,y等两个方向的值</p>
+</blockquote>
+<h2 id="offset"><a href="#offset" class="headerlink" title="offset"></a>offset</h2><p>距离其父元素的左侧内部边框的距离,<em>如果边框较宽，点在边框上为负值，因为是到边框内侧距离</em></p>
+<h2 id="client"><a href="#client" class="headerlink" title="client"></a>client</h2><p>其距离浏览器左侧的距离</p>
+<h2 id="page"><a href="#page" class="headerlink" title="page"></a>page</h2><p>其距离当前页面的边框距离（client+页面滚动的距离）</p>
+<h2 id="screen"><a href="#screen" class="headerlink" title="screen"></a>screen</h2><p>其距离当前显示器的边框距离</p>
+<p><img src="/img/2020/03/12/event.jpg" alt="event的各距离图示"><br><em>图片来源,<a href="https://www.cnblogs.com/jiangxiaobo/p/6593584.html" target="_blank" rel="noopener">博客园</a></em></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/12/DOM对象各定位值/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1203,120 +1275,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/12/正则加强/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/12/正则加强/" class="post-title-link" itemprop="url">正则加强</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-12 00:17:12" itemprop="dateCreated datePublished" datetime="2020-01-12T00:17:12+08:00">2020-01-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span>.prototype.match <span class="comment">// 匹配</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">RegExp</span>.prototype.test <span class="comment">// 是否符合</span></span><br><span class="line"><span class="built_in">RegExp</span>.prototype.exec <span class="comment">// 执行，进行捕获</span></span><br></pre></td></tr></table></figure>
-<h2 id="字面量，构造函数创建的区别"><a href="#字面量，构造函数创建的区别" class="headerlink" title="字面量，构造函数创建的区别"></a>字面量，构造函数创建的区别</h2><h3 id="字面量创建，元字符使用比较简单，构造函数需要特殊转义，转义符才能使用"><a href="#字面量创建，元字符使用比较简单，构造函数需要特殊转义，转义符才能使用" class="headerlink" title="字面量创建，元字符使用比较简单，构造函数需要特殊转义，转义符才能使用"></a>字面量创建，元字符使用比较简单，构造函数需要特殊转义，转义符才能使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 字面量方式创建</span></span><br><span class="line"><span class="keyword">let</span> reg1 = <span class="regexp">/\d+/</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 由构造函数创建,注意由于使用字符串的方式，要注意转义的问题，一般将\变为\\即可</span></span><br><span class="line"><span class="keyword">let</span> reg2 = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'\\d+'</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="如果要拼接正则，只能使用构造函数的方式"><a href="#如果要拼接正则，只能使用构造函数的方式" class="headerlink" title="如果要拼接正则，只能使用构造函数的方式"></a>如果要拼接正则，只能使用构造函数的方式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zhn'</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/^@'+type+'@$/</span></span><br><span class="line">reg.test(<span class="string">'@zhn@'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">"@'''''''typeeeee'@"</span>) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> name = <span class="string">'zhn'</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'^@'</span> + name +<span class="string">'@$'</span>)</span><br><span class="line">reg.test(<span class="string">'@zhn@'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">"@'''''''typeeeee'@"</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h2 id="正则匹配修饰符"><a href="#正则匹配修饰符" class="headerlink" title="正则匹配修饰符"></a>正则匹配修饰符</h2><p>i =&gt; ignoreCase 忽略大小写<br>m =&gt; multiline  多次匹配<br>g =&gt; global     全局匹配</p>
-<h2 id="常用元字符"><a href="#常用元字符" class="headerlink" title="常用元字符"></a>常用元字符</h2><h3 id="量词元字符"><a href="#量词元字符" class="headerlink" title="量词元字符"></a>量词元字符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* + ? &#123;m&#125; &#123;m,&#125; &#123;m,n&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="特殊元字符"><a href="#特殊元字符" class="headerlink" title="特殊元字符"></a>特殊元字符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\ . ^ $ \n \w \s \b \t a|b|c [abc] [a-z] [^n34]</span><br><span class="line">()  (?:) (?=) (?!)</span><br></pre></td></tr></table></figure>
-<h3 id="普通元字符"><a href="#普通元字符" class="headerlink" title="普通元字符"></a>普通元字符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/RegExp/ -&gt; 匹配 &apos;RegExp&apos;</span><br></pre></td></tr></table></figure>
-<h2 id="括号相关"><a href="#括号相关" class="headerlink" title="括号相关"></a>括号相关</h2><h3 id="表示分组"><a href="#表示分组" class="headerlink" title="() 表示分组"></a><code>()</code> 表示分组</h3><p>改变优先级，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 表示18|29,会出现较为混乱的结果</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/^18|29$/</span></span><br><span class="line">reg.test(<span class="string">'18'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'29'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'189'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'129'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'1829'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'829'</span>) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 结合小括号完成需求</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/^(18|29)$/</span></span><br><span class="line">reg.test(<span class="string">'18'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'29'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'189'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'129'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'1829'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'829'</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="表示本身含义"><a href="#表示本身含义" class="headerlink" title="[] 表示本身含义"></a><code>[]</code> 表示本身含义</h3><h3 id="仅表示一个字母"><a href="#仅表示一个字母" class="headerlink" title="仅表示一个字母"></a>仅表示一个字母</h3><p>中括号内仅表示一位字母（所有出现的可能性，也只能代表出现的一次）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">reg = <span class="regexp">/^[@+]$/</span> <span class="comment">// 包含在内</span></span><br><span class="line">reg.test(<span class="string">'+'</span>)  <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'@@'</span>) <span class="comment">// false // 2个字母</span></span><br><span class="line">reg.test(<span class="string">'@+'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'ab'</span>) <span class="comment">// false // 2个字母</span></span><br><span class="line"></span><br><span class="line">reg = <span class="regexp">/^[^@+]$/</span> <span class="comment">// 不能出现在内</span></span><br><span class="line">reg.test(<span class="string">'+'</span>)  <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'@@'</span>) <span class="comment">// false // 2个字母</span></span><br><span class="line">reg.test(<span class="string">'@+'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'a'</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="特殊元字符（及元字符在中括号内）"><a href="#特殊元字符（及元字符在中括号内）" class="headerlink" title="特殊元字符（及元字符在中括号内）"></a>特殊元字符（及元字符在中括号内）</h3><blockquote>
-<p>注意，<code>\</code>是表示转义,<code>[\d]</code> 表示的为<code>\d</code>, 如果是<code>[\\d]</code>,则表示<code>\</code>或者<code>d</code><br>所以在字符串中，也不要忘记转义的存在</p>
-</blockquote>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">reg = <span class="regexp">/^[\d]$/</span></span><br><span class="line">reg.test(<span class="string">'\\'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'d'</span>) <span class="comment">// false</span></span><br><span class="line">reg.test(<span class="string">'6'</span>) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">reg = <span class="regexp">/^[\\d]$/</span></span><br><span class="line">reg.test(<span class="string">'\\'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'d'</span>) <span class="comment">// true</span></span><br><span class="line">reg.test(<span class="string">'6'</span>) <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line">reg = <span class="regexp">/^[\w]$/</span> <span class="comment">// \w 即数字字母下划线</span></span><br><span class="line">reg = <span class="regexp">/^[\\w]$/</span> <span class="comment">// 只表示 \ 和 w, (如果要用字符串做检测，同样需要对字符串\转义 '\\')</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">reg = <span class="regexp">/^[10-29]$/</span> <span class="comment">// 表示1 | 0-2 | 9</span></span><br></pre></td></tr></table></figure>
-<h2 id="正则的懒惰性"><a href="#正则的懒惰性" class="headerlink" title="正则的懒惰性"></a>正则的懒惰性</h2><p>在正则匹配中，会在其实例对象上的lastIndex记录上一次匹配的位置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\d+/g</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 4</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 5</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 7</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 8</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
-<p>正则方法exec中，会展现出其懒惰性，主要取决于是否加<code>g</code>,也即<code>regExp.global</code>是否为true,在为true的情况下，才会继续匹配</p>
-<blockquote>
-<p>这里的懒惰是指正则是否会继续在记录匹配，<code>/\d+/</code>与<code>/\d+/g</code>在reg.exec中都会只匹配一次，只是<code>g</code>模式可以继续执行reg.exec。而str.match中，<code>g</code>可以一次性全匹配出来，即匹配成也给数组<code>[&#39;2020&#39;,&#39;01&#39;,&#39;06&#39;]</code></p>
-</blockquote>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\d+/g</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 4</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 5</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 7</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 8</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\d+/</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 0</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 0</span></span><br><span class="line">reg.exec(<span class="string">'2020-01-08'</span>) <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(reg.lastIndex)  <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
-<h3 id="利用惰性求值，处理execall-核心"><a href="#利用惰性求值，处理execall-核心" class="headerlink" title="利用惰性求值，处理execall,核心"></a>利用惰性求值，处理execall,核心</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\d+/g</span></span><br><span class="line"><span class="keyword">let</span> str = <span class="string">'2019-01-08'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> res = reg.exec(str)</span><br><span class="line"><span class="keyword">while</span>(res) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res) <span class="comment">// 依此输出2019，01，08</span></span><br><span class="line">  res = reg.exec(str)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用了惰性求值后，regExp均会记录lastIndex</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> res = reg.exec(str)</span><br><span class="line"><span class="keyword">while</span>(reg.test(str) === <span class="literal">true</span>) &#123; <span class="comment">// 此时会做一次匹配 移动一次lastIndex</span></span><br><span class="line">  <span class="built_in">console</span>.log(res)</span><br><span class="line">  res = reg.exec(str) <span class="comment">// 此时会做一次匹配 移动一次lastIndex</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="正则贪婪性"><a href="#正则贪婪性" class="headerlink" title="正则贪婪性"></a>正则贪婪性</h2><p>懒惰性： 每次捕获时仅捕获第一个符合的匹配串</p>
-<p>贪婪性： 满足条件就会一直匹配</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\d+/g</span></span><br><span class="line"><span class="keyword">let</span> str = <span class="string">'2020-01-10'</span></span><br><span class="line">str.match(reg) <span class="comment">// ["2020", "01", "10"]</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\d+?/g</span></span><br><span class="line"><span class="keyword">let</span> str = <span class="string">'2020-01-10'</span></span><br><span class="line">str.match(reg) <span class="comment">// ["2", "0", "2", "0", "0", "1", "1", "0"]</span></span><br></pre></td></tr></table></figure>
-<h3 id="的五大作用"><a href="#的五大作用" class="headerlink" title="?的五大作用"></a><code>?</code>的五大作用</h3><ul>
-<li><code>/\d?/</code> 表示0次或1次</li>
-<li><code>/\d+?/</code> 表示最终捕获一个</li>
-<li><code>/(?:)/</code> 只分组不捕获</li>
-<li><code>/(?=)/</code> 正向匹配预查</li>
-<li><code>/(?!)/</code> 正向不匹配预查</li>
-<li><code>/(?&lt;=)/</code> 负向匹配预查</li>
-<li><code>/(?&lt;!)/</code> 负向不匹配预查</li>
-</ul>
-<h2 id="正则替换，replace"><a href="#正则替换，replace" class="headerlink" title="正则替换，replace"></a>正则替换，replace</h2><h3 id="匹配字符串替换的问题"><a href="#匹配字符串替换的问题" class="headerlink" title="匹配字符串替换的问题"></a>匹配字符串替换的问题</h3><p>每次匹配一个</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'zhn and zhn'</span></span><br><span class="line">str = str.replace(<span class="string">'zhn'</span>, <span class="string">'me'</span>) <span class="comment">// 'me an zhn'</span></span><br><span class="line">str = str.replace(<span class="string">'zhn'</span>, <span class="string">'me'</span>) <span class="comment">// 'me an zhn'</span></span><br></pre></td></tr></table></figure>
-<p>可能造成重复匹配</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'zhn and zhn'</span></span><br><span class="line">str = str.replace(<span class="string">'zhn'</span>, <span class="string">'goodzhn'</span>) <span class="comment">// 'goodzhn and zhn'</span></span><br><span class="line">str = str.replace(<span class="string">'zhn'</span>, <span class="string">'goodzhn'</span>) <span class="comment">// 'goodgoodzhn and zhn'</span></span><br></pre></td></tr></table></figure>
-<p>使用正则匹配较优，<code>String.prototype.replace(reg, [String] | [Fn])</code>,与正则搭配是比较好的</p>
-<blockquote>
-<p>记得全局匹配 <code>g</code></p>
-</blockquote>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'zhn and zhn'</span></span><br><span class="line">str = str.replace(<span class="regexp">/zhn/g</span>, <span class="string">'me'</span>) <span class="comment">// 'me an me'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> str = <span class="string">'zhn and zhn'</span></span><br><span class="line">str = str.replace(<span class="regexp">/zhn/g</span>, <span class="string">'goodzhn'</span>) <span class="comment">// 'goodzhn and goodzhn'</span></span><br></pre></td></tr></table></figure>
-<p>单词首字母大写转换</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">'good good study, become a good man.'</span></span><br><span class="line"><span class="keyword">let</span> reg = <span class="regexp">/\b([a-zA-Z])[a-zA-Z]+\b/g</span></span><br><span class="line">str = str.replace(reg, (...args) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> [content, $<span class="number">1</span>] = args</span><br><span class="line">    <span class="comment">// 首字母大写，并且除去首字母的内容</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;$<span class="number">1.</span>toUpperCase()&#125;</span><span class="subst">$&#123;content.substr(<span class="number">1</span>)&#125;</span>`</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(str) <span class="comment">// Good Good Study, Become a Good Man.</span></span><br></pre></td></tr></table></figure>
-<h2 id="正向负向预查"><a href="#正向负向预查" class="headerlink" title="正向负向预查"></a>正向负向预查</h2><p>正则表达式中匹配出：形参，函数体</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> bodyReg = <span class="regexp">/(?&gt;=\&#123;)(.|\n)+(?=\&#125;)/m</span></span><br><span class="line"><span class="keyword">const</span> paramsReg = <span class="regexp">/(?&gt;=\().+(?=\)\s+\&#123;)/</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1388,7 +1346,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

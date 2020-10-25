@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[1024给自己的礼物]]></title>
+    <url>%2F2020%2F10%2F25%2F1024%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A4%BC%E7%89%A9%2F</url>
+    <content type="text"><![CDATA[没错，脱单了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈！ 这个女孩子会给我带来好运的，好好培养她，用心去浇灌她，她会感受到的。 林女士，多多指教！(｡･ω･｡) (第一次送花) (这个该死的女人)]]></content>
+      <tags>
+        <tag>心情</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ts中空值处理]]></title>
     <url>%2F2020%2F10%2F21%2Fts%E4%B8%AD%E7%A9%BA%E5%80%BC%E5%A4%84%E7%90%86%2F</url>
     <content type="text"><![CDATA[!非空断言操作符断言为非空用于过滤掉空值，只是在ts类型检测层面上做了不提示，代码本质并没有任何修改 123const p: Person | null = null;console.log(p!.name); 经过ts的编译后，不会有任何处理 12const p = null;console.log(p.name); ?.可选运算符可选链，在遇到空值时，会立即停止表达式的执行，代码本质会做一些修改,当可选链中途断开的时候，会返回undefined 123const val = a?.bvar val = a === null || a === void 0 ? void 0 : a.b; 利用可选链，可以做一些深层次的选择 12// cityName的类型为 string ｜ undefinedconst cityName = p.city?.name ??空值合并运算符当操作符左边的值为null或者为undefined时，会取右侧的值，否则会返回左侧的值/表达式的值 ts最终会经过一次编译 123const val = a ?? 'default'const val = a !== null &amp;&amp; a !== void 0 ? a : 'default'; js中&amp;&amp;是判断falsy的值，比如&#39;&#39;, 0, NaN三个falsy值，&amp;&amp;会认为失败,而??会认定为成功，也即??是为判断取值而诞生的 12345const foo = null ?? 'default string';console.log(foo); // 输出："default string" const baz = 0 ?? 42;console.log(baz); // 输出：0 短路效果 12345678910111213function A() &#123; console.log('A was called'); return undefined;&#125;function B() &#123; console.log('B was called'); return false;&#125;function C() &#123; console.log('C was called'); return "foo";&#125; console.log(A() ?? C());console.log(B() ?? C());// A was called // C was called // foo // B was called // false 可配合可选链，做去参数的默认值 由于?.操作取不到值时会返回undefined，符合??的判定依据 12// 如果customCity.city取值成功会返回，如果失败会返回"Unknown city"const customCity = customer?.city ?? "Unknown city" 类型去除/增加空值1234567type Person = &#123; name: string; age?: number; &#125;type P1 = Partial&lt;Person&gt;&#123; name?: string; age?: number; &#125;type P2 = Required&lt;Person&gt;&#123; name: string; age: number; &#125; 参数取默认值，不要加? 123456function foo(name: string, age: number = 18) &#123; console.log(name, age)&#125;foo('zhn', 20) // 'zhn', 20foo('zhn') // 'zhn', 18]]></content>

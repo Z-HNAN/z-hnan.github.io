@@ -188,6 +188,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/reselect解读/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/08/14/reselect解读/" class="post-title-link" itemprop="url">reselect解读</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-14 20:55:05" itemprop="dateCreated datePublished" datetime="2019-08-14T20:55:05+08:00">2019-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>基于1.0.0 进行解读</p>
+</blockquote>
+<h4 id="简单回顾一下高阶函数"><a href="#简单回顾一下高阶函数" class="headerlink" title="简单回顾一下高阶函数"></a>简单回顾一下高阶函数</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myMemorize</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> lastRet = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">let</span> lastParam = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">let</span> resultFuc = fn</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...args</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (lastRet &amp;&amp; args.every(<span class="function">(<span class="params">value, index</span>) =&gt;</span> value === lastParam[index])) &#123;</span><br><span class="line">      <span class="comment">// 有缓存结果，并且参数完全一致</span></span><br><span class="line">      <span class="keyword">return</span> lastRet</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 缓存结果不一致</span></span><br><span class="line">    lastParam = args</span><br><span class="line">    lastRet = resultFuc(...args)</span><br><span class="line">    <span class="keyword">return</span> lastRet</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b</span><br><span class="line"><span class="keyword">let</span> memAdd = myMemorize(add)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'---------------------------'</span>)</span><br><span class="line">add(<span class="number">1</span>, <span class="number">2</span>)  =&gt; <span class="number">3</span> 计算</span><br><span class="line">add(<span class="number">1</span>, <span class="number">2</span>)  =&gt; <span class="number">3</span> 计算</span><br><span class="line"></span><br><span class="line">memAdd(<span class="number">1</span>, <span class="number">2</span>) =&gt; <span class="number">3</span> 计算</span><br><span class="line">memAdd(<span class="number">1</span>, <span class="number">2</span>) =&gt; <span class="number">3</span> 缓存</span><br></pre></td></tr></table></figure>
+<h4 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h4><p>进行缓存数据，他对纯函数的结果进行一次缓存，（纯函数<em>Pure Function</em>：给定确定的输入输出，他的值都是不变的，所以有了缓存的需求，不用每一次都计算）</p>
+<p>另外，在react中，由于React的Diff算法，他会打补丁，那么如果给的state相同的话，就会跳过这个补丁，也就省去了此次的刷新操作，节省了时间。然而在原本的React中，state更新时，所有的state都会被通知到，内容完全一样，只是他们的内存地址不同，所以就导致了Diff会打上一个无用的补丁，做一些不必要的视图刷新操作。</p>
+<h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><p>使用高阶函数，将上一次的纯函数的参数，和函数运算的结果，做存储，如果此次的参数和上一次的完全相同，那么就认为可以使用上一次的缓存，也就达到了存储的目的。大量运用到了高阶函数的思想。</p>
+<h4 id="主要的方法"><a href="#主要的方法" class="headerlink" title="主要的方法"></a>主要的方法</h4><ul>
+<li><p><code>createSelectorCreator(memoize)</code><br>用来做生成一个select,他的高阶函数作用是定制化了记忆函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">createSelectorCreator (memoize) &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * dependencies 他所要依赖的相关函数</span></span><br><span class="line"><span class="comment">   * resultFunc 运行最终结果的函数</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">dependencies, resultFunc</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 拿到一个定制化的memoize</span></span><br><span class="line">    <span class="keyword">const</span> memoizeResultFunc = memoize(resultFunc)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回selector,他的作用是处理每一个state</span></span><br><span class="line">    <span class="keyword">const</span> selector = <span class="function">(<span class="params">state, props, ...args</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 执行每一个dependency,获取到每一个参数</span></span><br><span class="line">      <span class="keyword">const</span> params = dependencies.map(</span><br><span class="line">          dependency =&gt; dependency(state, props, ...args)</span><br><span class="line">      );</span><br><span class="line">      <span class="comment">// 通过定制记忆函数返回数据</span></span><br><span class="line">      <span class="keyword">return</span> memoizedResultFunc(...params);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> selector</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>defaultMemoize(func)</code><br>默认的一个记忆函数，他的高阶函数作用是，记住了上一次参数和结果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">defaultMemoize (func) &#123;</span><br><span class="line">  <span class="keyword">let</span> lastParams = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">let</span> lastResult = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 如果上一次有结果，并且 每个参数都相同，就返回结果</span></span><br><span class="line">    <span class="keyword">if</span> (lastParams !== <span class="literal">null</span> &amp;&amp; </span><br><span class="line">      params.every(<span class="function">(<span class="params">value, index</span>) =&gt;</span> value === lastParams[index])) &#123;</span><br><span class="line">      <span class="keyword">return</span> lastResult;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 记忆上一次的参数，真正执行一次，并把结果都缓存起来</span></span><br><span class="line">    lastParams = params;</span><br><span class="line">    lastResult = func(...params);</span><br><span class="line">    <span class="keyword">return</span> lastResult;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>defaultEqualityCheck(a, b)</code><br>这个函数的作用是判断连个参数是否相等，上面使用了硬比较 <code>===</code>, 当然也可以用其他的判断方法代替一下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">value === lastParams[index]</span><br><span class="line">defaultEqualityCheck(value, lastParams[index])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> state = &#123;</span><br><span class="line">  shop: &#123;</span><br><span class="line">    items: [&#123;<span class="attr">id</span>:<span class="number">1</span>, <span class="attr">value</span>: <span class="number">1</span>&#125;,&#123;<span class="attr">id</span>:<span class="number">2</span>, <span class="attr">value</span>: <span class="number">2</span>&#125;,&#123;<span class="attr">id</span>:<span class="number">3</span>, <span class="attr">value</span>: <span class="number">3</span>&#125;]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> shopItemsSelector = <span class="function"><span class="params">state</span> =&gt;</span> state.shop.items</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> totalSelector = createSelector(</span><br><span class="line">  shopItemsSelector,</span><br><span class="line">  (items) =&gt; items.reduce(<span class="function">(<span class="params">acc, item</span>) =&gt;</span> acc + item.value, <span class="number">0</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> total = totalSelector(state)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 创建出selector</span></span><br><span class="line"><span class="keyword">let</span> selector = createSelector([fun1, fun2], fun3)</span><br><span class="line"><span class="keyword">let</span> someState = (<span class="function"><span class="keyword">function</span>(<span class="params">state, props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> state1 = fun1(state, props)</span><br><span class="line">  <span class="keyword">let</span> state2 = fun2(state, props)</span><br><span class="line">  <span class="keyword">return</span> fun3(state1, state2)</span><br><span class="line">&#125;)(state, props)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 记忆结果</span></span><br><span class="line"><span class="keyword">return</span> fun3(state1, state2),</span><br><span class="line"><span class="comment">// 将直接执行fun3替换为已经记忆化过的memoizedResultFunc</span></span><br><span class="line"><span class="keyword">return</span> memoizedResultFunc(state1, state2)</span><br><span class="line">他去判断state的值是否相同，如果相同，就直接返回出一个上一次存储的结果</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/redux中常用的efffects/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1066,71 +1150,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/13状态模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/13状态模式/" class="post-title-link" itemprop="url">13状态模式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:36:27" itemprop="dateCreated datePublished" datetime="2019-06-25T16:36:27+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 状态模式， 在不同的状态下面 动态的为不同的事件绑定不同的方法， </span></span><br><span class="line"><span class="comment"> 这里模拟 电灯开关的例子， 关灯状态  按钮作用 - 开灯  开灯状态 按钮作用 - 关灯</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不适用状态模式 耦合性比较高，各种状态耦合在一起</span></span><br><span class="line"><span class="keyword">var</span> Light = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.state = <span class="string">'off'</span></span><br><span class="line">  <span class="keyword">this</span>.button = <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line">Light.prototype.init = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="built_in">document</span>.createElement(<span class="string">'button'</span>),</span><br><span class="line">    self = <span class="keyword">this</span></span><br><span class="line">  </span><br><span class="line">  button.innerHTML = <span class="string">'开关'</span></span><br><span class="line">  <span class="keyword">this</span>.button = <span class="built_in">document</span>.body.appendChild( button )</span><br><span class="line">  <span class="keyword">this</span>.button.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    self.buttonWasPressed()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">Light.prototype.buttonWasPressed = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.state === <span class="string">'on'</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'关灯'</span>)</span><br><span class="line">    <span class="keyword">this</span>.state = <span class="string">'off'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.state === <span class="string">'off'</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'开灯'</span>)</span><br><span class="line">    <span class="keyword">this</span>.state = <span class="string">'on'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> Light()</span><br><span class="line">light.init()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传统模拟类的一种写法 状态模式 对象方法语言中的实现</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// offLightState</span></span><br><span class="line"><span class="keyword">var</span> OffLightState = <span class="function"><span class="keyword">function</span> (<span class="params">light</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.light = light</span><br><span class="line">&#125;</span><br><span class="line">OffLightState.prototype.buttonWasPressed = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'弱光'</span>) <span class="comment">// offLightState对应行为</span></span><br><span class="line">  <span class="keyword">this</span>.light.setState(<span class="keyword">this</span>.light.weakLightState)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// WeakLightState</span></span><br><span class="line"><span class="keyword">var</span> WeakLightState = <span class="function"><span class="keyword">function</span> (<span class="params">light</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.light = light</span><br><span class="line">&#125;</span><br><span class="line">WeakLightState.prototype.buttonWasPressed = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'强光'</span>) <span class="comment">// WeakLightState对应行为</span></span><br><span class="line">  <span class="keyword">this</span>.light.setState(<span class="keyword">this</span>.light.strongLightState)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// StrongLightState</span></span><br><span class="line"><span class="keyword">var</span> StrongLightState = <span class="function"><span class="keyword">function</span> (<span class="params">light</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.light = light</span><br><span class="line">&#125;</span><br><span class="line">StrongLightState.prototype.buttonWasPressed = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'关灯'</span>) <span class="comment">// StrongLightState对应行为</span></span><br><span class="line">  <span class="keyword">this</span>.light.setState(<span class="keyword">this</span>.light.offLightState)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Light = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.offLightState = <span class="keyword">new</span> OffLightState(<span class="keyword">this</span>)</span><br><span class="line">  <span class="keyword">this</span>.weakLightState = <span class="keyword">new</span> WeakLightState(<span class="keyword">this</span>)</span><br><span class="line">  <span class="keyword">this</span>.strongLightState = <span class="keyword">new</span> StrongLightState(<span class="keyword">this</span>)</span><br><span class="line">  <span class="keyword">this</span>.button = <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line">Light.prototype.init = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="built_in">document</span>.createElement(<span class="string">'button'</span>),</span><br><span class="line">    self = <span class="keyword">this</span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">this</span>.button = <span class="built_in">document</span>.body.appendChild(button)</span><br><span class="line">  <span class="keyword">this</span>.button.innerHTML = <span class="string">'开关类的状态机'</span></span><br><span class="line">  <span class="keyword">this</span>.currentState = <span class="keyword">this</span>.offLightState <span class="comment">// 设置初始化关灯的状态</span></span><br><span class="line">  <span class="keyword">this</span>.button.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    self.currentState.buttonWasPressed()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">Light.prototype.setState = <span class="function"><span class="keyword">function</span> (<span class="params"> newState </span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.currentState = newState</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> Light()</span><br><span class="line">light.init()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// javascript 版本的状态机 FSM Finite State Machine 有限状态机</span></span><br><span class="line"><span class="keyword">var</span> Light = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.currentState = FSM.off</span><br><span class="line">  <span class="keyword">this</span>.button = <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line">Light.prototype.init = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> button = <span class="built_in">document</span>.createElement(<span class="string">'button'</span>),</span><br><span class="line">    self = <span class="keyword">this</span></span><br><span class="line">  </span><br><span class="line">  button.innerHTML = <span class="string">'开关灯FSM实现模式'</span></span><br><span class="line">  <span class="keyword">this</span>.button = <span class="built_in">document</span>.body.appendChild(button)</span><br><span class="line">  <span class="keyword">this</span>.button.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    self.currentState.buttonWasPressed.call(self)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> FSM = &#123;</span><br><span class="line">  off: &#123;</span><br><span class="line">    buttonWasPressed: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'开灯'</span>)</span><br><span class="line">      <span class="keyword">this</span>.button.innerHTML = <span class="string">'下一次关灯'</span></span><br><span class="line">      <span class="keyword">this</span>.currentState = FSM.on</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  on: &#123;</span><br><span class="line">    buttonWasPressed: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'关灯'</span>)</span><br><span class="line">      <span class="keyword">this</span>.button.innerHTML = <span class="string">'下一次开灯'</span></span><br><span class="line">      <span class="keyword">this</span>.currentState = FSM.off</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> light = <span class="keyword">new</span> Light()</span><br><span class="line">light.init()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果有修改 只需呀在状态机中修改即可,不用改动原始的代码</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1202,7 +1221,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

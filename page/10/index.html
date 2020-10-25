@@ -188,6 +188,71 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/03代理模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/25/03代理模式/" class="post-title-link" itemprop="url">03代理模式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-25 16:29:01" itemprop="dateCreated datePublished" datetime="2019-06-25T16:29:01+08:00">2019-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 代理模式，通过一个代理对象访问本体</span></span><br><span class="line"><span class="comment"> 模拟小明将花送给A</span></span><br><span class="line"><span class="comment"> 可以通过B转送给A</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> Flower = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 默认 */</span></span><br><span class="line"><span class="keyword">var</span> xiaoming = &#123;</span><br><span class="line">  sendFlower: <span class="function"><span class="keyword">function</span> (<span class="params"> target </span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> flower = <span class="keyword">new</span> Flower()</span><br><span class="line">    target.receiveFlower( flower )</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> A = &#123;</span><br><span class="line">  receiveFlower: <span class="function"><span class="keyword">function</span> (<span class="params"> flower </span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log( <span class="string">'收到了花'</span> + flower)</span><br><span class="line">  &#125;,</span><br><span class="line">  listenGoodMood: <span class="function"><span class="keyword">function</span> (<span class="params">fn</span>) </span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'心情不错，我答应啦'</span>)</span><br><span class="line">      fn()</span><br><span class="line">    &#125;, <span class="number">5000</span>)  <span class="comment">// 假设A 5s后心情变好</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// xiaoming.sendFlower( A ) 这里A只有在心情好的时候 才收花,所以这里不行, 需要一个代理B</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> B = &#123;</span><br><span class="line">  receiveFlower: <span class="function"><span class="keyword">function</span> (<span class="params"> flower </span>) </span>&#123;</span><br><span class="line">    A.listenGoodMood(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      A.receiveFlower( flower )</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// xiaoming.sendFlower( B ) //通过一个代理B 完成了任务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 虚拟代理发送整合http请求发送</span></span><br><span class="line"><span class="comment"> 对于实时性不太高的系统可以采用，减少频繁的http次数保证高效 </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> synchronousFile = <span class="function"><span class="keyword">function</span> (<span class="params"> id </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'开始同步文件， HTTP....'</span> + id )</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> checkbox = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'input'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, c; c = checkbox[i++]; ) &#123;</span><br><span class="line">  c.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( <span class="keyword">this</span>.checked === <span class="literal">true</span> ) &#123;</span><br><span class="line">      synchronousFile ( <span class="keyword">this</span>.id )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 频繁的发送浪费网络请求， 可以整合成一批 进行发送 </span></span><br><span class="line"><span class="comment"> 其原理类似公交车发车， 只要有一个请求过来就放一个公交车，</span></span><br><span class="line"><span class="comment"> 等待2s后，一起发车，后续的请求直接上车即可</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> proxySynchronousFile = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> cache = [], <span class="comment">// 保存发送队列</span></span><br><span class="line">    timer <span class="comment">// 定时器</span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"> id </span>) </span>&#123; <span class="comment">// 代理对象要与本体设计一致 方便调换和更改</span></span><br><span class="line">     cache.push(id) <span class="comment">// 放入发送队列</span></span><br><span class="line">     <span class="keyword">if</span> ( timer ) &#123; <span class="comment">// 当前已经有一批准备好，发送中</span></span><br><span class="line">       <span class="keyword">return</span></span><br><span class="line">     &#125;</span><br><span class="line">     </span><br><span class="line">     timer = setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">       synchronousFile ( cache.join( <span class="string">','</span> ) )</span><br><span class="line">       clearTimeout( timer )</span><br><span class="line">       timer = <span class="literal">null</span></span><br><span class="line">       cache.length = <span class="number">0</span> <span class="comment">// 清空集合</span></span><br><span class="line">     &#125;, <span class="number">2000</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> checkbox = <span class="built_in">document</span>.getElementsByTagName( <span class="string">'input'</span> )</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, c; c = checkbox[i++]; ) &#123;</span><br><span class="line">  c.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.checked === <span class="literal">true</span>) &#123;</span><br><span class="line">      proxySynchronousFile( <span class="keyword">this</span>.id )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 缓存代理，就是将一些结果提前缓存起来，然后后续便于直接查找</span></span><br><span class="line"><span class="comment">  如 这里做一些大计算（认为此处为复杂计算）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> mult = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="built_in">arguments</span>.length; i &lt; l; i++) &#123;</span><br><span class="line">    a = a * <span class="built_in">arguments</span>[i]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="built_in">arguments</span>.length; i &lt; l; i++) &#123;</span><br><span class="line">    a = a + <span class="built_in">arguments</span>[i] </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建缓存代理的工厂</span></span><br><span class="line"><span class="keyword">var</span> createProxyFactory = <span class="function"><span class="keyword">function</span> (<span class="params"> fn </span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> cache = &#123;&#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.join.call( <span class="built_in">arguments</span>, <span class="string">','</span> )</span><br><span class="line">    <span class="keyword">if</span> (args <span class="keyword">in</span> cache) &#123;</span><br><span class="line">      <span class="keyword">return</span> cache[ args ]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cache[ args ] = fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> proxyMult = createProxyFactory( mult )</span><br><span class="line"><span class="keyword">var</span> proxyAdd = createProxyFactory( add )</span><br><span class="line"></span><br><span class="line">proxyMult(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// 进行计算，并且把结果放入缓存中</span></span><br><span class="line">proxyMult(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// 从缓存中直接读取</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/02策略模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -845,97 +910,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/31/对创建jQuery的理解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/31/对创建jQuery的理解/" class="post-title-link" itemprop="url">1.对创建jQuery的理解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-31 15:18:38" itemprop="dateCreated datePublished" datetime="2019-05-31T15:18:38+08:00">2019-05-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="关于jQuery中创建对象的相关，jQuery-fn-init-prototype-jQuery-fn"><a href="#关于jQuery中创建对象的相关，jQuery-fn-init-prototype-jQuery-fn" class="headerlink" title="关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn;"></a>关于jQuery中创建对象的相关，jQuery.fn.init.prototype = jQuery.fn;</h2><blockquote>
-<p>本文以jQuery2.0.3分析为例</p>
-</blockquote>
-<h2 id="关于构造函数的两个点"><a href="#关于构造函数的两个点" class="headerlink" title="关于构造函数的两个点"></a>关于构造函数的两个点</h2><ul>
-<li>在JS中创建对象必须要使用<code>new</code>，否则就如同构建了一个普通对象，<code>this</code>表示未来创建的实例， 并返回this</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Student</span> (<span class="params">school</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.school = school</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Student(<span class="string">'hdu'</span>) <span class="comment">// 创建了对象 &#123;school: 'hdu'&#125;</span></span><br><span class="line">Student(<span class="string">'hdu'</span>) <span class="comment">// 仅仅是执行了一个函数 并无其他作用</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>如果构造函数中有返回值<code>return xxx</code> 如果<code>xxx</code>是个复杂类型（对象,数组…）时，最终返回这个复杂类型（对象,数组…）</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Student</span> (<span class="params">school</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.school = school</span><br><span class="line">  <span class="keyword">return</span> <span class="number">666</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Student(<span class="string">'hdu'</span>) <span class="comment">// &#123;school: 'hdu'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Student</span> (<span class="params">school</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.school = school</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">name</span>: <span class="string">'LiHua'</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Student(<span class="string">'hdu'</span>) <span class="comment">// &#123;name: 'LiHua'&#125;</span></span><br></pre></td></tr></table></figure>
-<h4 id="jQuery-fn-init-prototype-jQuery-fn的作用"><a href="#jQuery-fn-init-prototype-jQuery-fn的作用" class="headerlink" title="jQuery.fn.init.prototype = jQuery.fn的作用"></a><code>jQuery.fn.init.prototype = jQuery.fn</code>的作用</h4><blockquote>
-<p>首先在jQuery中定义了 <code>jQuery.fn = jQuery.prototype</code> ，其应该是方便后续的调用，fn就是prototype</p>
-</blockquote>
-<blockquote>
-<p>我们在调用jQuery的时候，是采用<code>$(&#39;&#39;)</code>(<em>$ = jQuery</em>)</p>
-</blockquote>
-<p>我们都知道jQuery是面向对象的思想，其<code>$(&#39;&#39;).css()</code>,那么我们就能推测出来，<code>$(&#39;&#39;)</code>返回值是一个对象，<br>但是之前我们看到构造函数必须要使用<code>new</code>这个关键字才行,也就是<code>new $(&#39;&#39;)</code>，<br>然而jQuery目的就是让我们<code>write less</code>,所以我们自然就推测出来，<code>$(&#39;&#39;)</code>他的返回值是一个对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jQuery = <span class="function"><span class="keyword">function</span>(<span class="params"> selector, context </span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<p>这也就证明了我们的推测, 调用<code>$(&#39;&#39;)</code>其返回值是<code>jQuery.fn.init</code>的一个实例</p>
-<p>那么问题又来了，我们在使用的时候，好多方法都是挂载到<code>$</code>原型上面的，那么既然创建出的是<code>jQuery.fn.init</code>的一个实例，<br>调用<code>$(&#39;&#39;).css()</code> 那么这个<code>css()</code>应该在<code>jQuery.fn.init</code>的原型上才对，但是纵观源码，都是对<code>jQuery</code>的原型操作的，<br>我们自己定义拓展方法也是 <code>$.fn.myFunction</code>,这都说明了我们确实是挂载到 <code>$</code>的原型上的，所以我们不妨大胆假设一下，<br><strong><code>jQuery.fn.init</code>的原型就是<code>jQuery</code>的原型</strong>，这样才能很好的解释我们的推测，也就说明了我们虽然创建出的是<code>jQuery.fn.init</code>的一个实例，<br>由于其原型也是<code>jQuery</code>的原型，所以我们给jQuery添加的拓展方法，自然就关联到jQuery.fn.init上了</p>
-<p>带着问题向下翻，果不其然!<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Give the init function the jQuery prototype for later instantiation</span></span><br><span class="line">jQuery.fn.init.prototype = jQuery.fn;</span><br></pre></td></tr></table></figure></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>jQuery为了我们书写方便，避免了<code>new $(&#39; &#39;)</code>, 但是他的源码中帮我们new了一个对象出来，为了关联，就只能把jQuery的原型和底层帮我们new出来的这个的原型绑定在一起，</p>
-<p>这就有一个假象： <code>$(&#39;&#39;)</code>，给我们 new 了一个jQuery出来。</p>
-<ul>
-<li>其实我们用的是jQuery.fn.init的实例</li>
-<li>jQuery也只是一个方法名</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1007,7 +981,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

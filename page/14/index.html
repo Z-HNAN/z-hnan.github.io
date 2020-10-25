@@ -188,6 +188,95 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/Git中分支相关的操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/10/18/Git中分支相关的操作/" class="post-title-link" itemprop="url">Git中分支相关的操作</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-18 20:25:32" itemprop="dateCreated datePublished" datetime="2018-10-18T20:25:32+08:00">2018-10-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="为什么要存在分支"><a href="#为什么要存在分支" class="headerlink" title="为什么要存在分支"></a>为什么要存在分支</h1><p><br></p>
+<blockquote>
+<ul>
+<li>如果只有一个主分支<strong>master</strong>那么我们在提交或是 修改的时候很容易影响到其他的代码或是文件，所以这里就需要引入一些分支，在这个分支修改好之后，再推送到主分支上。</li>
+<li>一般Master分支是最稳定的一个分支，用于发布版本使用</li>
+</ul>
+</blockquote>
+<h1 id="新建一个分支-git-branch-lt-branchName-gt"><a href="#新建一个分支-git-branch-lt-branchName-gt" class="headerlink" title="新建一个分支 $ git branch &lt;branchName&gt;"></a>新建一个分支 <code>$ git branch &lt;branchName&gt;</code></h1><p><br></p>
+<blockquote>
+<p>新建一个分支</p>
+</blockquote>
+<h1 id="切换一个分支-git-checkout-lt-branchName-gt"><a href="#切换一个分支-git-checkout-lt-branchName-gt" class="headerlink" title="切换一个分支 $ git checkout &lt;branchName&gt;"></a>切换一个分支 <code>$ git checkout &lt;branchName&gt;</code></h1><p><br></p>
+<blockquote>
+<p>切换一个分支，这里可以使用一个比较快捷的操作，再新建完分支 直接切换过去<code>$ git checkout -b &lt;branchName&gt;</code> 直接新建并且切换到该分支</p>
+</blockquote>
+<h1 id="分支的删除-git-branche-d-lt-branchName-gt"><a href="#分支的删除-git-branche-d-lt-branchName-gt" class="headerlink" title="分支的删除 $ git branche -d &lt;branchName&gt;"></a>分支的删除 <code>$ git branche -d &lt;branchName&gt;</code></h1><p><br></p>
+<blockquote>
+<p>可以删除这个分支</p>
+</blockquote>
+<h1 id="分支的合并-git-merge-lt-branchName-gt"><a href="#分支的合并-git-merge-lt-branchName-gt" class="headerlink" title="分支的合并$ git merge &lt;branchName&gt;"></a>分支的合并<code>$ git merge &lt;branchName&gt;</code></h1><p><br></p>
+<ul>
+<li>先切换到需要被 合并的分支 比如主Master分支</li>
+<li>之后进行分支的合并<code>$ git merge &lt;branchName&gt;</code></li>
+<li>如果出现了冲突，那么我们就在本地解决 冲突，最后不要忘记本地的提交 <strong>add</strong>与<strong>commit</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/Git的与远程仓库搭配的使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -503,7 +592,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-count">134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
