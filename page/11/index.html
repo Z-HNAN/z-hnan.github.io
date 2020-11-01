@@ -188,6 +188,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/01/jQuery中选择元素的相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/01/jQuery中选择元素的相关/" class="post-title-link" itemprop="url">2.jQuery中选择元素的相关</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-01 20:35:57" itemprop="dateCreated datePublished" datetime="2019-06-01T20:35:57+08:00">2019-06-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>jQuery中最后都是输出一个伪数组，也即本质是一个对象，{0:xx, 1:xx, length:2}为其准备了length，也即可以使用循环，但是不能使用数组的内置方法<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.lenth; i++)&#123;</span><br><span class="line">  <span class="keyword">let</span> temp = <span class="keyword">this</span>[i]  <span class="comment">// 其实是通过一个字面量的方式取到了对象内部的数据。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">this</span>.slice()  <span class="comment">// x 报错，其不是一个数组</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>一般情况下，会出现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'&lt;div&gt;&lt;/div&gt;'</span>)  <span class="comment">// 创建元素</span></span><br><span class="line">$(<span class="string">'#dv1'</span>)        <span class="comment">// 选择id</span></span><br><span class="line">$(<span class="string">'.div a.active'</span>) <span class="comment">// 复杂的选择器</span></span><br><span class="line">$(<span class="built_in">document</span>)   <span class="comment">// 传入的对象</span></span><br><span class="line">$(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; &#125;) <span class="comment">// 页面加载函数</span></span><br><span class="line">$(<span class="string">'[]'</span>) $(<span class="string">'&#123;&#125;'</span>)  <span class="comment">// 一些其他的</span></span><br></pre></td></tr></table></figure>
+<p>首先他都是通过一些正则的判断，用来匹配，用if else来分治不同的情况。</p>
+<ul>
+<li><p><code>$(&#39;&lt;div&gt;&lt;/div&gt;&#39;) $(&#39;&lt;div title=&#39;div&#39; html=&quot;div&quot;&gt;&lt;/div&gt;&#39;)</code>html标签的形式<br>主要使用jQuery.parseHTML解析成html字符串的形式，并最后jQuery.merge来混合成位数组，如果里面有属性，则遍历这个属性,<br>如果是jQuery定义的方法，如css(),html(),就采用 <code>this[ key ] (this[key])</code> 否则进行属性添加，<code>this.attr(key, this[key])</code></p>
+</li>
+<li><p><code>$(&#39;#dv1&#39;)</code>id的形式<br>主要通过提取其id并且通过js原生方法getElementById用来获取dom,之后挂载到this后输出即可</p>
+</li>
+<li><p><code>$(&#39;.div a.active&#39;)</code>复杂的选择器<br>主要通过使用jQuery的内置方法find来进行寻找，其find内部使用了sizzle引擎进行查找</p>
+</li>
+<li><p><code>$(function () { })</code>function 页面加载函数<br>直接将其挂载到rootjQuery.ready() 上面，页面加载函数</p>
+</li>
+<li><p><code>$(&#39;[]&#39;) $(&#39;{}&#39;)</code>其他一些形式<br>通过jQuery.makeArray，传入两个参数，变成一个伪数组后输出即可</p>
+</li>
+</ul>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>jQuery中的伪数组里面都是dom对象，这也就解释了为什么可以通过<code>$(&#39;&#39;)[0] $(&#39;&#39;).get(0)</code> 来转换成dom对象，（get方法内部就是this[num]，如果是负数 -&gt; 从后往前取，那么就是this[this.length+num]）</p>
+<p>dom对象转换成jQuery对象只需要 <code>$(dom)</code>,如果是对象的话<code>this[0] = dom</code> 直接挂载上去即可</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/31/对创建jQuery的理解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -970,75 +1054,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/19/关于云函数中await与async的理解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/04/19/关于云函数中await与async的理解/" class="post-title-link" itemprop="url">02关于云函数中await与async的理解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-04-19 00:12:28" itemprop="dateCreated datePublished" datetime="2019-04-19T00:12:28+08:00">2019-04-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在小程序云开发的服务端交互数据库的案例中，官方文档都用了async与await,其实是为了更好的表示出先后次序</p>
-<h4 id="核心语法"><a href="#核心语法" class="headerlink" title="核心语法"></a>核心语法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">await</span> asyncFunction()   <span class="comment">// 等待异步函数的执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其实他会阻塞函数，可以理解为把一个异步活生生变成同步了</p>
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">;<span class="function">(<span class="params">(</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())    <span class="comment">// 1555597655277</span></span><br><span class="line">  timeout(<span class="number">5000</span>)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())    <span class="comment">// 1555597655279</span></span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;<span class="function">(<span class="params"><span class="keyword">async</span> (</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())    <span class="comment">// 1555597655277</span></span><br><span class="line">  <span class="keyword">await</span> timeout(<span class="number">5000</span>)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())    <span class="comment">// 1555597655279</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<p>那么可以看出，这样做的目的，一方面是为了严控代码的执行顺序，另一方便也省去了很多考虑异步的麻烦。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1110,7 +1125,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

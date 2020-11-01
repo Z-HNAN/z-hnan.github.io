@@ -188,6 +188,74 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/nginx配置spa前端工程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/13/nginx配置spa前端工程/" class="post-title-link" itemprop="url">nginx配置spa前端工程</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-13 19:17:02" itemprop="dateCreated datePublished" datetime="2019-10-13T19:17:02+08:00">2019-10-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>spa应用最终打包的dist中，是会以index.html作为入口文件，如果一旦使用browserURL的这种方式来做路由的跳转，那么在部署的时候，可能会出现以下问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">www.blog.com</span><br><span class="line"></span><br><span class="line">在正常情况下,在应用内，跳转式没问题的</span><br><span class="line">www.blog.com/profie</span><br><span class="line">www.blog.com/artcile</span><br><span class="line"></span><br><span class="line">如果是刷新网页，服务器就会提示。profile资源不存在，这是由于路由导致的，我们在spa内解析的路由没有正确的被识别，反而当成了一种资源</span><br></pre></td></tr></table></figure>
+<p>在nginx的配置文件中，要使用如下的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">      listen       8080;</span><br><span class="line">      server_name  localhost;</span><br><span class="line">      root /usr/project/dist;</span><br><span class="line">      index index.html;</span><br><span class="line"></span><br><span class="line">      location / &#123;</span><br><span class="line">          try_files $uri $uri/ @router;</span><br><span class="line">          index index.html;</span><br><span class="line">          proxy_set_header   Host             $host;</span><br><span class="line">          proxy_set_header   X-Real-IP        $remote_addr;</span><br><span class="line">          proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">          proxy_set_header   X-Forwarded-Proto  $scheme;</span><br><span class="line">      &#125;</span><br><span class="line">      location @router &#123;</span><br><span class="line">          rewrite ^.*$ /index.html break;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/简单了解EventLoop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -915,98 +983,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/taro中集成redux-saga/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/08/14/taro中集成redux-saga/" class="post-title-link" itemprop="url">taro中集成redux-saga</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-08-14 22:52:44" itemprop="dateCreated datePublished" datetime="2019-08-14T22:52:44+08:00">2019-08-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>taro中redux处理方案是采用redux-thunk,这里采用<a href="https://redux-saga.js.org/" target="_blank" rel="noopener">redux-saga</a>解决异步问题，<em>引入目前最新<a href="mailto:redux-saga@1.0.5" target="_blank" rel="noopener">redux-saga@1.0.5</a></em></p>
-</blockquote>
-<h4 id="引入方式一"><a href="#引入方式一" class="headerlink" title="引入方式一"></a>引入方式一</h4><p>可以直接下载种子项目，已经引入了saga，并做好了相关配置，可在此基础上再次开发<br><a href="https://github.com/Z-HNAN/taro-redux-saga-seed" target="_blank" rel="noopener">taro-redux-saga-seed</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 下载种子项目</span><br><span class="line">git clone https://github.com/Z-HNAN/taro-redux-saga-seed</span><br><span class="line"></span><br><span class="line">// 安装依赖</span><br><span class="line">cd taro-redux-saga-seed</span><br><span class="line">npm i </span><br><span class="line"></span><br><span class="line">// 启动项目-小程序(微信开发者工具查看效果，有一个3s延迟的add示例)</span><br><span class="line">npm run dev:weapp</span><br></pre></td></tr></table></figure></p>
-<h4 id="引入方式二"><a href="#引入方式二" class="headerlink" title="引入方式二"></a>引入方式二</h4><p>在自己已经有的项目上引入，按照后续步骤自行引入即可</p>
-<h4 id="安装redux-saga"><a href="#安装redux-saga" class="headerlink" title="安装redux-saga"></a>安装redux-saga</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i redux-saga</span><br></pre></td></tr></table></figure>
-<h4 id="更改目录形式"><a href="#更改目录形式" class="headerlink" title="更改目录形式"></a>更改目录形式</h4><p>将每个文件放在模块中，利于查找，便于引入，后面引入saga文件也比较清晰，当然这里只是一个个人喜好，也可按照自己的目录形式来安排，这里只做一个参考,请多留意引入文件路径是否正确。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">└─src                     </span><br><span class="line">    │  app.jsx            </span><br><span class="line">    │  app.less           </span><br><span class="line">    │  index.html         </span><br><span class="line">    │                     </span><br><span class="line">    ├─pages               </span><br><span class="line">    │  └─index            </span><br><span class="line">    │          action.js  </span><br><span class="line">    │          index.jsx  </span><br><span class="line">    │          index.less </span><br><span class="line">    │          reducer.js </span><br><span class="line">    |          saga.js</span><br><span class="line">    │                     </span><br><span class="line">    └─store               </span><br><span class="line">            index.js      </span><br><span class="line">            reducer.js</span><br><span class="line">            saga.js</span><br></pre></td></tr></table></figure></p>
-<h4 id="引入index模块的saga"><a href="#引入index模块的saga" class="headerlink" title="引入index模块的saga"></a>引入index模块的saga</h4><ul>
-<li><code>pages/index/saga.js</code>捕获当前模块中的action</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; put, delay, takeEvery&#125; <span class="keyword">from</span> <span class="string">'redux-saga/effects'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">asyncAddRequest</span> (<span class="params">action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; timeout &#125; = action.payload</span><br><span class="line">  <span class="keyword">yield</span> delay(timeout)</span><br><span class="line">  <span class="keyword">yield</span> put(&#123; <span class="attr">type</span>: <span class="string">'ADD'</span> &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span>* (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> takeEvery(<span class="string">'ASYNC_ADD'</span>, asyncAddRequest)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="配置根saga文件"><a href="#配置根saga文件" class="headerlink" title="配置根saga文件"></a>配置根saga文件</h4><ul>
-<li><code>store/saga.js</code>启动各个模块的saga</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; all &#125; <span class="keyword">from</span> <span class="string">'redux-saga/effects'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> index <span class="keyword">from</span> <span class="string">'../pages/index/saga'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span>* (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> all([</span><br><span class="line">    index()</span><br><span class="line">  ])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="在store中引入sagaMiddleware"><a href="#在store中引入sagaMiddleware" class="headerlink" title="在store中引入sagaMiddleware"></a>在store中引入sagaMiddleware</h4><ul>
-<li><code>store/index.js</code>saga连接到store<ul>
-<li>引入saga</li>
-<li>配置saga中间件到middlewares</li>
-<li>启动saga</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware, compose &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"><span class="comment">/* 引入saga */</span></span><br><span class="line"><span class="keyword">import</span> createSagaMiddleware <span class="keyword">from</span> <span class="string">'redux-saga'</span></span><br><span class="line"><span class="keyword">import</span> rootSaga <span class="keyword">from</span> <span class="string">'./saga'</span></span><br><span class="line"><span class="keyword">import</span> rootReducer <span class="keyword">from</span> <span class="string">'./reducer'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> composeEnhancers =</span><br><span class="line">  <span class="keyword">typeof</span> <span class="built_in">window</span> === <span class="string">'object'</span> &amp;&amp;</span><br><span class="line">  <span class="built_in">window</span>.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   </span><br><span class="line">    <span class="built_in">window</span>.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(&#123;</span><br><span class="line">      <span class="comment">// Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...</span></span><br><span class="line">    &#125;) : compose</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成sagaMiddleware */</span></span><br><span class="line"><span class="keyword">const</span> sagaMiddleware = createSagaMiddleware();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> middlewares = [</span><br><span class="line">  <span class="comment">/* 应用saga */</span></span><br><span class="line">  sagaMiddleware</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 处理redux-logger */</span></span><br><span class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">'development'</span> &amp;&amp; process.env.TARO_ENV !== <span class="string">'quickapp'</span>) &#123;</span><br><span class="line">  middlewares.push(<span class="built_in">require</span>(<span class="string">'redux-logger'</span>).createLogger())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> enhancer = composeEnhancers(</span><br><span class="line">  applyMiddleware(...middlewares),</span><br><span class="line">  <span class="comment">// other store enhancers if any</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">configStore</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> store = createStore(rootReducer, enhancer)</span><br><span class="line">  <span class="comment">/* 启动saga */</span></span><br><span class="line">  sagaMiddleware.run(rootSaga)</span><br><span class="line">  <span class="keyword">return</span> store</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h4><ul>
-<li><code>pages/index/index.jsx</code> 本例以taro的redux为基础进行测试</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View, Button, Text &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; add, minus, asyncAdd &#125; <span class="keyword">from</span> <span class="string">'./action'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.less'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function">(<span class="params">state</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    counter: state.index.num</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function">(<span class="params">dispatch</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    add: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(add())</span><br><span class="line">    &#125;,</span><br><span class="line">    asyncAdd: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(asyncAdd(&#123; <span class="attr">timeout</span>: <span class="number">3000</span> &#125;))</span><br><span class="line">    &#125;,</span><br><span class="line">    minus: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(minus())</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@connect(mapStateToProps, mapDispatchToProps)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    config = &#123;</span><br><span class="line">    navigationBarTitleText: <span class="string">'首页'</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentWillReceiveProps (nextProps) &#123;</span><br><span class="line">    <span class="comment">// console.log(this.props, nextProps)</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentWillUnmount () &#123; &#125;</span><br><span class="line"></span><br><span class="line">  componentDidShow () &#123; &#125;</span><br><span class="line"></span><br><span class="line">  componentDidHide () &#123; &#125;</span><br><span class="line"></span><br><span class="line">  render () &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;View className=<span class="string">'index'</span>&gt;</span><br><span class="line">        &lt;Button className=<span class="string">'add_btn'</span> onClick=&#123;<span class="keyword">this</span>.props.add&#125;&gt;+<span class="xml"><span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line">        &lt;Button className=<span class="string">'dec_btn'</span> onClick=&#123;<span class="keyword">this</span>.props.minus&#125;&gt;-<span class="xml"><span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line">        &lt;Button className=<span class="string">'dec_btn'</span> onClick=&#123;<span class="keyword">this</span>.props.asyncAdd&#125;&gt;<span class="keyword">async</span>&lt;<span class="regexp">/Button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;View&gt;&lt;Text&gt;&#123;this.props.counter&#125;&lt;/</span>Text&gt;<span class="xml"><span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">        &lt;View&gt;<span class="xml"><span class="tag">&lt;<span class="name">Text</span>&gt;</span>Hello, Redux-saga<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span><span class="xml"><span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Index</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1078,7 +1054,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-count">135</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
