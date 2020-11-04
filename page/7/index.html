@@ -188,6 +188,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/15/js原型链相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/15/js原型链相关/" class="post-title-link" itemprop="url">js原型链相关</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-15 00:51:45" itemprop="dateCreated datePublished" datetime="2019-10-15T00:51:45+08:00">2019-10-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>首先是<code>__proto__</code>是不推荐使用的，这是大部分浏览器内部使用的一个对象，但是由于大部分浏览器都支持他了，所以ES’被迫’将这个属性写到了附录里面，但是也只是在浏览器环境中支持，其他环境不推荐支持该属性，应该使用<code>Object.getPrototypeOf()</code>来获取对象上的原型</p>
+</blockquote>
+<h2 id="prototype属性"><a href="#prototype属性" class="headerlink" title="prototype属性"></a>prototype属性</h2><blockquote>
+<p>当一个函数被创建的时候，他的原型对象就诞生了</p>
+</blockquote>
+<p>该属性是函数上用来使用的，为什么只有函数才有该属性了，应为js使用对象来new对象的时候，prototype就是指向的他的构造器，所以每一个函数其实都有可能成为一个构造器，可以用来new的，自然他们就需要挂载一个公共的指向对象，用来保存一些公共的方法，用来节省空间。也就有了prototype执行构造器。</p>
+<p>所以<code>__proto__ === prototype === Object.getPrototypeOf()</code></p>
+<blockquote>
+<p><code>new</code>的时候其实就是从Object继承个对象，挂载原型，然后把它绑定构造器执行</p>
+</blockquote>
+<h2 id="什么是原型链"><a href="#什么是原型链" class="headerlink" title="什么是原型链"></a>什么是原型链</h2><p><img src="/img/2019/10/15/1.png" alt="原型链上的关系"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">① foo的构造器<span class="function"><span class="keyword">function</span> <span class="title">Foo</span> (<span class="params"></span>) </span>&#123;&#125; 的原型, Foo.prototype</span><br><span class="line"></span><br><span class="line">② 函数的构造器<span class="function"><span class="keyword">function</span> <span class="title">Function</span> (<span class="params"></span>) </span>&#123;&#125; 的原型,  <span class="built_in">Function</span>.prototype</span><br><span class="line"></span><br><span class="line">③ 对象的构造器<span class="function"><span class="keyword">function</span> <span class="title">Object</span> (<span class="params"></span>) </span>&#123;&#125; 的原型,  <span class="built_in">Object</span>.prototype</span><br><span class="line"></span><br><span class="line">④ 函数的构造器<span class="function"><span class="keyword">function</span> <span class="title">Function</span> (<span class="params"></span>) </span>&#123;&#125; 的原型, <span class="built_in">Function</span>.prototype</span><br><span class="line"></span><br><span class="line">⑤ <span class="function"><span class="keyword">function</span>，由<span class="title">new</span> <span class="title">Function</span>(<span class="params"></span>)创造出来的的构造器<span class="title">function</span> <span class="title">Function</span> (<span class="params"></span>) </span>&#123;&#125; 的原型, <span class="built_in">Function</span>.prototype</span><br><span class="line"></span><br><span class="line">⑥ <span class="function"><span class="keyword">function</span> <span class="title">Function</span> 是最特殊的, 他的原型对象<span class="title">__prop__</span>就是他的<span class="title">proptype</span>对象，也就是 <span class="title">Function</span>.<span class="title">prototype</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="Object-prototype-proto"><a href="#Object-prototype-proto" class="headerlink" title="Object.prototype.__proto__"></a><code>Object.prototype.__proto__</code></h4><p>按道理<code>Object.prototype.__proto__</code>也是一个对象，应该指向Object的构造器的原型即，Object.prototype,但是这样就造成了循环的重复引用，导致寻找一个对象的原型链上的属性方法时，永远找不到尽头,所以为<code>null</code></p>
+<h4 id="prototype与constructor"><a href="#prototype与constructor" class="headerlink" title="prototype与constructor"></a>prototype与constructor</h4><p>构造函数拥有一个prototype属性，指向的是原型对象，然而原型对象上，有一个属性指向的constructor属性指向的是构造器的那个函数</p>
+<h2 id="如何判断一个对象是否在另一个对象的原型链上"><a href="#如何判断一个对象是否在另一个对象的原型链上" class="headerlink" title="如何判断一个对象是否在另一个对象的原型链上"></a>如何判断一个对象是否在另一个对象的原型链上</h2><h4 id="判断是否在我自己的原型链上object-instanceof-constructor"><a href="#判断是否在我自己的原型链上object-instanceof-constructor" class="headerlink" title="判断是否在我自己的原型链上object instanceof constructor"></a>判断是否在<strong>我自己</strong>的原型链上<code>object instanceof constructor</code></h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> fooObject = <span class="keyword">new</span> Foo()</span><br><span class="line"></span><br><span class="line">fooObject <span class="keyword">instanceof</span> Foo <span class="comment">// true</span></span><br><span class="line">fooObject <span class="keyword">instanceof</span> Functino <span class="comment">// false</span></span><br><span class="line">fooObject <span class="keyword">instanceof</span> <span class="built_in">Object</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h4 id="判断是否在别人的原型链上prototypeObj-isProptotypeOf-object"><a href="#判断是否在别人的原型链上prototypeObj-isProptotypeOf-object" class="headerlink" title="判断是否在别人的原型链上prototypeObj.isProptotypeOf(object)"></a>判断是否在<strong>别人</strong>的原型链上<code>prototypeObj.isProptotypeOf(object)</code></h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> fooObject = <span class="keyword">new</span> Foo()</span><br><span class="line"></span><br><span class="line">Foo.isProptotypeOf(fooObject) <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span>.isProptotypeOf(fooObject) <span class="comment">// false</span></span><br><span class="line"><span class="built_in">Object</span>.isProptotypeOf(fooObject) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="如何拒绝原型链，只看自己身上的属性hasOwnProperty"><a href="#如何拒绝原型链，只看自己身上的属性hasOwnProperty" class="headerlink" title="如何拒绝原型链，只看自己身上的属性hasOwnProperty"></a>如何拒绝原型链，只看自己身上的属性<code>hasOwnProperty</code></h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123; <span class="attr">age</span>: <span class="number">18</span> &#125;</span><br><span class="line"></span><br><span class="line">obj.hasOwnProperty(<span class="string">'age'</span>) <span class="comment">// true</span></span><br><span class="line">obj.hasOwnProperty(<span class="string">'toString'</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="实战（判断对象上的属性）"><a href="#实战（判断对象上的属性）" class="headerlink" title="实战（判断对象上的属性）"></a>实战（判断对象上的属性）</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.some = <span class="string">'222'</span></span><br><span class="line">  <span class="keyword">let</span> ccc = <span class="string">'ccc'</span></span><br><span class="line">  foo.okkoro = <span class="string">'okkoro'</span></span><br><span class="line">  foo.prototpye.a = <span class="string">'aaa'</span></span><br><span class="line">&#125;</span><br><span class="line">foo.koro = <span class="string">'koro'</span></span><br><span class="line">foo.prototpye.test = <span class="string">'test1'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> foo1 = <span class="keyword">new</span> foo ()</span><br><span class="line">foo1.prototpye.test = <span class="string">'test2'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终foo1上的属性（仅说明与此题相关的）</span></span><br><span class="line">foo: &#123;</span><br><span class="line">  some: <span class="string">'222'</span></span><br><span class="line">  __proto__: &#123;</span><br><span class="line">    a: <span class="string">'aaa'</span>,</span><br><span class="line">    test: <span class="string">'test2'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先要明白new的时候，首先从object继承了一个对象过来，然后把当前构造器的原型给他了他，他的原型上就有了a,之后又手动挂载了一个test,(后面被修改掉了，因为总是指向的关系)</p>
+<p>在实际的属性上，foo1仅有some一个属性，也就是构造函数中this的效果</p>
+<p>至于okkoro,koro这两个属性仅仅是foo的静态属性，通过foo1是无法访问到的，因为foo1和foo的关系仅仅是原型对象上的关系，实际挂载的属性是不相联系的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/nginx配置spa前端工程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -873,116 +959,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/微信小程序内，生成自定义二维码/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/08/14/微信小程序内，生成自定义二维码/" class="post-title-link" itemprop="url">微信小程序内，生成自定义二维码</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-08-14 22:54:48" itemprop="dateCreated datePublished" datetime="2019-08-14T22:54:48+08:00">2019-08-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近在开发中，需要生成自定义的二维码，于是做了一个包出来，分享给大家一起使用。适用于微信小程序的二维码生成器，基于Canvas生成，支持中文的输入。可在原生小程序，mpvue，taro中使用。（文末有一个使用示例）<img src="/img/2019/08/14/1.png" alt="qrcode"></p>
-<p>github地址 <a href="https://github.com/Z-HNAN/wxmp-qrcode" target="_blank" rel="noopener">wxmp-qrcode</a></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install wxmp-qrcode</span><br></pre></td></tr></table></figure>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ol>
-<li><p>创建一个canvas,设置其<code>id</code>,与<code>canvas-id</code>， 并设置canvas的样式，二维码基于其大小生成并居中</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"cav-qrcode"</span> <span class="attr">canvas-id</span>=<span class="string">"cav-qrcode"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>引入包并使用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QR <span class="keyword">from</span> <span class="string">'wxmp-qrcode'</span></span><br><span class="line">QR.draw(str, canvasId)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="api"><a href="#api" class="headerlink" title="api"></a>api</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 根据canvas尺寸，画出合适居中的qrcode</span><br><span class="line"> * @param &#123;Object&#125; str 二维码的内容 (必须)</span><br><span class="line"> * @param &#123;Object&#125; canvasId canvasId的值 (必须)</span><br><span class="line"> * @param &#123;Object&#125; $this 传入组件的this,兼容在组件中生成二维码 （可选，可省略该参数）</span><br><span class="line"> * @param &#123;Object&#125; callback 回调函数 (可选)</span><br><span class="line"> */</span><br><span class="line">draw: function (str, canvasId, $this, callback)</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* 清除canvas内容</span><br><span class="line">* @param &#123;Object&#125; canvasId canvasId (必须)</span><br><span class="line">* @param &#123;Object&#125; callback 回调函数 （可选）</span><br><span class="line">*/</span><br><span class="line">clear: function (canvasId, callback)</span><br></pre></td></tr></table></figure>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
-<li><p>canvas中 id, canvas-id必须保持一致</p>
-<ul>
-<li>id 获取canvas节点，自动计算大小使用, <strong>二维码大小基于canvas自动生成</strong></li>
-<li>canvas-id 绘制二维码使用</li>
-</ul>
-</li>
-<li><p>如果在组件中使用，需要传入组件的this，<code>draw(str, canvasId, componentThis)</code></p>
-<ul>
-<li>具体参见 <a href="https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createCanvasContext.html" target="_blank" rel="noopener">wx.createCanvasContext</a></li>
-</ul>
-</li>
-<li><p>可以保存二维码为临时图片地址</p>
-<ul>
-<li>具体可参见 <a href="https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasToTempFilePath.html" target="_blank" rel="noopener">wx.canvasToTempFilePath</a></li>
-<li>bug: 该方法有时保存的图片会有一个竖条。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">createQrCode: <span class="function"><span class="keyword">function</span> (<span class="params">content, canvasId</span>) </span>&#123;</span><br><span class="line">  QR.api.draw(content, canvasId)</span><br><span class="line">  <span class="keyword">this</span>.canvasToTempImage(canvasId)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取临时缓存图片路径</span></span><br><span class="line">canvasToTempImage: <span class="function"><span class="keyword">function</span> (<span class="params">canvasId</span>) </span>&#123;</span><br><span class="line">  wx.canvasToTempFilePath(&#123;</span><br><span class="line">    canvasId, </span><br><span class="line">    success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">let</span> tempFilePath = res.tempFilePath; <span class="comment">// 临时图片地址，可在放入图片src中使用</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="原生小程序wxmp中使用"><a href="#原生小程序wxmp中使用" class="headerlink" title="原生小程序wxmp中使用"></a>原生小程序wxmp中使用</h2><ol>
-<li>在项目设置中选择 <code>使用npm模块</code><br><img src="/img/2019/08/14/2.png" alt="使用npm模块"></li>
-<li>如果第一次使用npm模块，需要首先在根目录中<code>npm init</code>, 之后再安装模块 <code>npm i wxmp-qrcode</code> </li>
-<li>在工具中选择 <code>构建npm</code><br><img src="/img/2019/08/14/3.png" alt="构建npm"></li>
-<li><p>index.wxml</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"&#123;&#123;canvasId&#125;&#125;"</span> <span class="attr">canvas-id</span>=<span class="string">"&#123;&#123;canvasId&#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">bindtap</span>=<span class="string">"creatQRCode"</span>&gt;</span> 生成二维码 <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>index.wxss</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">canvas</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1</span>rpx solid <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">400</span>rpx;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">400</span>rpx;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">button</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">100</span>rpx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>index.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QR <span class="keyword">from</span> <span class="string">'./qrcode'</span></span><br><span class="line"></span><br><span class="line">Page(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    canvasId: <span class="string">'canvasId'</span>,</span><br><span class="line">    QRdata: <span class="string">'你好 wxmp-qrcode'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  creatQRCode () &#123;</span><br><span class="line">    <span class="keyword">let</span> str = <span class="keyword">this</span>.data.QRdata</span><br><span class="line">    <span class="keyword">let</span> canvasId = <span class="keyword">this</span>.data.canvasId</span><br><span class="line">    QR.draw(str, canvasId)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1054,7 +1030,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

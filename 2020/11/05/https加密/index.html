@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="简要介绍https是如何保证通信安全的 加密方式 对称加密  通过一个密钥，加密又可解密，通常此类算法性能损耗较小，加密速度相对比较快（简单的加密方式）  非对称加密  加密和解密不是同一个密钥。公钥加密，私钥解密；私钥加密，公钥解密。 公钥是可以公开的，私钥通常是自己保存的。 非对称加密的应用场景加密通信采用公钥加密数据，只有私钥可以解密，也就是只有私钥拥有者可以破译消息，就可以达到加密通信的要">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="https加密">
+<meta property="og:url" content="http://yoursite.com/2020/11/05/https加密/index.html">
+<meta property="og:site_name" content="Z-HNAN">
+<meta property="og:description" content="简要介绍https是如何保证通信安全的 加密方式 对称加密  通过一个密钥，加密又可解密，通常此类算法性能损耗较小，加密速度相对比较快（简单的加密方式）  非对称加密  加密和解密不是同一个密钥。公钥加密，私钥解密；私钥加密，公钥解密。 公钥是可以公开的，私钥通常是自己保存的。 非对称加密的应用场景加密通信采用公钥加密数据，只有私钥可以解密，也就是只有私钥拥有者可以破译消息，就可以达到加密通信的要">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/img/2020/11/05/color.png">
+<meta property="og:image" content="http://yoursite.com/img/2020/11/05/single-encrypt.png">
+<meta property="og:updated_time" content="2020-11-04T18:10:34.638Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="https加密">
+<meta name="twitter:description" content="简要介绍https是如何保证通信安全的 加密方式 对称加密  通过一个密钥，加密又可解密，通常此类算法性能损耗较小，加密速度相对比较快（简单的加密方式）  非对称加密  加密和解密不是同一个密钥。公钥加密，私钥解密；私钥加密，公钥解密。 公钥是可以公开的，私钥通常是自己保存的。 非对称加密的应用场景加密通信采用公钥加密数据，只有私钥可以解密，也就是只有私钥拥有者可以破译消息，就可以达到加密通信的要">
+<meta name="twitter:image" content="http://yoursite.com/img/2020/11/05/color.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/11/05/https加密/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>https加密 | Z-HNAN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Z-HNAN</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-进屋">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>进屋</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-文章">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>文章</a>
+
+  </li>
+        <li class="menu-item menu-item-给动物一个“家”">
+
+    <a href="http://baijiahao.baidu.com/s?id=1600785971176840846&wfr=spider&for=pc" rel="noopener" target="_blank"><i class="fa fa-fw fa-flash"></i>给动物一个“家”</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="search-pop-overlay">
+  <div class="popup search-popup">
+      <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/05/https加密/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          https加密
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-05 01:15:50 / 修改时间：02:10:34" itemprop="dateCreated datePublished" datetime="2020-11-05T01:15:50+08:00">2020-11-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>简要介绍https是如何保证通信安全的</p>
+<h1 id="加密方式"><a href="#加密方式" class="headerlink" title="加密方式"></a>加密方式</h1><ul>
+<li>对称加密</li>
+</ul>
+<p>通过一个密钥，加密又可解密，通常此类算法性能损耗较小，加密速度相对比较快（简单的加密方式）</p>
+<ul>
+<li>非对称加密</li>
+</ul>
+<p>加密和解密不是同一个密钥。公钥加密，私钥解密；私钥加密，公钥解密。</p>
+<p>公钥是可以公开的，私钥通常是自己保存的。</p>
+<h1 id="非对称加密的应用场景"><a href="#非对称加密的应用场景" class="headerlink" title="非对称加密的应用场景"></a>非对称加密的应用场景</h1><h2 id="加密通信"><a href="#加密通信" class="headerlink" title="加密通信"></a>加密通信</h2><p>采用公钥加密数据，只有私钥可以解密，也就是只有私钥拥有者可以破译消息，就可以达到加密通信的要求</p>
+<h2 id="鉴权"><a href="#鉴权" class="headerlink" title="鉴权"></a>鉴权</h2><p>采用私钥加密一定的身份信息，公钥解密后得到可信的身份数据，虽然攻击者也可以使用公钥解密出身份信息，但是没有办法使用私钥加密，所以只有私钥拥有者可以加密身份信息，之后正确的被对应公钥解开</p>
+<h2 id="消息完整性"><a href="#消息完整性" class="headerlink" title="消息完整性"></a>消息完整性</h2><p>对原始消息产生一个信息摘要（缩短加密内容），使用私钥进行加密，之后将加密信息摘要和消息一起发给对方，对方拿到公钥进行解密，并且使用相同算法产生摘要，和解密信息进行比对，攻击者由于没有私钥，就没有办法修改加密的信息摘要，从而保证了原始信息的完整性</p>
+<h1 id="网络通信的安全"><a href="#网络通信的安全" class="headerlink" title="网络通信的安全"></a>网络通信的安全</h1><p>网络传输包，很容易被第三方监听，我们要做的就是加密我们的数据，即用一个对称加密算法，可以大大提供安全性，但是如何将这个对称加密的密钥安全的送到通信方手中，是一个重要的问题。</p>
+<p>解决的是，传送对称加密密钥的安全问题，（非对称加密也安全，但是大量通信会比较浪费性能）</p>
+<h1 id="颜色理论"><a href="#颜色理论" class="headerlink" title="颜色理论"></a>颜色理论</h1><p>颜色理论是一种不传输密钥，但是却可以让双方都得到密钥的方法，他的唯一理论就是不可逆的过程，比如一杯水是红色，你不知道之前是哪两种颜色勾兑起来的。</p>
+<p><img src="/img/2020/11/05/color.png" alt="颜色交换加密"></p>
+<p>Alice和Bob最终得到了密钥颜色（棕色），但是这个过程中，他们俩自身的秘密颜色，都没有交换出来，只是交换了一次中间颜色，即使攻击人拿到后，也不知道是什么颜色相加得到</p>
+<h1 id="使用非对称加密交换密钥"><a href="#使用非对称加密交换密钥" class="headerlink" title="使用非对称加密交换密钥"></a>使用非对称加密交换密钥</h1><p>在访问服务器时，我们只需要拿到服务器的公钥，然后加密一个密钥，之后服务器使用私钥解密，就安全拿到了对称加密的密钥。</p>
+<p>但是我们需要拿到服务器的公钥，服务器的公钥是不能预先保存的，又到了如何保证拿到的公钥就是服务器的公钥，否则还是会造成攻击方透明的监听</p>
+<blockquote>
+<p>实际拿到了攻击者的公钥，他用私钥解密出对称密钥，再用真的服务器公钥加密，转发给服务器，实际上他已经拿到了对称密钥</p>
+</blockquote>
+<h2 id="CA机构的公钥"><a href="#CA机构的公钥" class="headerlink" title="CA机构的公钥"></a>CA机构的公钥</h2><p>为了打破这种死循环，有一些安全认证机构，直接将他们的公钥嵌入在操作系统中或者是浏览器内部，这样就保证了他们的公钥是真实可信的，直接从本地取就可以了，从而我们借助这个公钥可以进行鉴权，拿到后续真正的服务端公钥。</p>
+<h2 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h2><ol>
+<li>客户端将自己的公钥交给CA，去进行一次加密，CA机构用自己的私钥加密证书内容</li>
+</ol>
+<ul>
+<li>服务端将公钥交给CA证书，可以采用CA的公钥加密，CA用私钥进行一次解密，确保服务端公钥传输CA安全</li>
+<li>CA将加密的数据用自己的私钥加密，生成信息摘要，服务端拿到加密数据后，用公钥解密，对比一下加密的内容是否被篡改，进行数据完整性校验。确保拿到的东西是安全完整的。</li>
+</ul>
+<p><code>CA私钥 + 服务端公钥 = CA私钥加密(服务端公钥)</code></p>
+<ol start="2">
+<li>客户端将这个加密内容传输给客户端，客户端使用本地的CA公钥进行一次解密，也就得到了可靠的服务端公钥。</li>
+</ol>
+<ul>
+<li>上一步，还会在证书中携带一些持有人相关信息，也就是用CA公钥解密出来的东西，还可以确定这串加密是不是从服务端发过来的，因为只有CA可以加密内容，所以不会有错</li>
+</ul>
+<p><code>CA公钥 + CA私钥加密(服务端公钥) = 服务端公钥</code></p>
+<ol start="3">
+<li>客户端拿到服务端公钥后，以及一个加密算法，随机生成一个对称密钥，交给服务端</li>
+</ol>
+<p><code>服务端公钥 + 对称密钥 = 服务端公钥加密(对称密钥)</code></p>
+<ol start="4">
+<li>服务端拿到自己的私钥解密这一串数据，得到最终加密的数据</li>
+</ol>
+<p><code>服务端私钥 + 服务端公钥加密(对称密钥) = 对称密钥</code></p>
+<p><img src="/img/2020/11/05/single-encrypt.png" alt="单向加密流程"></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.jianshu.com/p/29e0ba31fb8d" target="_blank" rel="noopener">https://www.jianshu.com/p/29e0ba31fb8d</a></p>
+<p><a href="https://xz.aliyun.com/t/2526" target="_blank" rel="noopener">https://xz.aliyun.com/t/2526</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/前端/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/01/干/" rel="prev" title="干">
+      <i class="fa fa-chevron-left"></i> 干
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#加密方式"><span class="nav-number">1.</span> <span class="nav-text">加密方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非对称加密的应用场景"><span class="nav-number">2.</span> <span class="nav-text">非对称加密的应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#加密通信"><span class="nav-number">2.1.</span> <span class="nav-text">加密通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#鉴权"><span class="nav-number">2.2.</span> <span class="nav-text">鉴权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息完整性"><span class="nav-number">2.3.</span> <span class="nav-text">消息完整性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络通信的安全"><span class="nav-number">3.</span> <span class="nav-text">网络通信的安全</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#颜色理论"><span class="nav-number">4.</span> <span class="nav-text">颜色理论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用非对称加密交换密钥"><span class="nav-number">5.</span> <span class="nav-text">使用非对称加密交换密钥</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CA机构的公钥"><span class="nav-number">5.1.</span> <span class="nav-text">CA机构的公钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密过程"><span class="nav-number">5.2.</span> <span class="nav-text">加密过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="浩南"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">浩南</p>
+  <div class="site-description" itemprop="description">Keep Output!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Z-HNAN" title="GitHub → https://github.com/Z-HNAN" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhn68033@163.com" title="E-Mail → mailto:zhn68033@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浩南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="normal-page"><a href="https://z-hnan.github.io/" class="theme-link" rel="noopener" target="_blank">Blog</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="mirror-page"><span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span><a href="https://haonan98.gitee.io/" class="theme-link" rel="noopener" target="_blank">Blog(CN)</a></div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -188,6 +188,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/js设计模式总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/25/js设计模式总结/" class="post-title-link" itemprop="url">js设计模式总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-25 16:41:47" itemprop="dateCreated datePublished" datetime="2019-06-25T16:41:47+08:00">2019-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="单例设计模式"><a href="#单例设计模式" class="headerlink" title="单例设计模式"></a>单例设计模式</h4><p>js中由于没有类的概念，所以单例不需要特别设计，只要保证一个引用即可，但是保存到全局对象又容易造成污染，<br>所以要结合闭包。注意：对象创建与单例的管理要分开。</p>
+<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p>将算法的使用 与 算法的设计 分离开， 可以看成可变的函数调用<br>主要是解决if else分支过多的问题</p>
+<h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p>客户不方便直接访问某个对象的时候，提供一个对象来控制对这个对象的访问， 客户 -&gt; 代理 -&gt; 本体<br>虚拟代理 代理对象和实体之间应该是一致的，方便调用或者替换<br>缓存代理 访问某个对象之前，通过闭包看一下之前有没有缓存过，没有则执行并放入缓存 return cache[args] = fn()</p>
+<h4 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h4><p>将迭代的过程抽离开，只关心最后的结果，并不关心迭代的过程<br>内部迭代器 调用方便，更适合看结果，js已经实现了内部迭代器forEach<br>外部迭代器 需要手动控制迭代过程，可自定义化比较高 （数据库resultMap类似，.next() 下一位）</p>
+<h4 id="发布-订阅（观察者）-模式"><a href="#发布-订阅（观察者）-模式" class="headerlink" title="发布-订阅（观察者） 模式"></a>发布-订阅（观察者） 模式</h4><p>将 多个订阅者 放到 一个发布者存储起来（<em>尤其是对多个事件的异步执行</em>），当这个发布者发布对象的时候，会调用其所有订阅者的方法执行，<br>订阅者只需要按照规定订阅其发布者规定的方法即可，主要是事件的解耦，类似dom中的事件绑定</p>
+<h4 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h4><p>这里主要是针对绑定事件的解耦性， 将 <code>onclick = function () { xxx }</code> 分离开，变成约定好的固定模式,<br>用了一个第三者 （命令者）连接了起来， 做到了解耦性<br><code>onclick = commandObj.execute()</code> + <code>commandObj.execute = function () { xxx }</code></p>
+<p>注意：<br>命令模式中的：”聪明模式”由于没有receiver，从代码结构上与 策略模式 接近，但是从用途上区分他们<br>命令模式，范围广，对什么执行什么命令<br>策略模式，指定范围，采用什么样的方法解决</p>
+<p>“傻瓜模式”： 由receiver做execute,所以命令其实啥都不知道，就是得到命令，调execute<br>“聪明模式”： 直接在command中执行功能，不做转接，中间层直接执行代码</p>
+<h4 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h4><p>树形结构，只需要对树根发出指令，便会依此遍历所有的叶子方法的execute,是在命令模式的宏命令中延申而来<br>类似一个深度遍历， 如果是组合节点-&gt; 遍历执行所有的叶节点的 execute, 如果是叶子节点，直接执行其代码即可</p>
+<h4 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h4><p>算法的框架由模板定义好，子类只需要按照一定的规则去实现一些细节的实现即可，有点类似于与java中的抽象类，接口类<br>他是一种原型继承的方式</p>
+<h4 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h4><p>区分外部状态与内部状态其实就是找出变化的和不变化的，精髓是创建一个对象，依次改变其内部的属性，是一种<br>典型的 以时间换空间的例子， 对象池也类似享元模式虽然没有体现状态分离，但是有共享的体现</p>
+<h4 id="职责链模式"><a href="#职责链模式" class="headerlink" title="职责链模式"></a>职责链模式</h4><p>用来简化if else的相关操作，每个方法只需要处理自己的那一片，处理不了就往后抛，直到有相应的<br>职责者可以处理即可。一般用字符串<code>&#39;nextSuccessor&#39;</code>表示传递给下一个职责对象，或者手动调用下去<br>一般最后一个链都要放一个接锅侠，要不就被放走了</p>
+<h4 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h4><p>对象之间的引用过于复杂的时候，通常可以引入中介者，将每个人的关系都扯到中介者身上，这样会减少对象之间关系维护<br>的困扰，但是所有的关系都是由中介者来维护的，中介者一般会较大，处理逻辑较为复杂，但是其他类都是类似透明的，所有<br>关系都有中介者来维护，类之间是不知道自己是否与别人有关联(导致本身的关联不被关注)，折中使用<br>只需要维护中介者 就完成了类之间的关系维护</p>
+<h4 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h4><p>主要是为了在不改动原函数的情况下，进行拓展，最主要的运用是在函数之前<code>.before</code>，函数之后<code>.after</code><br>使用了AOP编程的思想，让功能之间的耦合度下降，并且装配性变强，可以根据不同的需求去装配不同的功能</p>
+<p>注意：（两者代码结构相似，但是要从目的来进行区分）<br>装饰者模式： 通常会添加一连串的装饰者，给他拓展之外的一些功能。<br>代理模式： 通常只有一个代理对象，而他的目的是增强原有的功能</p>
+<h4 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h4><p>根据不同的场景来解决不同的问题，主要是在不同状态下表现出的方法不一样，将各个事件绑定到状态中<br>定义且切换状态的方式，省去了大部分if else 的逻辑结构,其实就是鸭子类型，进行替换调这个替换对象中的方法</p>
+<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p>主要是在不改动原有代码的情况下 进行修改，在代码的编写阶段是不会有的，肯定是在对接老项目的时候，<br>修改了某些接口，从而进行变通的一种方式，或是为了兼容其他的API,或者是做方法之间的转换的</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>JavaScript中的设计模式，很多都是采用了高阶函数的一种变形， 其中大量充斥着闭包的概念<br>很多设计模式看似相同，结构也是大部分一样的，但是主要是思想上的不同，他们所针对，所解决的问题不一致<br>而不能单单从形式结构上区分它们，以及JavaScript是没有类的概念的，所以需要灵活的使用鸭子模式来达到<br>不同的设计</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/14适配器模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -769,71 +851,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/05订阅者模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/05订阅者模式/" class="post-title-link" itemprop="url">05订阅者模式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:30:53" itemprop="dateCreated datePublished" datetime="2019-06-25T16:30:53+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 订阅，发布者</span></span><br><span class="line"><span class="comment"> 模拟售楼部的情况</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> salesOffices = &#123; <span class="comment">// 售楼部</span></span><br><span class="line">  clientList: &#123;&#125;, <span class="comment">// 订阅的列表</span></span><br><span class="line">  </span><br><span class="line">  listen: <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 订阅者：订阅事件</span></span><br><span class="line">    <span class="keyword">if</span> ( !<span class="keyword">this</span>.clientList[ key ] ) &#123; <span class="comment">// 如果还没有订阅过，先初始化一下</span></span><br><span class="line">      <span class="keyword">this</span>.clientList[ key ] = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.clientList[ key ].push( fn ) <span class="comment">// 订阅消息添加进缓存列表</span></span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  trigger: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 发布者: 发布消息</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ), <span class="comment">// 消息类型</span></span><br><span class="line">      fns = <span class="keyword">this</span>.clientList[ key ] <span class="comment">// 订阅该消息的所有方法</span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span>) &#123; <span class="comment">// 没有人订阅</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123; <span class="comment">// 执行订阅</span></span><br><span class="line">      fn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123; <span class="comment">// 订阅squareMeter88事件</span></span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;)</span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter100'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123; <span class="comment">// 订阅squareMeter100事件</span></span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'squareMeter100 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span>) <span class="comment">// 发布squareMeter88事件</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter100'</span>, <span class="number">3000000</span>) <span class="comment">// 发布squareMeter100事件</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 通用的订阅者事件（增加remove） </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> event = &#123;</span><br><span class="line">  clientList: &#123;&#125;,</span><br><span class="line">  listen: <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 订阅功能</span></span><br><span class="line">    <span class="keyword">if</span> ( !<span class="keyword">this</span>.clientList[ key ]) &#123;</span><br><span class="line">      <span class="keyword">this</span>.clientList[ key ] = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.clientList[ key ].push( fn )</span><br><span class="line">  &#125;,</span><br><span class="line">  remove: <span class="function"><span class="keyword">function</span>(<span class="params"> key, fn </span>) </span>&#123; <span class="comment">// 取消事件的订阅</span></span><br><span class="line">    <span class="keyword">var</span> fns = <span class="keyword">this</span>.clientList[ key ]</span><br><span class="line">    <span class="keyword">if</span> ( !fns ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( !fn ) &#123; <span class="comment">// 没有指定 默认去除所有</span></span><br><span class="line">      fns &amp;&amp; ( fns.length = <span class="number">0</span> )</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">for</span> ( <span class="keyword">var</span> l = fns.length - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">         <span class="keyword">var</span> _fn = fns[ l ]</span><br><span class="line">         <span class="keyword">if</span> ( _fn === fn ) &#123;</span><br><span class="line">           fns.splice( l, <span class="number">1</span>)</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  trigger: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 发布功能</span></span><br><span class="line">    <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ),</span><br><span class="line">      fns = <span class="keyword">this</span>.clientList[ key ]</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span> ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123;</span><br><span class="line">      fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> installEvent = <span class="function"><span class="keyword">function</span> (<span class="params"> obj </span>) </span>&#123; <span class="comment">// 安装事件</span></span><br><span class="line">  <span class="keyword">for</span> ( <span class="keyword">var</span> key <span class="keyword">in</span> event) &#123;</span><br><span class="line">    obj[ key ] = event[ key ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> salesOffices = &#123;&#125;</span><br><span class="line">installEvent(salesOffices) <span class="comment">// 安装发布者模块</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> handleSquareMeter88Fn1 = <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'fn1得知 squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> handleSquareMeter88Fn2 = <span class="function"><span class="keyword">function</span> (<span class="params"> price </span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log( <span class="string">'fn2得知 squareMeter88 -&gt; 价格为'</span> + price )</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn1 ) <span class="comment">// fn1订阅squareMeter88事件</span></span><br><span class="line">salesOffices.listen( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn2 ) <span class="comment">// fn2订阅squareMeter88事件</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span> )</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'==========================='</span>)</span><br><span class="line">salesOffices.remove( <span class="string">'squareMeter88'</span>, handleSquareMeter88Fn1 ) <span class="comment">// 取消fn1对squareMeter88事件的订阅</span></span><br><span class="line">salesOffices.trigger( <span class="string">'squareMeter88'</span>, <span class="number">2000000</span> )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 然而现实中不需要为特定的对象专门注册这一个发布订阅， 共用一个即可 */</span></span><br><span class="line"><span class="keyword">var</span> Event = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> clientList = &#123;&#125;,</span><br><span class="line">    listen,</span><br><span class="line">    trigger,</span><br><span class="line">    remove</span><br><span class="line">    </span><br><span class="line">    listen = <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> ( !clientList[ key ]) &#123;</span><br><span class="line">        clientList[ key ] = []</span><br><span class="line">      &#125;</span><br><span class="line">      clientList[ key ].push( fn )</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    remove = <span class="function"><span class="keyword">function</span> (<span class="params"> key, fn </span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> fns = clientList[ key ]</span><br><span class="line">      <span class="keyword">if</span> ( !fns ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> ( !fn ) &#123;</span><br><span class="line">        fns &amp;&amp; (fns.length = <span class="number">0</span>)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> ( <span class="keyword">var</span> l = fns.length - <span class="number">1</span>; l &gt;= <span class="number">0</span>; l--) &#123;</span><br><span class="line">          <span class="keyword">var</span> _fn = fns[ l ]</span><br><span class="line">          <span class="keyword">if</span> ( _fn === fn ) &#123;</span><br><span class="line">            fns.splice( l, <span class="number">1</span> )</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    trigger = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> key = <span class="built_in">Array</span>.prototype.shift.call( <span class="built_in">arguments</span> ),</span><br><span class="line">        fns = clientList[ key ]</span><br><span class="line">      <span class="keyword">if</span> ( !fns || fns.length === <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, fn; fn = fns[ i++ ]; ) &#123;</span><br><span class="line">        fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 简单实现到这里， 完整的发布者 订阅者模式还需要提供如下两个方面的能力</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> 1.全局事件命名冲突 </span></span><br><span class="line"><span class="comment"> 比如都发布了一个 squareMeter88 无法确定具体是那一个 事件发布出来的，可能事件重名，不便于管理</span></span><br><span class="line"><span class="comment"> 这里可以引入 namespace 在每一个命名空间内进行事件的订阅</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 可以显示创建命名空间后在内部调用</span></span><br><span class="line"><span class="comment"> 默认情况下不申明，就在自己申明的'_default'环境中</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 2.离线时间的发布</span></span><br><span class="line"><span class="comment"> 有的事件发布出来，可能订阅者还没来得及订阅，这里可以使用一个离线的cache,等待何时的时机发布出去</span></span><br><span class="line"><span class="comment"> 离线事件只能发布一次，不能重复发布，不然就没有了发布的意义（它只是当时没发布，等到事宜的时机再将事件发布出去）</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> 在触发的时候，判定有离线事件队列，就先别真触发，先放入离线事件队列中</span></span><br><span class="line"><span class="comment"> 当触发监听listen时 如果有离线事件队列，就把离线事件队列调出来运行一次</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -905,7 +922,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

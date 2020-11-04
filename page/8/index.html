@@ -188,6 +188,116 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/微信小程序内，生成自定义二维码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/08/14/微信小程序内，生成自定义二维码/" class="post-title-link" itemprop="url">微信小程序内，生成自定义二维码</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-14 22:54:48" itemprop="dateCreated datePublished" datetime="2019-08-14T22:54:48+08:00">2019-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在开发中，需要生成自定义的二维码，于是做了一个包出来，分享给大家一起使用。适用于微信小程序的二维码生成器，基于Canvas生成，支持中文的输入。可在原生小程序，mpvue，taro中使用。（文末有一个使用示例）<img src="/img/2019/08/14/1.png" alt="qrcode"></p>
+<p>github地址 <a href="https://github.com/Z-HNAN/wxmp-qrcode" target="_blank" rel="noopener">wxmp-qrcode</a></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install wxmp-qrcode</span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ol>
+<li><p>创建一个canvas,设置其<code>id</code>,与<code>canvas-id</code>， 并设置canvas的样式，二维码基于其大小生成并居中</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"cav-qrcode"</span> <span class="attr">canvas-id</span>=<span class="string">"cav-qrcode"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>引入包并使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QR <span class="keyword">from</span> <span class="string">'wxmp-qrcode'</span></span><br><span class="line">QR.draw(str, canvasId)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="api"><a href="#api" class="headerlink" title="api"></a>api</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 根据canvas尺寸，画出合适居中的qrcode</span><br><span class="line"> * @param &#123;Object&#125; str 二维码的内容 (必须)</span><br><span class="line"> * @param &#123;Object&#125; canvasId canvasId的值 (必须)</span><br><span class="line"> * @param &#123;Object&#125; $this 传入组件的this,兼容在组件中生成二维码 （可选，可省略该参数）</span><br><span class="line"> * @param &#123;Object&#125; callback 回调函数 (可选)</span><br><span class="line"> */</span><br><span class="line">draw: function (str, canvasId, $this, callback)</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* 清除canvas内容</span><br><span class="line">* @param &#123;Object&#125; canvasId canvasId (必须)</span><br><span class="line">* @param &#123;Object&#125; callback 回调函数 （可选）</span><br><span class="line">*/</span><br><span class="line">clear: function (canvasId, callback)</span><br></pre></td></tr></table></figure>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
+<li><p>canvas中 id, canvas-id必须保持一致</p>
+<ul>
+<li>id 获取canvas节点，自动计算大小使用, <strong>二维码大小基于canvas自动生成</strong></li>
+<li>canvas-id 绘制二维码使用</li>
+</ul>
+</li>
+<li><p>如果在组件中使用，需要传入组件的this，<code>draw(str, canvasId, componentThis)</code></p>
+<ul>
+<li>具体参见 <a href="https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createCanvasContext.html" target="_blank" rel="noopener">wx.createCanvasContext</a></li>
+</ul>
+</li>
+<li><p>可以保存二维码为临时图片地址</p>
+<ul>
+<li>具体可参见 <a href="https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.canvasToTempFilePath.html" target="_blank" rel="noopener">wx.canvasToTempFilePath</a></li>
+<li>bug: 该方法有时保存的图片会有一个竖条。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">createQrCode: <span class="function"><span class="keyword">function</span> (<span class="params">content, canvasId</span>) </span>&#123;</span><br><span class="line">  QR.api.draw(content, canvasId)</span><br><span class="line">  <span class="keyword">this</span>.canvasToTempImage(canvasId)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取临时缓存图片路径</span></span><br><span class="line">canvasToTempImage: <span class="function"><span class="keyword">function</span> (<span class="params">canvasId</span>) </span>&#123;</span><br><span class="line">  wx.canvasToTempFilePath(&#123;</span><br><span class="line">    canvasId, </span><br><span class="line">    success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">let</span> tempFilePath = res.tempFilePath; <span class="comment">// 临时图片地址，可在放入图片src中使用</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="原生小程序wxmp中使用"><a href="#原生小程序wxmp中使用" class="headerlink" title="原生小程序wxmp中使用"></a>原生小程序wxmp中使用</h2><ol>
+<li>在项目设置中选择 <code>使用npm模块</code><br><img src="/img/2019/08/14/2.png" alt="使用npm模块"></li>
+<li>如果第一次使用npm模块，需要首先在根目录中<code>npm init</code>, 之后再安装模块 <code>npm i wxmp-qrcode</code> </li>
+<li>在工具中选择 <code>构建npm</code><br><img src="/img/2019/08/14/3.png" alt="构建npm"></li>
+<li><p>index.wxml</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"&#123;&#123;canvasId&#125;&#125;"</span> <span class="attr">canvas-id</span>=<span class="string">"&#123;&#123;canvasId&#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">bindtap</span>=<span class="string">"creatQRCode"</span>&gt;</span> 生成二维码 <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>index.wxss</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">canvas</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1</span>rpx solid <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">400</span>rpx;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">400</span>rpx;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">button</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">100</span>rpx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>index.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QR <span class="keyword">from</span> <span class="string">'./qrcode'</span></span><br><span class="line"></span><br><span class="line">Page(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    canvasId: <span class="string">'canvasId'</span>,</span><br><span class="line">    QRdata: <span class="string">'你好 wxmp-qrcode'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  creatQRCode () &#123;</span><br><span class="line">    <span class="keyword">let</span> str = <span class="keyword">this</span>.data.QRdata</span><br><span class="line">    <span class="keyword">let</span> canvasId = <span class="keyword">this</span>.data.canvasId</span><br><span class="line">    QR.draw(str, canvasId)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/taro中集成redux-saga/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1095,88 +1205,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/js设计模式总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/25/js设计模式总结/" class="post-title-link" itemprop="url">js设计模式总结</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-25 16:41:47" itemprop="dateCreated datePublished" datetime="2019-06-25T16:41:47+08:00">2019-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="单例设计模式"><a href="#单例设计模式" class="headerlink" title="单例设计模式"></a>单例设计模式</h4><p>js中由于没有类的概念，所以单例不需要特别设计，只要保证一个引用即可，但是保存到全局对象又容易造成污染，<br>所以要结合闭包。注意：对象创建与单例的管理要分开。</p>
-<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p>将算法的使用 与 算法的设计 分离开， 可以看成可变的函数调用<br>主要是解决if else分支过多的问题</p>
-<h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p>客户不方便直接访问某个对象的时候，提供一个对象来控制对这个对象的访问， 客户 -&gt; 代理 -&gt; 本体<br>虚拟代理 代理对象和实体之间应该是一致的，方便调用或者替换<br>缓存代理 访问某个对象之前，通过闭包看一下之前有没有缓存过，没有则执行并放入缓存 return cache[args] = fn()</p>
-<h4 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h4><p>将迭代的过程抽离开，只关心最后的结果，并不关心迭代的过程<br>内部迭代器 调用方便，更适合看结果，js已经实现了内部迭代器forEach<br>外部迭代器 需要手动控制迭代过程，可自定义化比较高 （数据库resultMap类似，.next() 下一位）</p>
-<h4 id="发布-订阅（观察者）-模式"><a href="#发布-订阅（观察者）-模式" class="headerlink" title="发布-订阅（观察者） 模式"></a>发布-订阅（观察者） 模式</h4><p>将 多个订阅者 放到 一个发布者存储起来（<em>尤其是对多个事件的异步执行</em>），当这个发布者发布对象的时候，会调用其所有订阅者的方法执行，<br>订阅者只需要按照规定订阅其发布者规定的方法即可，主要是事件的解耦，类似dom中的事件绑定</p>
-<h4 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h4><p>这里主要是针对绑定事件的解耦性， 将 <code>onclick = function () { xxx }</code> 分离开，变成约定好的固定模式,<br>用了一个第三者 （命令者）连接了起来， 做到了解耦性<br><code>onclick = commandObj.execute()</code> + <code>commandObj.execute = function () { xxx }</code></p>
-<p>注意：<br>命令模式中的：”聪明模式”由于没有receiver，从代码结构上与 策略模式 接近，但是从用途上区分他们<br>命令模式，范围广，对什么执行什么命令<br>策略模式，指定范围，采用什么样的方法解决</p>
-<p>“傻瓜模式”： 由receiver做execute,所以命令其实啥都不知道，就是得到命令，调execute<br>“聪明模式”： 直接在command中执行功能，不做转接，中间层直接执行代码</p>
-<h4 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h4><p>树形结构，只需要对树根发出指令，便会依此遍历所有的叶子方法的execute,是在命令模式的宏命令中延申而来<br>类似一个深度遍历， 如果是组合节点-&gt; 遍历执行所有的叶节点的 execute, 如果是叶子节点，直接执行其代码即可</p>
-<h4 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h4><p>算法的框架由模板定义好，子类只需要按照一定的规则去实现一些细节的实现即可，有点类似于与java中的抽象类，接口类<br>他是一种原型继承的方式</p>
-<h4 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h4><p>区分外部状态与内部状态其实就是找出变化的和不变化的，精髓是创建一个对象，依次改变其内部的属性，是一种<br>典型的 以时间换空间的例子， 对象池也类似享元模式虽然没有体现状态分离，但是有共享的体现</p>
-<h4 id="职责链模式"><a href="#职责链模式" class="headerlink" title="职责链模式"></a>职责链模式</h4><p>用来简化if else的相关操作，每个方法只需要处理自己的那一片，处理不了就往后抛，直到有相应的<br>职责者可以处理即可。一般用字符串<code>&#39;nextSuccessor&#39;</code>表示传递给下一个职责对象，或者手动调用下去<br>一般最后一个链都要放一个接锅侠，要不就被放走了</p>
-<h4 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h4><p>对象之间的引用过于复杂的时候，通常可以引入中介者，将每个人的关系都扯到中介者身上，这样会减少对象之间关系维护<br>的困扰，但是所有的关系都是由中介者来维护的，中介者一般会较大，处理逻辑较为复杂，但是其他类都是类似透明的，所有<br>关系都有中介者来维护，类之间是不知道自己是否与别人有关联(导致本身的关联不被关注)，折中使用<br>只需要维护中介者 就完成了类之间的关系维护</p>
-<h4 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h4><p>主要是为了在不改动原函数的情况下，进行拓展，最主要的运用是在函数之前<code>.before</code>，函数之后<code>.after</code><br>使用了AOP编程的思想，让功能之间的耦合度下降，并且装配性变强，可以根据不同的需求去装配不同的功能</p>
-<p>注意：（两者代码结构相似，但是要从目的来进行区分）<br>装饰者模式： 通常会添加一连串的装饰者，给他拓展之外的一些功能。<br>代理模式： 通常只有一个代理对象，而他的目的是增强原有的功能</p>
-<h4 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h4><p>根据不同的场景来解决不同的问题，主要是在不同状态下表现出的方法不一样，将各个事件绑定到状态中<br>定义且切换状态的方式，省去了大部分if else 的逻辑结构,其实就是鸭子类型，进行替换调这个替换对象中的方法</p>
-<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p>主要是在不改动原有代码的情况下 进行修改，在代码的编写阶段是不会有的，肯定是在对接老项目的时候，<br>修改了某些接口，从而进行变通的一种方式，或是为了兼容其他的API,或者是做方法之间的转换的</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>JavaScript中的设计模式，很多都是采用了高阶函数的一种变形， 其中大量充斥着闭包的概念<br>很多设计模式看似相同，结构也是大部分一样的，但是主要是思想上的不同，他们所针对，所解决的问题不一致<br>而不能单单从形式结构上区分它们，以及JavaScript是没有类的概念的，所以需要灵活的使用鸭子模式来达到<br>不同的设计</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1248,7 +1276,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

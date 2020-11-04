@@ -188,6 +188,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/19/关于云开发中云函数超时定义/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/19/关于云开发中云函数超时定义/" class="post-title-link" itemprop="url">关于云开发中云函数超时定义</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-19 00:17:38" itemprop="dateCreated datePublished" datetime="2019-04-19T00:17:38+08:00">2019-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在云函数中的定义里，有一个关于超时的概念，这里并不是程序实际运行的时间，而是一个预期运行的时间</p>
+<p>比如一个程序跑下来仅用了 8ms 但是他一直在等待内部的异步操作执行完才会关闭，这里就是异步操作超时，导致整个请求超时。（20s是截止目前云函数最长运行时间）<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'=======  start  ==='</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())   <span class="comment">// 1555601179634</span></span><br><span class="line">db.collection(<span class="string">"testCollection"</span>).get()</span><br><span class="line">  .then(<span class="function"><span class="params">res</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'===第一次===='</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()) <span class="comment">// 1555601179843</span></span><br><span class="line">    <span class="keyword">return</span> timeout(<span class="number">5000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">res</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'===第二次===='</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()) <span class="comment">// 1555601184847</span></span><br><span class="line">    <span class="keyword">return</span> timeout(<span class="number">5000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">res</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'===第三次===='</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()) <span class="comment">// 1555601189853</span></span><br><span class="line">    <span class="keyword">return</span> timeout(<span class="number">5000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">res</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'===第四次===='</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()) <span class="comment">// 1555601194853</span></span><br><span class="line">    <span class="keyword">return</span> timeout(<span class="number">5000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">res</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'===第五次===='</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()) <span class="comment">// 这里已经是超时区了</span></span><br><span class="line">    <span class="keyword">return</span> timeout(<span class="number">5000</span>)</span><br><span class="line">  &#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'=======  end  ==='</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())   <span class="comment">// 1555601179642</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 封装的Promise的等待函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timeout</span>(<span class="params">ms</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(resolve, ms);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/19/关于云函数中await与async的理解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1086,105 +1152,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/05/JS模块化（三）AMD(Asynchronous Module Definition)的应用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/02/05/JS模块化（三）AMD(Asynchronous Module Definition)的应用/" class="post-title-link" itemprop="url">JS模块化（三）AMD(Asynchronous Module Definition)的应用</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-02-05 13:23:53" itemprop="dateCreated datePublished" datetime="2019-02-05T13:23:53+08:00">2019-02-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
-<li><p>暴露出去</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义没有依赖的模块</span></span><br><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> 模块	</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义有依赖的模块</span></span><br><span class="line">define([<span class="string">'module1'</span>,<span class="string">'module2'</span>],<span class="function"><span class="keyword">function</span>(<span class="params">m1,m2</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> 模块</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>应用进来</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">requirejs([<span class="string">'module1'</span>,<span class="string">'module2'</span>],<span class="function"><span class="keyword">function</span>(<span class="params">m1,m2</span>)</span>&#123;</span><br><span class="line">	使用m1,m2即可</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="自定义依赖的引用"><a href="#自定义依赖的引用" class="headerlink" title="自定义依赖的引用"></a>自定义依赖的引用</h4><ul>
-<li><p>文件的结构</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">└─js</span><br><span class="line">    │  main.js</span><br><span class="line">    │</span><br><span class="line">    ├─libs</span><br><span class="line">    │      require.js</span><br><span class="line">    │</span><br><span class="line">    └─modules</span><br><span class="line">            alerter.js</span><br><span class="line">            dataService.js</span><br><span class="line">│</span><br><span class="line">│  index.html</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>modules 的文件</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">dataService.js</span><br><span class="line"></span><br><span class="line">define(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> name = <span class="string">"dataService.js"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">getName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 向外暴露模块</span></span><br><span class="line">	<span class="keyword">return</span> &#123;getName&#125;;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">alerter.js</span><br><span class="line"></span><br><span class="line">define([<span class="string">'dataService'</span>],<span class="function"><span class="keyword">function</span> (<span class="params">dataService</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> msg = <span class="string">"alerter.js"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">showMsg</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(msg, dataService.getName());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 向外暴露模块</span></span><br><span class="line">	<span class="keyword">return</span> &#123;showMsg&#125;;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>主文件main.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">// 配置requirejs</span></span><br><span class="line">	requirejs.config(&#123;</span><br><span class="line">		baseUrl: <span class="string">"js/"</span>,</span><br><span class="line">		paths: &#123;</span><br><span class="line">			dataService: <span class="string">'./modules/dataService'</span>,</span><br><span class="line">			alerter: <span class="string">'./modules/alerter'</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 引入依赖</span></span><br><span class="line">	requirejs([<span class="string">'alerter'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">alerter</span>) </span>&#123;</span><br><span class="line">		alerter.showMsg();		<span class="comment">// alerter.js dataService.js</span></span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>html文件</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">data-main</span>=<span class="string">"js/main.js"</span> <span class="attr">src</span>=<span class="string">"js/libs/require.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这种方式需要做requirejs的配置，之后再引入js文件的时候，<strong>注意src是requre.js 而data-main才是我们的main.js</strong>,这种方式是针对客户端较早出现的一种方式</p>
-<h4 id="引入第三方的依赖-（引入jQuery为例）"><a href="#引入第三方的依赖-（引入jQuery为例）" class="headerlink" title="引入第三方的依赖 （引入jQuery为例）"></a>引入第三方的依赖 （引入jQuery为例）</h4><ul>
-<li><p>放入相关的js，文件结构</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">│  index.html</span><br><span class="line">│</span><br><span class="line">└─js</span><br><span class="line">    │  main.js</span><br><span class="line">    │</span><br><span class="line">    ├─libs</span><br><span class="line">    │      jquery-1.11.0.js</span><br><span class="line">    │      require.js</span><br><span class="line">    │</span><br><span class="line">    └─modules</span><br><span class="line">            alerter.js</span><br><span class="line">            dataService.js</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>其余和之前相同，就是引入第三方库即可，main.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">// 配置requirejs</span></span><br><span class="line">	requirejs.config(&#123;</span><br><span class="line">		baseUrl: <span class="string">"js/"</span>,</span><br><span class="line">		paths: &#123;</span><br><span class="line">			dataService: <span class="string">'./modules/dataService'</span>,</span><br><span class="line">			alerter: <span class="string">'./modules/alerter'</span>,</span><br><span class="line">			jquery: <span class="string">'./libs/jquery-1.11.0'</span>	<span class="comment">// jQuery源码中 遵循了AMD规范 并且暴露模块为jquery</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 引入依赖</span></span><br><span class="line">	requirejs([<span class="string">'alerter'</span>,<span class="string">"jquery"</span>], <span class="function"><span class="keyword">function</span>(<span class="params">alerter,$</span>) </span>&#123;</span><br><span class="line">		alerter.showMsg();</span><br><span class="line">		$(<span class="string">"body"</span>).css(<span class="string">"background"</span>,<span class="string">"deeppink"</span>);</span><br><span class="line">		</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>html文件</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">data-main</span>=<span class="string">"js/main.js"</span> <span class="attr">src</span>=<span class="string">"js/libs/require.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>都是在内部引入的，所以发请求只需要一个请求就可以搞定，只需要配置好模块路径即可</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1256,7 +1223,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

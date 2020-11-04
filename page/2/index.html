@@ -188,6 +188,74 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/28/优化多个判断分支/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/28/优化多个判断分支/" class="post-title-link" itemprop="url">优化多个判断分支</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-28 13:01:39 / 修改时间：13:05:28" itemprop="dateCreated datePublished" datetime="2020-08-28T13:01:39+08:00">2020-08-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在充斥了大量的<code>if-else</code>的场景中，如果分支切换过多，会导致以后看起来不是很直观，需要进行策略模式的设计</p>
+<h1 id="使用switch"><a href="#使用switch" class="headerlink" title="使用switch"></a>使用switch</h1><p>适用于操作不多的情况，直接做一些转换，比如redux中就使用了这种方式，其优点是可以做一些透穿，一定要注意break，或者直接return了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'ADD'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ... &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'UPDATE'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ... &#125;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ... &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="抽出成key-value的形式"><a href="#抽出成key-value的形式" class="headerlink" title="抽出成key-value的形式"></a>抽出成key-value的形式</h1><p>将switch中的判断case做成key即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// object类型</span></span><br><span class="line"><span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="string">'ADD'</span>, function1,</span><br><span class="line">  <span class="string">'UPDATE'</span>, function2,</span><br><span class="line">  <span class="string">'default'</span>, function2,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> command = <span class="string">'ADD'</span></span><br><span class="line"><span class="keyword">const</span> res = actions[command] || actions[<span class="string">'default'</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// map类型</span></span><br><span class="line"><span class="keyword">const</span> actions = <span class="keyword">new</span> <span class="built_in">Map</span>([</span><br><span class="line">  [<span class="string">'ADD'</span>, function1],</span><br><span class="line">  [<span class="string">'UPDATE'</span>, function2],</span><br><span class="line">  [<span class="string">'default'</span>, function3],</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> command = <span class="string">'ADD'</span></span><br><span class="line"><span class="keyword">const</span> res = actions.get(command) || actions.get(<span class="string">'default'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="多层嵌套判断"><a href="#多层嵌套判断" class="headerlink" title="多层嵌套判断"></a>多层嵌套判断</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (guest) &#123;</span><br><span class="line">  <span class="keyword">if</span> (command === <span class="string">'ADD'</span>) &#123;</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (command === <span class="string">'UPDATE'</span>) &#123;</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (....)</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (master) &#123;</span><br><span class="line">  <span class="keyword">if</span> (command === <span class="string">'ADD'</span>) &#123;</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (command === <span class="string">'UPDATE'</span>) &#123;</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (....)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// object，map都可以叠加作为key</span></span><br><span class="line"><span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="string">'guest_ADD'</span>, function1,</span><br><span class="line">  <span class="string">'guest_UPDATE'</span>, function2,</span><br><span class="line">  <span class="string">'master_ADD'</span>, function3,</span><br><span class="line">  <span class="string">'master_UPDATE'</span>, function2,</span><br><span class="line">  <span class="string">'default'</span>, function2,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> identity = <span class="string">'guest'</span></span><br><span class="line"><span class="keyword">let</span> action = <span class="string">'ADD'</span></span><br><span class="line"><span class="keyword">let</span> command = <span class="string">`<span class="subst">$&#123;identity&#125;</span>_<span class="subst">$&#123;action&#125;</span>`</span></span><br><span class="line"><span class="keyword">const</span> res = actions[command] || actions[<span class="string">'default'</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="利用map的key多类型，做高级key"><a href="#利用map的key多类型，做高级key" class="headerlink" title="利用map的key多类型，做高级key"></a>利用map的key多类型，做高级key</h1><p>使用正则表达式去匹配</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> actions = <span class="keyword">new</span> <span class="built_in">Map</span>([</span><br><span class="line">  [<span class="regexp">/^guest_(ADD|UPDATE)$/</span>, function1], <span class="comment">// 匹配 guest_ADD, guest_UPDATE</span></span><br><span class="line">  [<span class="regexp">/^master_[1-4]$/</span>, function2] <span class="comment">// 匹配 master_1, master_2, ..., master_3</span></span><br><span class="line">  [<span class="regexp">/default/</span>, function3]</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> identity = <span class="string">'guest'</span></span><br><span class="line"><span class="keyword">let</span> action = <span class="string">'ADD'</span></span><br><span class="line"><span class="keyword">let</span> command = <span class="string">`<span class="subst">$&#123;identity&#125;</span>_<span class="subst">$&#123;action&#125;</span>`</span></span><br><span class="line"><span class="keyword">const</span> res = [...actions].find(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span> key.test(command))</span><br></pre></td></tr></table></figure>
+<p>将key直接做成一个对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> actions = <span class="keyword">new</span> <span class="built_in">Map</span>([</span><br><span class="line">  [&#123; <span class="attr">identity</span>: <span class="string">'guest'</span>, <span class="attr">action</span>: <span class="string">'ADD'</span>&#125;, fucntion1],</span><br><span class="line">  [&#123; <span class="attr">identity</span>: <span class="string">'guest'</span>, <span class="attr">action</span>: <span class="string">'UPDATE'</span>&#125;, fucntion2],</span><br><span class="line">  [&#123; <span class="attr">identity</span>: <span class="string">'master'</span>, <span class="attr">action</span>: <span class="string">'ADD'</span>&#125;, fucntion3],</span><br><span class="line">  [&#123; <span class="attr">identity</span>: <span class="string">'master'</span>, <span class="attr">action</span>: <span class="string">'UPDATE'</span>&#125;, fucntion4],</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">])</span><br><span class="line"><span class="keyword">let</span> identity = <span class="string">'guest'</span></span><br><span class="line"><span class="keyword">let</span> action = <span class="string">'ADD'</span></span><br><span class="line"><span class="keyword">let</span> command = <span class="string">`<span class="subst">$&#123;identity&#125;</span>_<span class="subst">$&#123;action&#125;</span>`</span></span><br><span class="line"><span class="keyword">const</span> res = [...actions].find(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span> key.identity === identitu &amp;&amp; key.action === action)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/14/2020-0814/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1042,72 +1110,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/04/致2年前的自己/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/04/致2年前的自己/" class="post-title-link" itemprop="url">致2年前的自己</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-04 23:55:41" itemprop="dateCreated datePublished" datetime="2020-06-04T23:55:41+08:00">2020-06-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/img/2020/06/05/bear.png" alt="bear"></p>
-<p>2年前的自己应该是在准备高考了，今年受到疫情影响有所推迟，应该是到7月份了。今天和同学聊了聊人生，感觉不知不觉大家也都开始考虑人生了，反观自己，这里一路走来还是得以有父母能一直支持与鼓励我。教育真的很重要，一定不能小看了他的作用，不仅是教授一个人知识，更是约束一个人在正确时间干正确的事，希望父母一切安好，也给自己打气，加油！</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1179,7 +1181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">135</span>
+          <span class="site-state-item-count">136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
