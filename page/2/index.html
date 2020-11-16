@@ -188,6 +188,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/28/Object与Map的选用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/28/Object与Map的选用/" class="post-title-link" itemprop="url">Object与Map的选用</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-28 13:06:17 / 修改时间：13:20:41" itemprop="dateCreated datePublished" datetime="2020-08-28T13:06:17+08:00">2020-08-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="各自的特点"><a href="#各自的特点" class="headerlink" title="各自的特点"></a>各自的特点</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>Map</th>
+<th>Object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>默认值</td>
+<td>不包含任何的值，只有显式插入的键</td>
+<td>Object上有原型，原型上的键可能会与自定义键名冲突</td>
+</tr>
+<tr>
+<td>key类型</td>
+<td>任意的类型</td>
+<td><code>String</code> 或者<code>Symbol</code></td>
+</tr>
+<tr>
+<td>长度</td>
+<td>通过属性size获取</td>
+<td>键值个数只能手动计算</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>频繁增删键值对有一定的性能优化</td>
+<td>对频繁增添场景未进行优化</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><ul>
+<li>有原生的JSON相关转换方法，可以更方面的转换为json串</li>
+<li>其key需为<code>string</code>,<code>symbol</code>相对来说有一些限制</li>
+<li>不可直接迭代</li>
+<li>原型上有相关方法，注意不要与key重复<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> o = &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(o.constructor) <span class="comment">//  Object() &#123; [native code] &#125;</span></span><br><span class="line">o.constructor = <span class="number">1</span> <span class="comment">// `.`操作的用法</span></span><br><span class="line"><span class="built_in">console</span>.log(o.constructorr) <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可能出问题的部分</span></span><br><span class="line"><span class="keyword">let</span> count = o[key] || <span class="number">0</span> <span class="comment">// 如果key为constructor则第一次初始化不到0</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><ul>
+<li>其key可以为任何类型。<ul>
+<li>key为正则，可以为一类数据匹配结果</li>
+<li>key也可为对象，直接<code>key.status = xxx &amp;&amp; key.code === xxx</code></li>
+</ul>
+</li>
+<li>Map对象插入是有顺序的，可以直接迭代拿出顺序</li>
+<li>其key不会有任何冲突，因为他是使用方法操作的数据，并不是通过<code>.</code>来操作数据</li>
+</ul>
+<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> obj2 = &#123; <span class="attr">name</span>: <span class="string">'zhn'</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> map1 = <span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="keyword">let</span> map2 = <span class="keyword">new</span> <span class="built_in">Map</span>([</span><br><span class="line">  [<span class="string">'name'</span>, <span class="string">'zhn'</span>]</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+<h3 id="增删"><a href="#增删" class="headerlink" title="增删"></a>增删</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> key = <span class="string">'age'</span></span><br><span class="line"><span class="keyword">let</span> value = <span class="number">18</span></span><br><span class="line"></span><br><span class="line">obj[key] = value</span><br><span class="line">map.set(key, value)</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> obj[key]</span><br><span class="line">map.delete(key)</span><br></pre></td></tr></table></figure>
+<h3 id="获取元素"><a href="#获取元素" class="headerlink" title="获取元素"></a>获取元素</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> key = <span class="string">'name'</span></span><br><span class="line"></span><br><span class="line">obj[key] <span class="comment">// zhn</span></span><br><span class="line">map.get(key) <span class="comment">// zhn</span></span><br></pre></td></tr></table></figure>
+<h3 id="遍历元素"><a href="#遍历元素" class="headerlink" title="遍历元素"></a>遍历元素</h3><h4 id="Object-1"><a href="#Object-1" class="headerlink" title="Object"></a>Object</h4><p>object可搭配<code>Object.keys(obj)</code>进行遍历</p>
+<p>object本身就不能保证顺序，但是其Object.keys可以返回一定的顺序（ES6+）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> object = &#123; &#125;;</span><br><span class="line">object[<span class="string">'key1'</span>] = <span class="string">'value1'</span>;</span><br><span class="line">object[<span class="string">'key0'</span>] = <span class="string">'value0'</span>;</span><br><span class="line">object; <span class="comment">// &#123; key1: "value1", key0: "value0" &#125;</span></span><br><span class="line">object[<span class="number">20</span>] = <span class="string">'value20'</span>; <span class="comment">// 经历了隐式类型转换</span></span><br><span class="line">object; <span class="comment">// &#123; 20: "value20", key1: "value1", key0: "value0" &#125;</span></span><br></pre></td></tr></table></figure>
+<p>借助Object遍历的方式，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">of</span> <span class="built_in">Object</span>.keys(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// key1</span></span><br><span class="line"><span class="comment">// key2</span></span><br><span class="line"><span class="comment">// key3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> value <span class="keyword">of</span> <span class="built_in">Object</span>.values(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// value1</span></span><br><span class="line"><span class="comment">// value2</span></span><br><span class="line"><span class="comment">// value3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> entry <span class="keyword">of</span> <span class="built_in">Object</span>.entries(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(entry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ["key1", "value1"]</span></span><br><span class="line"><span class="comment">// ["key2", "value2"]</span></span><br><span class="line"><span class="comment">// ["key3", "value3"]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> [key,value] <span class="keyword">of</span> <span class="built_in">Object</span>.entries(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key,value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//"key1", "value1"</span></span><br><span class="line"><span class="comment">//"key2", "value2"</span></span><br><span class="line"><span class="comment">//"key3", "value3"</span></span><br></pre></td></tr></table></figure>
+<p>object不是可迭代对象，所以<strong>不能</strong>使用<code>for-of</code>直接获取其值，<strong>可以</strong>使用<code>for-in</code>方法去获取keys</p>
+<h4 id="Map-1"><a href="#Map-1" class="headerlink" title="Map"></a>Map</h4><p>map是一个可迭代的对象，并且保证了其在迭代的顺序是可以保证的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// forEach</span></span><br><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">map.set(<span class="string">'key1'</span>, <span class="string">'value1'</span>);</span><br><span class="line">map.set(<span class="string">'key2'</span>, <span class="string">'value2'</span>);</span><br><span class="line">map.set(<span class="string">'key3'</span>, <span class="string">'value3'</span>);</span><br><span class="line">map.forEach(<span class="function">(<span class="params">value, key</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key, value);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// key1 value1</span></span><br><span class="line"><span class="comment">// key2 value2</span></span><br><span class="line"><span class="comment">// key3 value3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//for...of...</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> entry <span class="keyword">of</span> map) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(entry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ["key1", "value1"]</span></span><br><span class="line"><span class="comment">// ["key2", "value2"]</span></span><br><span class="line"><span class="comment">// ["key3", "value3"]</span></span><br></pre></td></tr></table></figure>
+<h2 id="如何更好的选用"><a href="#如何更好的选用" class="headerlink" title="如何更好的选用"></a>如何更好的选用</h2><blockquote>
+<p>不能用map去代替object，只是一种补充方案</p>
+</blockquote>
+<p>考虑键值类型，是<code>string, symbol</code>,如果较为简单，则使用object即可，如果有更为复杂的key类型，使用map也可以。</p>
+<p>考虑之后遍历是否需要保证其中的顺序，map是可以保证顺序的，object的本意就是没有顺序的，而且隐式类型转换也有问题。</p>
+<p>频繁操作性能考虑，map的结构是一个哈希结构，频繁增上有较好的性能优化效果</p>
+<p>考虑其key的可能性，如果key是用户可自定的话，要考虑是否会覆盖，比如用户自定了<code>toString</code>这个键，那么使用map较好</p>
+<p>考虑是否需要使用JSON，object原生对json串支持较好，map需要自己去做实现</p>
+<p>考虑是否要在key上做文章，map的key为任意类型，其中改写为正则类型，会有更好的拓展延伸效果</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/28/优化多个判断分支/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1011,105 +1137,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/06/js中常用继承方式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/06/js中常用继承方式/" class="post-title-link" itemprop="url">js中常用继承方式</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-06 15:47:47" itemprop="dateCreated datePublished" datetime="2020-06-06T15:47:47+08:00">2020-06-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>继承能够实现，是因为对象找属性，如果找不到会一直顺着原型链走下去，直到找到null为之。</p>
-</blockquote>
-<h1 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h1><p>将原型指向一个创建的新的父对象</p>
-<p>优点：可以访问父对象的所有方法<br>缺点：1.父对象的数据会被所以子类共享，2.无法向构造函数内传参</p>
-<p>如果为子类改原型之后，要修改好之后再去添加原型上的方法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.names = [<span class="string">'kevin'</span>, <span class="string">'daisy'</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">Child.prototype = <span class="keyword">new</span> Parent();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> child1 = <span class="keyword">new</span> Child();</span><br><span class="line"> </span><br><span class="line">child1.names.push(<span class="string">'yayu'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(child1.names); <span class="comment">// ["kevin", "daisy", "yayu"]</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> child2 = <span class="keyword">new</span> Child();</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(child2.names); <span class="comment">// ["kevin", "daisy", "yayu"]</span></span><br></pre></td></tr></table></figure>
-<h1 id="类式继承，构造器继承，经典继承"><a href="#类式继承，构造器继承，经典继承" class="headerlink" title="类式继承，构造器继承，经典继承"></a>类式继承，构造器继承，经典继承</h1><p>利用创建对象时，<em>同es6中类的construct中this的特性</em>,也即最终返回的结果会是真正创建出来</p>
-<p>他避免了原型继承的大部分缺点，并且等于将父类’构造器‘借用了自己一下。</p>
-<p>优点：1.避免子类所有属性共享。2.可以向构造器内传参<br>缺点：1.不能访问父类原型方法。2.只是使用一下父类原型，但是每一次都要重新创建父类</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="keyword">this</span>, name);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> child1 = <span class="keyword">new</span> Child(<span class="string">'kevin'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(child1.name); <span class="comment">// kevin</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> child2 = <span class="keyword">new</span> Child(<span class="string">'daisy'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(child2.name); <span class="comment">// daisy</span></span><br></pre></td></tr></table></figure>
-<h1 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h1><p>原型链继承 + 类式继承</p>
-<p>原型继承重点关注了原型部分，类式继承重点关注了实例部分，将他们进行一次组合</p>
-<p>优点：1.不能访问父类原型方法。2.避免子类所有属性共享。3.可以向构造器内传参<br>缺点：1.只是使用一下父类原型，但是每一次都要重新创建父类，调用2次，创建实例一次，绑定原型一次。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'green'</span>];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">Parent.prototype.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="keyword">this</span>, name);</span><br><span class="line">   </span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">Child.prototype = <span class="keyword">new</span> Parent();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> child1 = <span class="keyword">new</span> Child(<span class="string">'kevin'</span>, <span class="string">'18'</span>);</span><br><span class="line"> </span><br><span class="line">child1.colors.push(<span class="string">'black'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(child1.name); <span class="comment">// kevin</span></span><br><span class="line"><span class="built_in">console</span>.log(child1.age); <span class="comment">// 18</span></span><br><span class="line"><span class="built_in">console</span>.log(child1.colors); <span class="comment">// ["red", "blue", "green", "black"]</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> child2 = <span class="keyword">new</span> Child(<span class="string">'daisy'</span>, <span class="string">'20'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="built_in">console</span>.log(child2.name); <span class="comment">// daisy</span></span><br><span class="line"><span class="built_in">console</span>.log(child2.age); <span class="comment">// 20</span></span><br><span class="line"><span class="built_in">console</span>.log(child2.colors); <span class="comment">// ["red", "blue", "green"]</span></span><br></pre></td></tr></table></figure>
-<h1 id="原型式继承"><a href="#原型式继承" class="headerlink" title="原型式继承"></a>原型式继承</h1><p>创建对象时，直接以某个对象为原型挂载，和原型链继承相似，只不过我们并没有提供构造函数。</p>
-<p>他和原型链继承的区别是：</p>
-<ul>
-<li>原型链继承，有构造函数，改变<code>prototype</code></li>
-<li>原型式继承，无构造函数，内部创建一个空构造函数，直接替换<code>prototype</code>,只关心以某个对象为原型的创建。</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// es6官方实现</span></span><br><span class="line"><span class="built_in">Object</span>.create()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在内部手动创建了构造器</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObj</span>(<span class="params">proto</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">  F.prototype = proto</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>优点：1.可以使用原型链的方法。2.创建起来比较简单。<br>缺点：1.会共享父对象方法，但不一定会改变</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = &#123;</span><br><span class="line">  name: <span class="string">'kevin'</span>,</span><br><span class="line">  friends: [<span class="string">'daisy'</span>, <span class="string">'kelly'</span>]</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> person1 = createObj(person);</span><br><span class="line"><span class="keyword">let</span> person2 = createObj(person);</span><br><span class="line"> </span><br><span class="line">person1.name = <span class="string">'person1'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(person2.name); <span class="comment">// kevin</span></span><br><span class="line"> </span><br><span class="line">person1.friends.push(<span class="string">'taylor'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(person2.friends); <span class="comment">// ["daisy", "kelly", "taylor"]</span></span><br></pre></td></tr></table></figure>
-<p>这里一定要注意<code>.</code>操作符，如果他没有该属性，会进行添加，然后进行修改的话是不会发生改变的。</p>
-<p>所以，修改<code>person1.name</code>的值，<code>person2.name</code>的值并未发生改变，并不是因为<code>person1</code>和<code>person2</code>有独立的 <code>name</code> 值，而是因为<code>person1.name = &#39;person1&#39;</code>，给<code>person1</code>添加了<code>name</code>值，并非修改了原型上的<code>name</code>值。</p>
-<p>同样，如果是<code>person1.friends = [ xxx ]</code>这样以后再修改，也是不会影响到原型上的方法的。</p>
-<h1 id="寄生式继承"><a href="#寄生式继承" class="headerlink" title="寄生式继承"></a>寄生式继承</h1><p>和原型式继承很像，只是增添了一些方法，类似于包装了一层</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObj</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> clone = <span class="built_in">Object</span>.create(o)</span><br><span class="line">  clone.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'hi'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> clone</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="寄生组合式继承"><a href="#寄生组合式继承" class="headerlink" title="寄生组合式继承"></a>寄生组合式继承</h1><p>他是结合了上述的优点，只是我们再使用继承时，一般不会希望子类去共享父类的方法，（有的话，就使用组合继承）所以会创建很多对象，其原型上可能会有一些用不到的对象，那么我们用组合继承就可以避免</p>
-<p>优点：1.可以访问父类原型。2.避免共享父类数据。3.可以调用父类构造函数传参。4.免去原型上不必要的属性。</p>
-<p>就是在组合继承的基础上，避免直接<code>prototype = new Xxx()</code>,而是采用迂回的方式。</p>
-<p>最终Parent上的属性，通过类式继承，借给子类，等于直接变成了子类的属性，而在原型上，由于并没有new操作，所以也并不会将Parent上的部分无用属性挂载到原型上。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'green'</span>];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">Parent.prototype.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="keyword">this</span>, name);</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subObj, supperObj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> prototype = <span class="built_in">Object</span>.create(supperObj.prototype)</span><br><span class="line">  prototype.constructor = subObj</span><br><span class="line">  prototype.constructor.prototype = prototype</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inheritPrototype(Child, Parent)</span><br></pre></td></tr></table></figure>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>(<a href="https://www.cnblogs.com/lanyueff/p/7792009.html)[https://www.cnblogs.com/lanyueff/p/7792009.html]" target="_blank" rel="noopener">https://www.cnblogs.com/lanyueff/p/7792009.html)[https://www.cnblogs.com/lanyueff/p/7792009.html]</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1181,7 +1208,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-count">137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

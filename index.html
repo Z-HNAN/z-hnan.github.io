@@ -188,6 +188,148 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/16/前端性能监控/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/16/前端性能监控/" class="post-title-link" itemprop="url">前端性能监控</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-16 14:38:28" itemprop="dateCreated datePublished" datetime="2020-11-16T14:38:28+08:00">2020-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-17 02:57:31" itemprop="dateModified" datetime="2020-11-17T02:57:31+08:00">2020-11-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="监控相关性能指标"><a href="#监控相关性能指标" class="headerlink" title="监控相关性能指标"></a>监控相关性能指标</h1><ul>
+<li><code>FP</code> first paint 首次绘制</li>
+<li><code>FCP</code> first contentful paint 首次内容绘制（有东西出来就行）</li>
+<li><code>FMP</code> first meaningful paint 首次有意义的绘制（有大概意义即可）</li>
+</ul>
+<p><img src="/img/2020/11/17/1.png" alt="监控相关性能指标"></p>
+<h2 id="FMP"><a href="#FMP" class="headerlink" title="FMP"></a>FMP</h2><p>对fmp的定义不尽相同，什么是有意义的对于不同的业务方理解是不同的 如</p>
+<ul>
+<li>博客：标题，博文显示出来即可</li>
+<li>电商网站，更多的图片被显示出来</li>
+<li>搜索引擎，搜索内容显示出来</li>
+</ul>
+<p>google提出了一个较为通用的解决方案，就是<strong>页面上DOM变动最大时，即认为做出了首次有意义的绘制</strong>，同时要考虑一些内容页面（页面内容超出显示器内容时的情况，页面内容/屏幕内容），以及引用到了特殊的字体时，要考虑字体没有加载出来，从而加载出的内容也是没有太大的意义的。</p>
+<h2 id="使用浏览器相关API获取数据"><a href="#使用浏览器相关API获取数据" class="headerlink" title="使用浏览器相关API获取数据"></a>使用浏览器相关API获取数据</h2><p>浏览器原生的<code>performance</code>API记录数据</p>
+<ul>
+<li><p><code>performance.navigation</code> 页面加载还是刷新，发生了多少次重定向</p>
+</li>
+<li><p><code>performance.timing</code> 页面加载的各阶段时长，其中可以获得页面各个性能指标的时间</p>
+</li>
+<li><p><code>performance.memory</code> 内存使用情况（chrome中支持的非标准特性）</p>
+</li>
+<li><p><code>performance.timeorigin</code> 性能开始记录时高精度的时间戳</p>
+</li>
+</ul>
+<p>获取指标数据</p>
+<ul>
+<li><p><code>performance.now()</code> 获取当前页面开始加载到现在的时间戳（毫秒），而不是1970年的那个时间戳</p>
+</li>
+<li><p><code>perfromance.getEntries()</code>  获得各种打点记录数据</p>
+</li>
+<li><p><code>perfromance.getEntriesByName()</code> 通过名称获取记录数据（自定义mark的数据也可以这样取得）</p>
+</li>
+<li><p><code>performance.getEntriesByType()</code> 通过类型获取指标，比如<code>paint</code>, 绘制相关，<em><code>FP,FCP</code>等</em>。<code>resource</code>各种资源的时间节点</p>
+</li>
+<li><p><code>performance.mark(&lt;tag string&gt;)</code>  自定义打点，之后可通过<code>getEntriesByName</code>查询到</p>
+</li>
+<li><p><code>performance.clearMarks(&lt;tag string&gt;)</code> 清除相关自定义打点监控数据</p>
+</li>
+</ul>
+<h2 id="FPS"><a href="#FPS" class="headerlink" title="FPS"></a>FPS</h2><p>一般页面正常FPS维持在60会是一个比较理想的状态，如果页面降到20FPS后，会产生明显的卡顿感，由于毕竟浏览器还是要计算绘制的，一直让其保证60FPS也是不太可能的，比如在用户产生滑动时，页面FPS会突然下降，但是只要后续能够恢复正常就没有问题，所以我们在检测FPS一定是一段时间内的检测，设定相应的阈值，比如降低到某FPS，持续多少次，或者多久进行上报，或者采样每秒的FPS进行比对。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单计算FPS的方式,1s内渲染了多少帧图片</span></span><br><span class="line"><span class="comment">// 也可以计算上一次渲染和这一次渲染的时间差 1000/时间差 = FPS</span></span><br><span class="line"><span class="keyword">let</span> lastCountTime = performance.now()</span><br><span class="line"><span class="keyword">let</span> frames = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tick</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (time - lastCountTime &gt; <span class="number">1000</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'current FPS:'</span> + frames)</span><br><span class="line">    lastCountTime = time</span><br><span class="line">    frames = <span class="number">0</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    frames += <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">window</span>.requestAnimationFrame(tick)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.requestAnimationFrame(tick)</span><br></pre></td></tr></table></figure>
+<h1 id="监控js报错"><a href="#监控js报错" class="headerlink" title="监控js报错"></a>监控js报错</h1><p>页面执行的错误也需要我们进行捕获，由于浏览器的跨域安全策略，部分script脚本加载时出错是捕获不到的.</p>
+<h2 id="监控js遇到的问题"><a href="#监控js遇到的问题" class="headerlink" title="监控js遇到的问题"></a>监控js遇到的问题</h2><p>出于安全考虑，浏览器会刻意隐藏其他域的JS文件抛出的具体错误信息，这样做可以有效避免敏感信息无意中被不受控制的第三方脚本捕获。因此，浏览器只允许同域下的脚本捕获具体错误信息，而其他脚本只知道发生了一个错误，但无法获知错误的具体内容。</p>
+<p>具体例子如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Test page in http://test.com<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://another-domain.com/app.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onerror = <span class="function"><span class="keyword">function</span> (<span class="params">message, url, line, column, error</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.log(message, url, line, column, error);</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="javascript">  foo(); <span class="comment">// 调用app.js中定义的foo方法。</span></span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// js执行时引发了错误</span></span><br><span class="line"><span class="comment">// another-domain.com/app.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  bar(); <span class="comment">// ReferenceError: bar is not a function</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最终捕获的错误</span></span><br><span class="line"><span class="string">"Script error."</span>, <span class="string">""</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="literal">undefined</span></span><br></pre></td></tr></table></figure>
+<p>通常有如下2个方面的解法</p>
+<h2 id="开启CORS（Cross-Origin-Resource-Sharing，跨域资源共享）"><a href="#开启CORS（Cross-Origin-Resource-Sharing，跨域资源共享）" class="headerlink" title="开启CORS（Cross Origin Resource Sharing，跨域资源共享）"></a>开启CORS（Cross Origin Resource Sharing，跨域资源共享）</h2><ol>
+<li>添加crossorigin=”anonymous”属性。</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://another-domain.com/app.js"</span> <span class="attr">crossorigin</span>=<span class="string">"anonymous"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>添加跨域HTTP响应头。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 添加跨域访问</span><br><span class="line">Access-Control-Allow-Origin: http://test.com</span><br><span class="line"></span><br><span class="line"># 或者直接使用*</span><br><span class="line">Access-Control-Allow-Origin: *</span><br></pre></td></tr></table></figure>
+<h2 id="try-catch"><a href="#try-catch" class="headerlink" title="try catch"></a><code>try catch</code></h2><p>内部发生的错误，先被我们捕获一次，之后在进行抛出，神不知鬼不觉的拿到了错误信息</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  foo(); <span class="comment">// 调用app.js中定义的foo方法</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(e);</span><br><span class="line">  <span class="keyword">throw</span> e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>前端页面虽然在开发阶段，可以使用<code>lighthouse</code>或者<code>webpagetest</code>,但是真正在线上的情形我们是无从的得知的，需要真正统计线上的数据才能有一个大致的了解，就需要我们对线上的页面进行一些监控，从而有针对性的进行优化分析。</p>
+<p>对于前端性能监控，总的来说关注两个大点</p>
+<ul>
+<li>页面加载时各种数据</li>
+</ul>
+<p>用来计算页面的各种打开性能，打开快不快，页面加载的时间如何，用户体验好不好</p>
+<ul>
+<li>页面运行时的报错</li>
+</ul>
+<p>线上出现的问题，我们是没法调试的，不可能让用户去抓包，所以及时上报一些异常情况会及时发现问题，<em>对于第三方包要开启<code>crossorigin=&quot;anonymous&quot;</code>，或者自定义<code>try-catch</code>包裹错误</em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 捕获js抛出的异常</span></span><br><span class="line"><span class="built_in">window</span>.onerror = <span class="function"><span class="keyword">function</span> (<span class="params">message, source, lineno, colno, error</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 上报异常</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 捕获promise的unhandled异常</span></span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"unhandledrejection"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;   </span><br><span class="line">    <span class="comment">// 上报异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上报时机</li>
+</ul>
+<p>由于毕竟监控也是使用js，或多或少还是会有一定的影响，这里要做一定的考量，以及使用一些监控方式（线上抽样检测，而不是全量检测），另外鉴于js单线程的特性，主线程阻塞时也没有办法继续监控，可以考虑采取<code>service-worker</code>进行向主进程推送心跳包的方式，判定主线程是否正常。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><p><a href="https://docs.google.com/document/d/1BR94tJdZLsin5poeet0XoTW60M0SjvOJQttKT-JK8HI/view" target="_blank" rel="noopener">https://docs.google.com/document/d/1BR94tJdZLsin5poeet0XoTW60M0SjvOJQttKT-JK8HI/view</a></p>
+</li>
+<li><p><a href="https://www.alibabacloud.com/help/zh/doc-detail/88579.htm" target="_blank" rel="noopener">https://www.alibabacloud.com/help/zh/doc-detail/88579.htm</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/05/https加密/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -948,132 +1090,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/28/Object与Map的选用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/28/Object与Map的选用/" class="post-title-link" itemprop="url">Object与Map的选用</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-08-28 13:06:17 / 修改时间：13:20:41" itemprop="dateCreated datePublished" datetime="2020-08-28T13:06:17+08:00">2020-08-28</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br></pre></td></tr></table></figure>
-<h2 id="各自的特点"><a href="#各自的特点" class="headerlink" title="各自的特点"></a>各自的特点</h2><table>
-<thead>
-<tr>
-<th></th>
-<th>Map</th>
-<th>Object</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>默认值</td>
-<td>不包含任何的值，只有显式插入的键</td>
-<td>Object上有原型，原型上的键可能会与自定义键名冲突</td>
-</tr>
-<tr>
-<td>key类型</td>
-<td>任意的类型</td>
-<td><code>String</code> 或者<code>Symbol</code></td>
-</tr>
-<tr>
-<td>长度</td>
-<td>通过属性size获取</td>
-<td>键值个数只能手动计算</td>
-</tr>
-<tr>
-<td>性能</td>
-<td>频繁增删键值对有一定的性能优化</td>
-<td>对频繁增添场景未进行优化</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><ul>
-<li>有原生的JSON相关转换方法，可以更方面的转换为json串</li>
-<li>其key需为<code>string</code>,<code>symbol</code>相对来说有一些限制</li>
-<li>不可直接迭代</li>
-<li>原型上有相关方法，注意不要与key重复<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> o = &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(o.constructor) <span class="comment">//  Object() &#123; [native code] &#125;</span></span><br><span class="line">o.constructor = <span class="number">1</span> <span class="comment">// `.`操作的用法</span></span><br><span class="line"><span class="built_in">console</span>.log(o.constructorr) <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可能出问题的部分</span></span><br><span class="line"><span class="keyword">let</span> count = o[key] || <span class="number">0</span> <span class="comment">// 如果key为constructor则第一次初始化不到0</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><ul>
-<li>其key可以为任何类型。<ul>
-<li>key为正则，可以为一类数据匹配结果</li>
-<li>key也可为对象，直接<code>key.status = xxx &amp;&amp; key.code === xxx</code></li>
-</ul>
-</li>
-<li>Map对象插入是有顺序的，可以直接迭代拿出顺序</li>
-<li>其key不会有任何冲突，因为他是使用方法操作的数据，并不是通过<code>.</code>来操作数据</li>
-</ul>
-<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> obj2 = &#123; <span class="attr">name</span>: <span class="string">'zhn'</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> map1 = <span class="keyword">new</span> <span class="built_in">Map</span>()</span><br><span class="line"><span class="keyword">let</span> map2 = <span class="keyword">new</span> <span class="built_in">Map</span>([</span><br><span class="line">  [<span class="string">'name'</span>, <span class="string">'zhn'</span>]</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
-<h3 id="增删"><a href="#增删" class="headerlink" title="增删"></a>增删</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> key = <span class="string">'age'</span></span><br><span class="line"><span class="keyword">let</span> value = <span class="number">18</span></span><br><span class="line"></span><br><span class="line">obj[key] = value</span><br><span class="line">map.set(key, value)</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> obj[key]</span><br><span class="line">map.delete(key)</span><br></pre></td></tr></table></figure>
-<h3 id="获取元素"><a href="#获取元素" class="headerlink" title="获取元素"></a>获取元素</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> key = <span class="string">'name'</span></span><br><span class="line"></span><br><span class="line">obj[key] <span class="comment">// zhn</span></span><br><span class="line">map.get(key) <span class="comment">// zhn</span></span><br></pre></td></tr></table></figure>
-<h3 id="遍历元素"><a href="#遍历元素" class="headerlink" title="遍历元素"></a>遍历元素</h3><h4 id="Object-1"><a href="#Object-1" class="headerlink" title="Object"></a>Object</h4><p>object可搭配<code>Object.keys(obj)</code>进行遍历</p>
-<p>object本身就不能保证顺序，但是其Object.keys可以返回一定的顺序（ES6+）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> object = &#123; &#125;;</span><br><span class="line">object[<span class="string">'key1'</span>] = <span class="string">'value1'</span>;</span><br><span class="line">object[<span class="string">'key0'</span>] = <span class="string">'value0'</span>;</span><br><span class="line">object; <span class="comment">// &#123; key1: "value1", key0: "value0" &#125;</span></span><br><span class="line">object[<span class="number">20</span>] = <span class="string">'value20'</span>; <span class="comment">// 经历了隐式类型转换</span></span><br><span class="line">object; <span class="comment">// &#123; 20: "value20", key1: "value1", key0: "value0" &#125;</span></span><br></pre></td></tr></table></figure>
-<p>借助Object遍历的方式，</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">of</span> <span class="built_in">Object</span>.keys(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// key1</span></span><br><span class="line"><span class="comment">// key2</span></span><br><span class="line"><span class="comment">// key3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> value <span class="keyword">of</span> <span class="built_in">Object</span>.values(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// value1</span></span><br><span class="line"><span class="comment">// value2</span></span><br><span class="line"><span class="comment">// value3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> entry <span class="keyword">of</span> <span class="built_in">Object</span>.entries(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(entry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ["key1", "value1"]</span></span><br><span class="line"><span class="comment">// ["key2", "value2"]</span></span><br><span class="line"><span class="comment">// ["key3", "value3"]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> [key,value] <span class="keyword">of</span> <span class="built_in">Object</span>.entries(object)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key,value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//"key1", "value1"</span></span><br><span class="line"><span class="comment">//"key2", "value2"</span></span><br><span class="line"><span class="comment">//"key3", "value3"</span></span><br></pre></td></tr></table></figure>
-<p>object不是可迭代对象，所以<strong>不能</strong>使用<code>for-of</code>直接获取其值，<strong>可以</strong>使用<code>for-in</code>方法去获取keys</p>
-<h4 id="Map-1"><a href="#Map-1" class="headerlink" title="Map"></a>Map</h4><p>map是一个可迭代的对象，并且保证了其在迭代的顺序是可以保证的</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// forEach</span></span><br><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">map.set(<span class="string">'key1'</span>, <span class="string">'value1'</span>);</span><br><span class="line">map.set(<span class="string">'key2'</span>, <span class="string">'value2'</span>);</span><br><span class="line">map.set(<span class="string">'key3'</span>, <span class="string">'value3'</span>);</span><br><span class="line">map.forEach(<span class="function">(<span class="params">value, key</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key, value);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// key1 value1</span></span><br><span class="line"><span class="comment">// key2 value2</span></span><br><span class="line"><span class="comment">// key3 value3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//for...of...</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> entry <span class="keyword">of</span> map) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(entry);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ["key1", "value1"]</span></span><br><span class="line"><span class="comment">// ["key2", "value2"]</span></span><br><span class="line"><span class="comment">// ["key3", "value3"]</span></span><br></pre></td></tr></table></figure>
-<h2 id="如何更好的选用"><a href="#如何更好的选用" class="headerlink" title="如何更好的选用"></a>如何更好的选用</h2><blockquote>
-<p>不能用map去代替object，只是一种补充方案</p>
-</blockquote>
-<p>考虑键值类型，是<code>string, symbol</code>,如果较为简单，则使用object即可，如果有更为复杂的key类型，使用map也可以。</p>
-<p>考虑之后遍历是否需要保证其中的顺序，map是可以保证顺序的，object的本意就是没有顺序的，而且隐式类型转换也有问题。</p>
-<p>频繁操作性能考虑，map的结构是一个哈希结构，频繁增上有较好的性能优化效果</p>
-<p>考虑其key的可能性，如果key是用户可自定的话，要考虑是否会覆盖，比如用户自定了<code>toString</code>这个键，那么使用map较好</p>
-<p>考虑是否需要使用JSON，object原生对json串支持较好，map需要自己去做实现</p>
-<p>考虑是否要在key上做文章，map的key为任意类型，其中改写为正则类型，会有更好的拓展延伸效果</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1145,7 +1161,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">136</span>
+          <span class="site-state-item-count">137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
