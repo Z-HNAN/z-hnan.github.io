@@ -188,6 +188,133 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/14/深拷贝/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/14/深拷贝/" class="post-title-link" itemprop="url">深拷贝</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-14 15:39:07" itemprop="dateCreated datePublished" datetime="2020-04-14T15:39:07+08:00">2020-04-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JS中的深拷贝"><a href="#JS中的深拷贝" class="headerlink" title="JS中的深拷贝"></a>JS中的深拷贝</h1><h2 id="最为简单的方式"><a href="#最为简单的方式" class="headerlink" title="最为简单的方式"></a>最为简单的方式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(obj))</span><br></pre></td></tr></table></figure>
+<h2 id="使用递归，手写深拷贝"><a href="#使用递归，手写深拷贝" class="headerlink" title="使用递归，手写深拷贝"></a>使用递归，手写深拷贝</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span> (<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> target === <span class="string">'object'</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> cloneTarget = <span class="built_in">Array</span>.isArray(target) ? [] : &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> target) &#123;</span><br><span class="line">      cloneTarget[key] = clone(target[key])</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cloneTarget</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> target</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用map-防止循环引用自身的情况-重复引用情况"><a href="#使用map-防止循环引用自身的情况-重复引用情况" class="headerlink" title="使用map,防止循环引用自身的情况(重复引用情况)"></a>使用map,防止循环引用自身的情况(重复引用情况)</h2><blockquote>
+<p>WeakMap,如果放入的对象其引用已经为null,则其中的元素会自动销毁，被垃圾回收器处理</p>
+</blockquote>
+<p>这里仅仅考虑最为普通的形式，即深层次递归的是一个数组或者是对象，<em>如果是函数function，则直接返回其引用即可，并没有什么深层次拷贝的意义</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span> (<span class="params">target, map = new WeakMap(</span>)) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> target === <span class="string">'object'</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> cloneTarget = <span class="built_in">Array</span>.isArray(target) ? [] : &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> (map.get(target)) &#123;</span><br><span class="line">      <span class="keyword">return</span> map.get(target)</span><br><span class="line">    &#125;</span><br><span class="line">    map.set(target, cloneTarget)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> target) &#123;</span><br><span class="line">      cloneTarget[key] = clone(target[key], map)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cloneTarget</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> target</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="由于while循环速度较快，可以将for-in-循环改进成while循环"><a href="#由于while循环速度较快，可以将for-in-循环改进成while循环" class="headerlink" title="由于while循环速度较快，可以将for in 循环改进成while循环"></a>由于while循环速度较快，可以将<code>for in 循环改进成while循环</code></h2><blockquote>
+<p>while循环效率 &gt; 普通for循环的效率 &gt; <code>for in</code>的效率</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">forEach</span>(<span class="params">array, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">-1</span></span><br><span class="line">  <span class="keyword">const</span> length = array.length</span><br><span class="line">  <span class="keyword">while</span> (++index &lt; length) &#123;</span><br><span class="line">    callback.call(array[index], array[index], index)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="考虑多种数据类型"><a href="#考虑多种数据类型" class="headerlink" title="考虑多种数据类型"></a>考虑多种数据类型</h2><h3 id="重构判断基本类型"><a href="#重构判断基本类型" class="headerlink" title="重构判断基本类型"></a>重构判断基本类型</h3><blockquote>
+<p>function直接当做基本类型，复制过去</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isObject</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> type = <span class="keyword">typeof</span> obj</span><br><span class="line">  <span class="keyword">return</span> type !== <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span> )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getType</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.call(obj)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="克隆时，保证其原型对象挂载正常"><a href="#克隆时，保证其原型对象挂载正常" class="headerlink" title="克隆时，保证其原型对象挂载正常"></a>克隆时，保证其原型对象挂载正常</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getInit</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> Ctor = obj.constructor</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Ctor()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="构建多种类型，包括适合深拷贝"><a href="#构建多种类型，包括适合深拷贝" class="headerlink" title="构建多种类型，包括适合深拷贝"></a>构建多种类型，包括适合深拷贝</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 适合递归深拷贝的类型</span></span><br><span class="line"><span class="keyword">const</span> mapTag = <span class="string">'[object Map]'</span></span><br><span class="line"><span class="keyword">const</span> setTag = <span class="string">'[object Set]'</span></span><br><span class="line"><span class="keyword">const</span> arrayTag = <span class="string">'[object Array]'</span></span><br><span class="line"><span class="keyword">const</span> objectTag = <span class="string">'[object Object]'</span></span><br><span class="line"><span class="keyword">const</span> deepTag = [mapTag, setTag, arrayTag, objectTag]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其余重新拷贝的类型</span></span><br><span class="line"><span class="keyword">const</span> booleanTag = <span class="string">'[object Boolean]'</span></span><br><span class="line"><span class="keyword">const</span> dateTag = <span class="string">'[object Date]'</span></span><br><span class="line"><span class="keyword">const</span> errorTag = <span class="string">'[object Error]'</span></span><br><span class="line"><span class="keyword">const</span> numberTag = <span class="string">'[object Number]'</span></span><br><span class="line"><span class="keyword">const</span> regexpTag = <span class="string">'[object RegExp]'</span></span><br><span class="line"><span class="keyword">const</span> stringTag = <span class="string">'[object String]'</span></span><br><span class="line"><span class="keyword">const</span> symbolTag = <span class="string">'[object Symbol]'</span></span><br><span class="line"><span class="keyword">const</span> functionTag = <span class="string">'[object Function]'</span></span><br></pre></td></tr></table></figure>
+<p>深度clone</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span> (<span class="params">target, map = new WeakMap(</span>)) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆原始类型</span></span><br><span class="line">  <span class="keyword">if</span> (!isObject(target)) &#123;</span><br><span class="line">    <span class="keyword">return</span> target</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始化</span></span><br><span class="line">  <span class="keyword">const</span> type = getType(target)</span><br><span class="line">  <span class="keyword">let</span> cloneTarget</span><br><span class="line">  <span class="keyword">if</span> (deepTag.includes(type)) &#123;</span><br><span class="line">    cloneTarget = getInit(target)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 防止循环引用</span></span><br><span class="line">  <span class="keyword">if</span> (map.get(target)) &#123;</span><br><span class="line">    <span class="keyword">return</span> map.get(target)</span><br><span class="line">  &#125;</span><br><span class="line">  map.set(target, cloneTarget)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆set</span></span><br><span class="line">  <span class="keyword">if</span> (type === setTag) &#123;</span><br><span class="line">    target.foreach(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">      cloneTarget.add(clone(value, map))</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆map</span></span><br><span class="line">  <span class="keyword">if</span> (type === mapTag) &#123;</span><br><span class="line">    target.foreach(<span class="function">(<span class="params">value, key</span>) =&gt;</span> &#123;</span><br><span class="line">      cloneTarget.set(key, clone(value, map))</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆数组</span></span><br><span class="line">  <span class="keyword">if</span> (type === arrayTag) &#123;</span><br><span class="line">    foreach(target, (value, index) =&gt; &#123;</span><br><span class="line">      <span class="comment">// [a, b, c] =&gt; 0:a 1:b 2:c 使用的是0,1,2</span></span><br><span class="line">      cloneTarget[index] = clone(target[index], map) </span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆对象</span></span><br><span class="line">  <span class="keyword">if</span> (type === objectTag) &#123;</span><br><span class="line">    <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(target)</span><br><span class="line">    foreach(keys, (key, index) =&gt; &#123;</span><br><span class="line">      <span class="comment">// ['name', 'age'] =&gt; 0: 'name', 1: 'age' 我们使用到的是name, age</span></span><br><span class="line">      cloneTarget[key] = clone(target[key], map)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="克隆函数的方式"><a href="#克隆函数的方式" class="headerlink" title="克隆函数的方式"></a>克隆函数的方式</h2><blockquote>
+<p>函数可以直接引用地址，这里也可以使用正则匹配</p>
+</blockquote>
+<ul>
+<li>箭头函数没有原型，可以直接使用<code>eval()</code>生成</li>
+<li>普通函数有原型，需要使用<code>new Function(...params, functionBody)</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneFunction</span> (<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> bodyReg = <span class="regexp">/(?&lt;=\&#123;)(.|\n)+(?=\&#125;)/m</span></span><br><span class="line">  <span class="keyword">const</span> paramsReg = <span class="regexp">/(?&lt;=\().+(?=\)\s+\&#123;)/</span></span><br><span class="line">  <span class="keyword">const</span> fnStr = fn.toString()</span><br><span class="line">  <span class="keyword">if</span> (fn.prototype) &#123;</span><br><span class="line">    <span class="comment">// 普通函数</span></span><br><span class="line">    <span class="keyword">const</span> body = bodyReg.exec(fnStr)</span><br><span class="line">    <span class="keyword">const</span> params = paramsReg.exec(fnStr)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无函数体</span></span><br><span class="line">    <span class="keyword">if</span> (!body) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无参数</span></span><br><span class="line">    <span class="keyword">if</span> (!params) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(body[<span class="number">0</span>])</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 有参数</span></span><br><span class="line">    <span class="keyword">const</span> paramsArr = params[<span class="number">0</span>].split(<span class="string">','</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(...paramsArr, body[<span class="number">0</span>])</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 箭头函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">eval</span>(fnStr)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="克隆其他类型的方式"><a href="#克隆其他类型的方式" class="headerlink" title="克隆其他类型的方式"></a>克隆其他类型的方式</h2><p>除了<code>map, set, object, array</code>其余可以使用构造器，或者再生成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> type = getType(target)</span><br><span class="line"><span class="keyword">let</span> cloneTarget</span><br><span class="line"><span class="keyword">if</span> (deepTag.includes(type)) &#123;</span><br><span class="line">  cloneTarget = getInit(target)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> cloneOtherType(target, type)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 克隆其他类型</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneOtherType</span> (<span class="params">target, type</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> Ctor = target.constructor</span><br><span class="line">  <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">    <span class="keyword">case</span> booleanTag:</span><br><span class="line">    <span class="keyword">case</span> numberTag:</span><br><span class="line">    <span class="keyword">case</span> stringTag:</span><br><span class="line">    <span class="keyword">case</span> dateTag:</span><br><span class="line">    <span class="keyword">case</span> errorTag:</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> Ctor(target)</span><br><span class="line">    <span class="keyword">case</span> functionTag:</span><br><span class="line">      <span class="keyword">return</span> cloneFunction(target)</span><br><span class="line">    <span class="keyword">case</span> symbolTag:</span><br><span class="line">      <span class="keyword">return</span> cloneSymbol(target)</span><br><span class="line">    <span class="keyword">case</span> regexpTag:</span><br><span class="line">      <span class="keyword">return</span> cloneRegExp(target)</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 克隆Symbol</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneSymbol</span> (<span class="params">symbol</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>(<span class="built_in">Symbol</span>.prototype.valueOf.call(symbol))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 克隆正则</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneRegExp</span> (<span class="params">regExp</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// const flagReg = /[i|m|g]*$/g</span></span><br><span class="line">  <span class="keyword">const</span> flagReg = <span class="regexp">/\w*$/g</span></span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">new</span> <span class="built_in">RegExp</span>(regExp.source, flagReg.exec(regExp))</span><br><span class="line">  result.lastIndex = regExp.lastIndex</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><blockquote>
+<p>基本数据类型在栈中存储，一旦创建则不可改变；存储在堆中的引用类型则需要深拷贝。</p>
+</blockquote>
+<p>深拷贝时，要考虑三种类型的拷贝，基本数据类型，通过递归操作的引用类型，通过创建实例的其他引用类型</p>
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>首先JS中的基本数据类型有,<code>null undefined boolean number string symbol object</code></p>
+<p>要判断是基本数据类型还是引用类型，需要使用<code>typeof</code> 可区分</p>
+<ul>
+<li><code>typeof</code>会将<code>function</code>类型单独区分出来，其实是属于<code>object</code>类型中的</li>
+<li><code>typeof null === &#39;object&#39;</code>这是早期js设计的bug,后来考虑到兼容性的问题，就没有在进行修复</li>
+</ul>
+<p>因为function类型并没有实际拷贝的需要，<code>lodash</code>中也是直接返回的</p>
+<p>所以创建出一个判断是否是Object类型的方法，核心使用typeof进行判断，如果不是<code>object</code>类型(<code>function</code>类型也直接被返回了)，直接返回该值</p>
+<h2 id="通过递归操作的引用类型"><a href="#通过递归操作的引用类型" class="headerlink" title="通过递归操作的引用类型"></a>通过递归操作的引用类型</h2><p>其次判断类型应该使用<code>Object.prototype.toString.call(target)</code>来判断，分为两类</p>
+<ul>
+<li>需要进行递归操作拷贝的类型<code>map, set, object, array</code><em>暂不考虑<code>WeakMap</code>, <code>WeakSet</code></em></li>
+<li>另一类包括基本类型的一些包装类型<code>Number, Boolean, String</code>, 还有其他类型<code>Date, Symbol, RegExp</code></li>
+</ul>
+<p>需要深拷贝的类型</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> Ctor = target.constructor</span><br><span class="line"><span class="keyword">let</span> cloneTarget = <span class="keyword">new</span> Ctor()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 克隆set</span></span><br><span class="line">  <span class="keyword">if</span> (type === setTag) &#123;</span><br><span class="line">    target.foreach(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">      cloneTarget.add(clone(value, map))</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆map</span></span><br><span class="line">  <span class="keyword">if</span> (type === mapTag) &#123;</span><br><span class="line">    target.foreach(<span class="function">(<span class="params">value, key</span>) =&gt;</span> &#123;</span><br><span class="line">      cloneTarget.set(key, clone(value, map))</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆数组</span></span><br><span class="line">  <span class="keyword">if</span> (type === arrayTag) &#123;</span><br><span class="line">    foreach(target, (value, index) =&gt; &#123;</span><br><span class="line">      <span class="comment">// [a, b, c] =&gt; 0:a 1:b 2:c 使用的是0,1,2</span></span><br><span class="line">      cloneTarget[index] = clone(target[index], map) </span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 克隆对象</span></span><br><span class="line">  <span class="keyword">if</span> (type === objectTag) &#123;</span><br><span class="line">    <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(target)</span><br><span class="line">    foreach(keys, (key, index) =&gt; &#123;</span><br><span class="line">      <span class="comment">// ['name', 'age'] =&gt; 0: 'name', 1: 'age' 我们使用到的是name, age</span></span><br><span class="line">      cloneTarget[key] = clone(target[key], map)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="其他类型-通过创建实例的其他引用类型"><a href="#其他类型-通过创建实例的其他引用类型" class="headerlink" title="其他类型 通过创建实例的其他引用类型"></a>其他类型 通过创建实例的其他引用类型</h2><p>其他类型，包装类型，以及一些简单的类型</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Ctor = target.constructor</span><br><span class="line"><span class="keyword">switch</span> (type) &#123;</span><br><span class="line">  <span class="keyword">case</span> booleanTag:</span><br><span class="line">  <span class="keyword">case</span> numberTag:</span><br><span class="line">  <span class="keyword">case</span> stringTag:</span><br><span class="line">  <span class="keyword">case</span> dateTag:</span><br><span class="line">  <span class="keyword">case</span> errorTag:</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Ctor(target)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其他类型 <code>Symbol</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> s1 = <span class="built_in">Symbol</span>(<span class="string">'foo'</span>)</span><br><span class="line"><span class="comment">// const s2 = Symbol.prototype.valueOf.call(s1) // s1 === s2</span></span><br><span class="line"><span class="keyword">const</span> s2 = <span class="built_in">Object</span>(<span class="built_in">Symbol</span>.prototype.valueOf.call(s1)) <span class="comment">// s1 !== s2</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneSymbol</span>(<span class="params">symbol</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>(<span class="built_in">Symbol</span>.prototype.valueOf.call(symbol))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其他类型 <code>RegExp</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneRegExp</span>(<span class="params">regExp</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> flagReg = <span class="regexp">/\w*$/</span> <span class="comment">// 匹配结尾的模式修饰符img</span></span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">new</span> <span class="built_in">RegExp</span>(regExp.source, flagReg.exec(regExp)) <span class="comment">// 重新创建示例</span></span><br><span class="line">  result.lastIndex = regExp.lastIndex <span class="comment">// 修正lastIndex</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其他类型 <code>function</code></p>
+<p><code>function</code>类型可以直接返回，但是这里也做出实现</p>
+<ul>
+<li>箭头函数没有原型，可以用<code>eval</code>直接返回</li>
+<li>普通函数有原型，可以使用<code>new Function(...params, functionBody)</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cloneFunction</span> (<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> bodyReg = <span class="regexp">/(?&gt;=\&#123;)(.|\n)+(?=\&#125;)/m</span></span><br><span class="line">  <span class="keyword">const</span> paramsReg = <span class="regexp">/(?&gt;=\().+(?=\)\s+\&#123;)/</span></span><br><span class="line">  <span class="keyword">const</span> fnStr = fn.toString()</span><br><span class="line">  <span class="keyword">if</span> (fn.prototype) &#123;</span><br><span class="line">    <span class="comment">// 普通函数</span></span><br><span class="line">    <span class="keyword">const</span> body = bodyReg.exec(fnStr)</span><br><span class="line">    <span class="keyword">const</span> params = paramsReg.exec(fnStr)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无函数体</span></span><br><span class="line">    <span class="keyword">if</span> (!body) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无参数</span></span><br><span class="line">    <span class="keyword">if</span> (!params) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(body[<span class="number">0</span>])</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 有参数</span></span><br><span class="line">    <span class="keyword">const</span> paramsArr = params[<span class="number">0</span>].split(<span class="string">','</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(...paramsArr, body[<span class="number">0</span>])</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 箭头函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">eval</span>(fnStr)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="处理循环引用"><a href="#处理循环引用" class="headerlink" title="处理循环引用"></a>处理循环引用</h2><p><code>WeakMap</code>,若key对应不在有引用，则下一次<code>GC</code>会对其引用回收，避免内存泄漏</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span></span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/10/win10优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1222,184 +1349,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/07/css-基础-选择器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/07/css-基础-选择器/" class="post-title-link" itemprop="url">css-基础-选择器</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-07 14:19:30" itemprop="dateCreated datePublished" datetime="2020-03-07T14:19:30+08:00">2020-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="html-css历史"><a href="#html-css历史" class="headerlink" title="html,css历史"></a>html,css历史</h2><p>在 1990 年，Tim Berners-Lee 发明 HTML 时，主要是为了规范科研文档的格式。这时 HTML 是一个简单的标记语言，为文档赋予了基本的结构和意义，包括如标题、列表、定义等标签。后来为了展示更多的效果，以及对部分标签的滥用，比如table标签被用来布局等，样式和结构逐经行了抽离。</p>
-<h2 id="css历史"><a href="#css历史" class="headerlink" title="css历史"></a>css历史</h2><ul>
-<li>css1在1996年成为标准</li>
-<li>css2在1998年成为标准</li>
-<li>css3在2002就被提上议案，并不同的模块被提上不同的提案，不同模块单独控制，从level1开始，如果是之前已经有的内容，则题为level3并继续发展</li>
-</ul>
-<h2 id="html历史"><a href="#html历史" class="headerlink" title="html历史"></a>html历史</h2><p>html经过4.01版本后，衍生出了xhtml1.0,由于其过于严格,最终无法落地，最终诞生出了html5.</p>
-<h2 id="css的渐进增强与向后兼容"><a href="#css的渐进增强与向后兼容" class="headerlink" title="css的渐进增强与向后兼容"></a>css的渐进增强与向后兼容</h2><h3 id="渐进增强"><a href="#渐进增强" class="headerlink" title="渐进增强"></a>渐进增强</h3><p>首先为最小的，公共部分的浏览器准备能用的内容，其次在为支持新特性的浏览器增加内容</p>
-<h3 id="向后兼容"><a href="#向后兼容" class="headerlink" title="向后兼容"></a>向后兼容</h3><p>在使用新特性时，新属性在前，后属性在后，即使新特性用不了，也可以使用旧的兼容的特性。</p>
-<h3 id="厂商前缀"><a href="#厂商前缀" class="headerlink" title="厂商前缀"></a>厂商前缀</h3><ul>
-<li><code>-webkit-</code>适用于webkit内核浏览器 safari/chrome/opera</li>
-<li><code>-moz-</code>适用于Mozilla内核 Firefox</li>
-<li><code>-ms-</code>适用于微软的IE</li>
-</ul>
-<p>其中可使用autofix，或者webpack中的postcss/postcss-preset-env来自动增加前缀信息。</p>
-<h2 id="语义化标签"><a href="#语义化标签" class="headerlink" title="语义化标签"></a>语义化标签</h2><p>多使用语义化标签，能够便于浏览器识别，或是屏幕阅读器，或是单纯的处理文本的浏览器，或者盲文点触设备，更利于搜索引擎进行搜索</p>
-<h2 id="css选择器种类"><a href="#css选择器种类" class="headerlink" title="css选择器种类"></a>css选择器种类</h2><h3 id="独立选择器"><a href="#独立选择器" class="headerlink" title="独立选择器"></a>独立选择器</h3><p>自己单独就可使用</p>
-<h4 id="标签选择器"><a href="#标签选择器" class="headerlink" title="标签选择器"></a>标签选择器</h4><p>匹配给定元素名称的元素</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">input</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="类选择器"><a href="#类选择器" class="headerlink" title="类选择器"></a>类选择器</h4><p>选中class属性中包含指定的属性值，必须是完整的属性</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.intro</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="id选择器，"><a href="#id选择器，" class="headerlink" title="id选择器，"></a>id选择器，</h4><p>与之唯一的一个id,页面中唯一出现的属性</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#idname</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="通用选择器"><a href="#通用选择器" class="headerlink" title="通用选择器"></a>通用选择器</h4><p>选择器选择所有的节点，也用<code>.intro &gt; *</code>表示<code>.intro的所有子元素</code></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="属性选择器"><a href="#属性选择器" class="headerlink" title="属性选择器"></a>属性选择器</h4><p>根据属性来匹配，</p>
-<ul>
-<li>属性值开头<code>img[src^=&quot;http://&quot;]</code></li>
-<li>属性值包含<code>img[src*=&quot;http://&quot;]</code></li>
-<li>属性值结束<code>img[src$=&quot;http://&quot;]</code></li>
-</ul>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[type]</span> &#123;&#125;</span><br><span class="line"><span class="selector-attr">[class='intro']</span></span><br></pre></td></tr></table></figure>
-<h4 id="伪元素"><a href="#伪元素" class="headerlink" title="伪元素"></a>伪元素</h4><p>选择页面的特殊区域，不是通过元素来表示的</p>
-<ul>
-<li>排版类，暂时应用于inline中<ul>
-<li>首行<code>::first-line</code>,</li>
-<li>首字母<code>::first-letter</code>,</li>
-</ul>
-</li>
-<li>存在于页面DOM中,<code>content不为none时会显示</code><ul>
-<li>之前<code>::before</code></li>
-<li>之后<code>::after</code></li>
-</ul>
-</li>
-<li>其他<ul>
-<li>输入框占位元素<code>::placeholder</code></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">::after</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="伪类"><a href="#伪类" class="headerlink" title="伪类"></a>伪类</h4><p>选择页面中元素的特殊状态</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:hover</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>由于在移动设备中，不一定有真的悬浮状态，所以要慎重使用<code>hover</code></p>
-<h5 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h5><ul>
-<li>普通链接（未点击过）<code>a:link</code></li>
-<li>访问过的链接 <code>a:visited</code></li>
-<li>悬停/键盘tab预选时 <code>a:hover</code></li>
-<li>活动状态，鼠标点击时 <code>a:active</code></li>
-</ul>
-<h5 id="目标与反选"><a href="#目标与反选" class="headerlink" title="目标与反选"></a>目标与反选</h5><h6 id="浏览器的目标匹配id-该元素被匹配-target"><a href="#浏览器的目标匹配id-该元素被匹配-target" class="headerlink" title="浏览器的目标匹配id, 该元素被匹配 :target"></a>浏览器的目标匹配id, 该元素被匹配 <code>:target</code></h6><p>浏览器地址为: <code>http://example.com/blog/1/#comment-3</code></p>
-<p>元素id为hash值 <code>&lt;article class=&quot;comment&quot; id=&quot;comment-3&quot;&gt;&lt;/article&gt;</code></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.comment</span><span class="selector-pseudo">:target</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="反选-not"><a href="#反选-not" class="headerlink" title="反选 :not()"></a>反选 <code>:not()</code></h6><p>选中comment,但是不能是违法评论(.illegal)</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.comment</span><span class="selector-pseudo">:not(.illegal)</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="结构化伪类"><a href="#结构化伪类" class="headerlink" title="结构化伪类"></a>结构化伪类</h5><p>其中默认从1开始，如果设置了n，则n的取值从0开始递增</p>
-<ul>
-<li>只选择元素<ul>
-<li><code>:nth-child()</code> 正向选择</li>
-<li><code>:nth-last-child()</code> 从后开始计数选择</li>
-<li><code>:first-child()</code></li>
-<li><code>:last-child()</code></li>
-</ul>
-</li>
-<li>选择同等类型的,过滤掉不符合类型的<ul>
-<li><code>:nth-of-type()</code> 正向选择</li>
-<li><code>:nth-last-of-type()</code> 从后开始计数选择</li>
-</ul>
-</li>
-</ul>
-<h5 id="表单伪类"><a href="#表单伪类" class="headerlink" title="表单伪类"></a>表单伪类</h5><ul>
-<li><code>:required</code>,<code>:optional</code> 必填和选填项</li>
-<li><code>:disabled</code>,<code>:read-only</code>, <code>:read-write</code> 禁用，只读，读写</li>
-<li><code>:vaild</code>,<code>:invaild</code>, 有效，无效</li>
-</ul>
-<h3 id="组合选择器"><a href="#组合选择器" class="headerlink" title="组合选择器"></a>组合选择器</h3><p>通过单独选择器的组合，其中s1,s2,s3表示独立选择器</p>
-<blockquote>
-<p>由于浏览器渲染顺序，都是往后进行选择，如存在向前的选择器，那么浏览器会对一个文档进行多轮渲染</p>
-</blockquote>
-<h4 id="分组选择器"><a href="#分组选择器" class="headerlink" title="分组选择器"></a>分组选择器</h4><p>用逗号最为分隔，多个选择器同时应用一种样式</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">s1</span>, <span class="selector-tag">s2</span>, <span class="selector-tag">s3</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="后代选择器"><a href="#后代选择器" class="headerlink" title="后代选择器"></a>后代选择器</h4><p>用空格作为分割，选择其后代</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">s1</span> <span class="selector-tag">s2</span> <span class="selector-tag">s3</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="子选择器"><a href="#子选择器" class="headerlink" title="子选择器"></a>子选择器</h4><p>使用大于号作为分隔，只会选择器子元素，不会跨越元素去选</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">s1</span> &gt; <span class="selector-tag">s2</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="相邻元素选择器"><a href="#相邻元素选择器" class="headerlink" title="相邻元素选择器"></a>相邻元素选择器</h4><p>选择其后的相邻的元素，如果符合则选定，不符合则不选定，不会跳跃查于其所有的兄弟元素，也不会查其子元素</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 查找s1紧跟的兄弟元素s2, 如果s1后的紧邻兄弟元素不是s2，则不予以选定</span><br><span class="line"><span class="selector-tag">s1</span> + <span class="selector-tag">s2</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="一般同类选择器"><a href="#一般同类选择器" class="headerlink" title="一般同类选择器"></a>一般同类选择器</h4><p>选择其后的相邻的元素，会跳跃查其所有的兄弟元素</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 查找s1以后的所有兄弟元素s2, 紧跟元素有多少选择多少</span><br><span class="line"><span class="selector-tag">s1</span> ~ <span class="selector-tag">s2</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="css选择器的特殊性"><a href="#css选择器的特殊性" class="headerlink" title="css选择器的特殊性"></a>css选择器的特殊性</h2><p><code>a, b, c, d</code></p>
-<p>css是采用4个级别判定该样式的优先级（从左往右比较顺序），<strong>每个级别只会在其位置上增减，并不会进位</strong>，<strong>相同优先级，从上到下的顺序排列</strong></p>
-<ul>
-<li>a=1,a是行内样式，</li>
-<li>b=ID选择器的个数</li>
-<li>c=类选择器的个数和伪类选择器的个数</li>
-<li>d=类型选择器和伪元素选择器的个数</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id="dv-1" class="box target current"&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">div &#123;&#125; // 0.0.0.1</span><br><span class="line">div .box &#123;&#125; // 0.0.1.1</span><br><span class="line">.box.target.current // 0.0.3.0</span><br><span class="line">#dv-1 &#123;&#125; // 0.1.0.0</span><br></pre></td></tr></table></figure>
-<h2 id="css的继承"><a href="#css的继承" class="headerlink" title="css的继承"></a>css的继承</h2><p>所有父元素的属性均会继承给其子元素，<strong>该元素有自己的样式，则会覆盖继承样式</strong>（针对同样式而言）</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">body</span>&gt;</span><br><span class="line">  &lt;h1&gt;css&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">color</span>: red; &#125;</span><br><span class="line"><span class="selector-tag">h1</span> &#123; <span class="attribute">color</span>: blue; &#125;</span><br><span class="line"></span><br><span class="line">最终内容为<span class="selector-tag">blue</span></span><br></pre></td></tr></table></figure>
-<p>h1收到body的样式继承为red, 又因为h1设置了自己的颜色，所以会覆盖继承的red,为blue</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">body</span>&gt;</span><br><span class="line">  &lt;h1&gt;css&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">font-size</span>: <span class="number">50px</span>; &#125;</span><br><span class="line"></span><br><span class="line">最终<span class="selector-tag">h1</span>的字号为浏览器自带（并非<span class="selector-tag">body</span>继承的50）</span><br></pre></td></tr></table></figure>
-<p>h1收到body的样式继承为50px,因为浏览器默认对标题有字号设置，所以覆盖继承的50px,为之前字号大小</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 特列</span><br><span class="line">&lt;<span class="selector-tag">body</span>&gt;</span><br><span class="line">  &lt;<span class="selector-tag">h1</span>&gt;</span><br><span class="line">    hello&lt;em&gt;css&lt;/em&gt;</span><br><span class="line">  &lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">* &#123; <span class="attribute">color</span>: red; &#125;</span><br><span class="line"><span class="selector-tag">h1</span> &#123; <span class="attribute">color</span>: blue; &#125;</span><br><span class="line"></span><br><span class="line">最终<span class="selector-tag">hello</span>呈现<span class="selector-tag">blue</span>，<span class="selector-tag">css</span>呈现<span class="selector-tag">red</span></span><br></pre></td></tr></table></figure>
-<p><code>*</code>等于为每个元素都设定了样式，虽然h1的blue继承给了内部的em，但是之前的<code>*</code>为其设置的样式进行了覆盖，所以呈现red</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1471,7 +1420,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">137</span>
+          <span class="site-state-item-count">138</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

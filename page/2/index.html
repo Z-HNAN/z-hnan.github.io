@@ -188,6 +188,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/28/转换hooks的开发建议/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/28/转换hooks的开发建议/" class="post-title-link" itemprop="url">转换hooks的开发建议</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-28 13:21:16 / 修改时间：13:23:17" itemprop="dateCreated datePublished" datetime="2020-08-28T13:21:16+08:00">2020-08-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>同学，还不试一把React-hooks吗？</p>
+</blockquote>
+<p>使用hooks开发有一阵时间了，几乎是从推出后就尝试使用，一路走来，一顿毒打，踩了不少坑，也逐渐体会到了hooks模式下，开发方式的变化，不得不说还是要吹一波的。</p>
+<p>接触到的最开始就是<a href="https://material-ui.com/zh/" target="_blank" rel="noopener">MaterialUI</a>了，当时hooks模式正式发布后，MaterialUI也推了一版，并且官方文档就已经使用到了hooks，当时以为hooks就是存个state，后来发现完全是另一种开发组件的思想。</p>
+<p>本篇只是希望给同学们提供一些不一样的开发思路，更多是和大家讨论一下hooks模式，涉及到具体的api使用，及更深入可去<a href="https://reactjs.org/docs/hooks-intro.html" target="_blank" rel="noopener">React-Hooks</a>学习。</p>
+<h2 id="Hooks模式介绍"><a href="#Hooks模式介绍" class="headerlink" title="Hooks模式介绍"></a>Hooks模式介绍</h2><p>2019年第一季度,React16.7正式发布，Hooks模式也可以用于生产环境中，</p>
+<p>首先必须要明确的一点，hooks是在function组件中使用的，所以函数式组件的使用是直接调用的，比如</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// React 16.13.0 ReactFiberHooks.new.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Component即jsx转换后传递的 Function组件的引用</span></span><br><span class="line"><span class="keyword">let</span> children = Component(props, secondArg);</span><br></pre></td></tr></table></figure>
+<p>但是基于ReactFiber架构，即有了为Function组件拓展的可能，在fiber上挂载一个hooks的链</p>
+<p>个人认为，发布的hooks主要分为三大块方向</p>
+<ul>
+<li>存储数据型 （useState, useReducer …）</li>
+</ul>
+<p>主要负责将数据和’生命周期’连接起来，有了同class组件类似的this.state功能，能够满足函数式组件自己定义状态的能力。</p>
+<ul>
+<li>辅助记忆型 （useMemo, useCallback …）</li>
+</ul>
+<p>由于函数式组件每次都是重新执行一遍,所以自己存储的一些数据会丢失，需要重新来一次，比如使用到了一个计算较为昂贵的值，就可以使用该函数缓存起来。</p>
+<ul>
+<li>工具型 （useEffect, useRef, useContext …）</li>
+</ul>
+<p>使得函数式组件有了能够和React内部有了关联，比如能够对数据生命周期控制，或者能够获取到上下文Context,或是存储ref对象</p>
+<h2 id="Hooks解决了什么"><a href="#Hooks解决了什么" class="headerlink" title="Hooks解决了什么"></a>Hooks解决了什么</h2><p>hooks开发时有两点感觉还是很不错的，能和之前class组件有不同的开发方式</p>
+<h3 id="以数据为生命周期"><a href="#以数据为生命周期" class="headerlink" title="以数据为生命周期"></a>以数据为生命周期</h3><p>之前使用class组件时，我们都是以整个组件的周期去统揽我们的各个数据，应该在这个组件什么生命周期去操作他，使用它，同样的,我们的核心是组件的生命周期，所有数据要应用到组件的生命周期，这就有一个问题，我们其实更加关心的是这个数据的生命周期。</p>
+<p>比如我们展示一个好友列表，如果当前没数据，我们去从服务端拉起数据，同样的，如果这个数据发生了改变，需要更新好友列表时，我们需要从服务端拉取数据。那么实际上，我们就是在看这个好友列表，而且最终反应到界面，更不知道组件的生命周期状态发生了改变。</p>
+<p>hooks模式下，则完全变成了我们对一个数据的生命周期的操作，不管当前这个组件是什么状态，只关心最终呈现到页面上，这也更符合我们的思考逻辑，同时也对开发者更加友好，<em>减少bug的最好方式就是少写代码</em>。</p>
+<h4 id="以搜索框举例"><a href="#以搜索框举例" class="headerlink" title="以搜索框举例"></a>以搜索框举例</h4><p>我们需要通过一个搜索框中内容的改变做一些校验</p>
+<ul>
+<li>Class组件中</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.state = &#123;</span><br><span class="line">  search: <span class="string">'defaultValue'</span>,</span><br><span class="line">  resultList: [],</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了放大问题，使用间接的方式修改resultlist</span></span><br><span class="line">componentDidUpdate(prevState) &#123;</span><br><span class="line">  <span class="keyword">if</span> (prevState.search !== <span class="keyword">this</span>.state.search) &#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">      resultList: fetchData(<span class="keyword">this</span>.search)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 组件挂载好，去修改默认搜索内容</span></span><br><span class="line">componentDidMount()&#123;</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    resultList: fetchData(<span class="keyword">this</span>.search)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Function组件中</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设定search搜索框中的内容状态</span></span><br><span class="line"><span class="keyword">const</span> [search, setSearch] = React.useState(<span class="string">'defaultValue'</span>)</span><br><span class="line"><span class="comment">// 当search内容发生改变时，更新结果列表</span></span><br><span class="line"><span class="keyword">const</span> [resultList, setResultList] = React.useState([])</span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  setResultList(fetchResult(search))</span><br><span class="line">&#125;, [search])</span><br></pre></td></tr></table></figure>
+<h3 id="逻辑更为集中"><a href="#逻辑更为集中" class="headerlink" title="逻辑更为集中"></a>逻辑更为集中</h3><p>当时用了class组件时，大部分逻辑是处于分散在各个生命周期内的，因为我们使用的类，所以必须是一个个方法，如果又要配合生命周期使用，那么<code>state</code>+<code>logic</code>+<code>lifecycle</code>会分散出来，然而大部分组件内状态的管理都会使用到这三个方式，能将某一部分集中起来，代码量再多的情况下，也会更好的拆分出来。</p>
+<h2 id="hooks开发相关建议"><a href="#hooks开发相关建议" class="headerlink" title="hooks开发相关建议"></a>hooks开发相关建议</h2><blockquote>
+<p>hooks不止是存储了this.state/this.setState</p>
+</blockquote>
+<h3 id="无需刻意在function组件中模拟class的周期"><a href="#无需刻意在function组件中模拟class的周期" class="headerlink" title="无需刻意在function组件中模拟class的周期"></a>无需刻意在function组件中模拟class的周期</h3><p>如果真的需要class组件周期使用的，那么使用class组件是更好的方式。</p>
+<p>大部分人会模拟生命周期，比较明显的就是<code>didMount</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 模拟componentDidMount</span></span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+<p>其实可以写很多个，内部使用依赖进行比较，一个空的依赖始终都是一样的，所以只会执行一次。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// name相关操作</span></span><br><span class="line"><span class="keyword">const</span> [name, setName] = React.useState(<span class="string">''</span>)</span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 初始化name操作...</span></span><br><span class="line">&#125;, [])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// age相关操作</span></span><br><span class="line"><span class="keyword">const</span> [age, setAge] = React.useState(<span class="number">0</span>)</span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 初始化age操作...</span></span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+<h3 id="使用callback时的闭包"><a href="#使用callback时的闭包" class="headerlink" title="使用callback时的闭包"></a>使用callback时的闭包</h3><p>当使用callback，他会缓存当前的执行栈相关的信息，这里的缓存如果控制不好依赖，就容易造成很大的问题，同样的window自带的<code>setTimeout</code>,<code>setInterval</code>也会有相关的问题。</p>
+<p>比如我们需要在组件挂载3s后打印当前的state状态</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [count, setCount] = React.useState(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> timer = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(count)</span><br><span class="line">  &#125;, <span class="number">3000</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 根据需要进行卸载 return () =&gt; &#123; clearTimeout(timer) &#125;</span></span><br><span class="line">&#125;, [])</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> (</span><br><span class="line">  &lt;button onClick=&#123;() =&gt; &#123; setCount(count + <span class="number">1</span>) &#125;&#125;&gt;increment&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">)</span></span><br></pre></td></tr></table></figure>
+<p>即使同样都是用到了count,多次点击按钮，发现3s钟后打印出的count还是0,因为创建时已经绑定了环境，及count已经为0了，（使用class组件并没体现出来，this.state.count，一串引用）</p>
+<p>使用引用去解决引用,ref</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [count, setCount] = React.useState(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> callbackRef = React.useRef()</span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  callbackRef.current = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(count)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, [count])</span><br><span class="line"></span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    callbackRef.current()</span><br><span class="line">  &#125;, <span class="number">3000</span>)</span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+<p>最终由于count的改变，修改了<code>callbackRef</code>的<code>current</code>，并且timeout绑定的是执行栈的<code>callbackRef</code>,然而他的ref已经被跟新了</p>
+<h3 id="不要欺骗你的hooks"><a href="#不要欺骗你的hooks" class="headerlink" title="不要欺骗你的hooks"></a>不要欺骗你的hooks</h3><p>hooks的依赖项决定了当前这个hooks是否在组件渲染时重新更新，即绑定了上下文环境中的变量，所以当他缓存起来时，就已经决定了内部的各种state值，可以说已经被替换为相应的数值，不再是一个变量了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 组件申明时</span></span><br><span class="line"><span class="keyword">const</span> [count, setCount] = React.useState(<span class="number">0</span>)</span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// count ...</span></span><br><span class="line">&#125;, [])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后续组件被缓存，可以理解为</span></span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 0 ...</span></span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+<p><strong>当使用各种callback去优化时，一定要注意使用的依赖是否正确</strong></p>
+<h3 id="hooks放置在函数组件顶部"><a href="#hooks放置在函数组件顶部" class="headerlink" title="hooks放置在函数组件顶部"></a>hooks放置在函数组件顶部</h3><blockquote>
+<p><a href="https://zh-hans.reactjs.org/docs/hooks-rules.html#explanation" target="_blank" rel="noopener">官方说明</a></p>
+</blockquote>
+<p>hooks内部的实现是挂载于fiber内的一个链表，无论是<code>useState</code>,还是<code>useEffect</code>等，React无法用一个明显的key值去区分挂载于fiber上的具体哪一个节点对应哪一个hooks，使用他们的顺序index也就成了目前最好的选择</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [count, setCount] = React.useState()</span><br><span class="line"></span><br><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ....</span></span><br><span class="line">&#125;, [])</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> price = React.useMemo(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"> <span class="comment">// ....价格由一堆复杂折扣计算而来， f(discount)</span></span><br><span class="line">&#125;, [ discount ])</span><br></pre></td></tr></table></figure>
+<p>之后挂载与该Fiber上的hooks链表大致为</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123; (count代表的useState) , next-&gt;(useEffect)&#125;</span><br><span class="line">&#123; (useEffect) , next-&gt;(useEffect)&#125;</span><br><span class="line">&#123; (count代表的useState) , next-&gt;(price代表的useMemo)&#125;</span><br><span class="line">&#123; (price代表的useMemo) , next-&gt;(<span class="literal">null</span>)&#125;</span><br></pre></td></tr></table></figure>
+<p>正常情况React再次渲染时，根据出现的顺序，将Fiber上记忆的每一个hooks，依据顺序去赋值操作，正好也是对上的</p>
+<p>如果有hooks前后出现顺序不一致，则会出现再次渲染时对不上，导致hooks调用错误</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误写法</span></span><br><span class="line"><span class="keyword">if</span> (!isLogin) &#123;</span><br><span class="line">  React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// .....</span></span><br><span class="line">  &#125;, [])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里想表示，某一个effect逻辑只在登陆时做检查，但是由于当前这个hooks（useEffect）是被嵌套的，很可能出现该hooks在函数内的执行顺序不一致</p>
+<ul>
+<li>isLogin == true</li>
+</ul>
+<p>hooks对应情况</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [count, setCount] ----&gt; React.useState</span><br><span class="line">  执行相关effect内部方法   ----&gt; React.useEffect</span><br><span class="line"><span class="keyword">const</span> price             ----&gt; React.useMemo</span><br></pre></td></tr></table></figure>
+<ul>
+<li>isLogin == false</li>
+</ul>
+<p>hooks对应情况</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [count, setCount] ----&gt; React.useState</span><br><span class="line"><span class="keyword">const</span> price    		  ----&gt; React.useEffect</span><br></pre></td></tr></table></figure>
+<p>这时出现了，对不上hooks存储的相关数据与其对应的使用发生了错误，即出现了问题</p>
+<ul>
+<li>正确的使用方式</li>
+</ul>
+<p>将判断逻辑，嵌套内置与hooks内部</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">React.useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!isLogin) &#123;</span><br><span class="line">    <span class="comment">// .....</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+<p>无论程序执行状况是怎样的，最终都是稳定，正确的hooks调用关系</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [count, setCount] ----&gt; React.useState</span><br><span class="line">  执行相关effect内部方法   ----&gt; React.useEffect</span><br><span class="line"><span class="keyword">const</span> price             ----&gt; React.useMemo</span><br></pre></td></tr></table></figure>
+<h2 id="需要立刻替换hooks吗"><a href="#需要立刻替换hooks吗" class="headerlink" title="需要立刻替换hooks吗"></a>需要立刻替换hooks吗</h2><p>可以着手于新的组件使用hooks模式（如果喜欢这种开发方式），hooks模式与class模式是可以共存的，所以并不用着力去修改。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/28/Object与Map的选用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1056,87 +1199,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/07/模拟async自执行函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/07/模拟async自执行函数/" class="post-title-link" itemprop="url">模拟async自执行函数</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-07 15:01:52" itemprop="dateCreated datePublished" datetime="2020-06-07T15:01:52+08:00">2020-06-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="回顾generator函数"><a href="#回顾generator函数" class="headerlink" title="回顾generator函数"></a>回顾generator函数</h1><p>generator函数是用来处理异步编程的解决方案，它使得一个函数可以暂时离开当前的执行栈，并将函数的执行权交由外部去处理。</p>
-<p><code>next</code>方法，手动获取当前的执行情况，<code>next()</code>方法的返回值，是yield的右侧内容，而<code>next(param)</code>参数param则是传递给generator函数中被yield挂起的左侧返回值。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">generator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> data1 = <span class="keyword">yield</span> <span class="number">2</span></span><br><span class="line">  <span class="keyword">const</span> data2 = <span class="keyword">yield</span> data1 + <span class="number">1</span></span><br><span class="line">  <span class="keyword">return</span> data2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 执行情况1 */</span></span><br><span class="line"><span class="keyword">const</span> gen = generator()</span><br><span class="line">gen.next() <span class="comment">// &#123; value: 2, done: false &#125; 函数从头开始，停在在yield 2右处</span></span><br><span class="line">gen.next() <span class="comment">// &#123; value: NaN, done: false &#125; 函数从yield 2 左侧开始，并返回undefined, 停在yield data1 + 1 </span></span><br><span class="line">gen.next() <span class="comment">// &#123; value: NaN, done: true &#125; 函数从yield data1 + 1 左侧开始 并返回undefined 停在执行完函数return</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 执行情况2 */</span></span><br><span class="line"><span class="keyword">const</span> gen = generator()</span><br><span class="line">gen.next() <span class="comment">// &#123; value: 2, done: false &#125; 函数从头开始，停在在yield 2右处</span></span><br><span class="line">gen.next(<span class="number">8</span>) <span class="comment">// &#123; value: 9, done: false &#125; 函数从yield 2 左侧开始，并返回8, 停在yield data1 + 1 </span></span><br><span class="line">gen.next(<span class="number">2</span>) <span class="comment">// &#123; value: 2, done: true &#125; 函数从yield data1 + 1 左侧开始, 并返回2, 停在执行完函数return</span></span><br></pre></td></tr></table></figure>
-<p>可以看出generator设计并不是将yield右侧内容，异步处理完毕后解析给左侧，他是让你来处理，只不过大多数情况我们都将处理的结果返回yield,造成了一种假象，并且其实直接返回内容给yield正是我们的本意</p>
-<p><code>for-of</code>循环可以在done为false的情况下，不断执行，使用generator执行fibonacci</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">fibonacci</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> [pre, cur] = [<span class="number">0</span>, <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">    [pre, cur] = [cur, pre + cur];</span><br><span class="line">    <span class="keyword">yield</span> cur</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> n <span class="keyword">of</span> fibonacci()) &#123;</span><br><span class="line">  <span class="keyword">if</span> (n &gt; <span class="number">100</span>) &#123;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(n) <span class="comment">// 1 ... 89</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="实现一个async-await的实现"><a href="#实现一个async-await的实现" class="headerlink" title="实现一个async/await的实现"></a>实现一个<code>async/await</code>的实现</h1><blockquote>
-<p><code>async/await</code>是<code>generator</code>函数的一个语法糖</p>
-</blockquote>
-<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>使用<code>async/await</code>重写例子</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">asyncFunc</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> data1 = <span class="keyword">await</span> <span class="number">2</span></span><br><span class="line">  <span class="keyword">const</span> data2 = <span class="keyword">await</span> data1 + <span class="number">1</span></span><br><span class="line">  <span class="keyword">return</span> data2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">asyncFunc().then(<span class="function"><span class="params">val</span> =&gt;</span> <span class="built_in">console</span>.log(val)) <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p>我们期望通过封装之后能够实现<code>async/await</code>类似的效果</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> asyncFunc = asyncToGenerator(<span class="function"><span class="keyword">function</span>* <span class="title">generator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> data1 = <span class="keyword">yield</span> <span class="number">2</span></span><br><span class="line">  <span class="keyword">const</span> data2 = <span class="keyword">yield</span> data1 + <span class="number">1</span></span><br><span class="line">  <span class="keyword">return</span> data2</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">asyncFunc().then(<span class="function"><span class="params">val</span> =&gt;</span> <span class="built_in">console</span>.log(val)) <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>如果实现串式，需要使用到Promise,核心内容为，如果当前<code>next</code>未执行完毕，则在下一个<code>promise.then</code>中继续调用next(),也即我们构建了一个Promise，省略了generator中若干可控制的yield,只将他的返回值取出来了。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncToGenerator</span>(<span class="params">generatorFunc</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> gen = generatorFunc.apply(<span class="keyword">this</span>, args)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="function"><span class="keyword">function</span> <span class="title">step</span>(<span class="params">key, arg</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> generatorResult</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          generatorResult = gen[key](arg)</span><br><span class="line">        &#125; <span class="keyword">catch</span>(error) &#123;</span><br><span class="line">          <span class="keyword">return</span> reject(error)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">const</span> &#123; value, done &#125; = generatorResult</span><br><span class="line">        <span class="keyword">if</span> (done) &#123;</span><br><span class="line">          <span class="keyword">return</span> resolve(value)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(value).then(<span class="function"><span class="params">val</span> =&gt;</span> step(<span class="string">'next'</span>,val), err =&gt; step(<span class="string">'throw'</span>,err))</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 开启任务</span></span><br><span class="line">      step(<span class="string">'next'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>测试</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">calcFunc</span>(<span class="params">num</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> x = <span class="keyword">yield</span> num * <span class="number">2</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">  <span class="keyword">const</span> y = <span class="number">3</span> * (<span class="keyword">yield</span> x + <span class="number">1</span>);</span><br><span class="line">  <span class="built_in">console</span>.log(y);</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> gen = asyncToGenerator(calcFunc)</span><br><span class="line">gen(<span class="number">2</span>).then(<span class="function"><span class="params">val</span> =&gt;</span> <span class="built_in">console</span>.log(val)); <span class="comment">// 16</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1208,7 +1270,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">137</span>
+          <span class="site-state-item-count">138</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
