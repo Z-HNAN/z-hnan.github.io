@@ -188,6 +188,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/09/BFC块状格式化区域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/09/BFC块状格式化区域/" class="post-title-link" itemprop="url">BFC块状格式化区域</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-09 21:33:06" itemprop="dateCreated datePublished" datetime="2020-06-09T21:33:06+08:00">2020-06-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="什么是BFC"><a href="#什么是BFC" class="headerlink" title="什么是BFC"></a>什么是BFC</h1><p>BFC（block-fomatting-context）是一种css渲染规则，规定了其内部元素的渲染规律，css2.1规定了BFC,IFC,css3又规定了BFC,IFC,GFC,FFC。</p>
+<p>BFC就是块级的作用域。GFC就是grid作用域。IFC就是内联作用域。FFC就是flex作用域。</p>
+<p>BFC可以理解为一种渲染的独立区域，规定了内部如何渲染，并且与外部也毫不关联。常用在独立的定位区域，并多余float关联（float也是营造出BFC的一种方式）</p>
+<h1 id="BFC内部特性如下"><a href="#BFC内部特性如下" class="headerlink" title="BFC内部特性如下"></a>BFC内部特性如下</h1><ul>
+<li>内部的Box会在垂直方向上一个接着一个放置。</li>
+<li>Box垂直方向的距离由 margin 决定。属于同一个BFC中的两个相邻的Box上下margin会发生叠加。</li>
+<li>每个元素的margin box 的左边，与包含块border box 的左边相接触。即使浮动也是如此。</li>
+<li>BFC 的区域不会与float box 重叠。</li>
+<li>BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响外面的元素，反之也如此。</li>
+<li>计算BFC的高度时，浮动元素也参与计算。</li>
+</ul>
+<p>也就是说我们的BFC环境中，他的计算都是独立出来的，与外部的BFC区域边界接触。并且内部与外部不相互影响。</p>
+<h1 id="营造出BFC环境的几种方式"><a href="#营造出BFC环境的几种方式" class="headerlink" title="营造出BFC环境的几种方式"></a>营造出BFC环境的几种方式</h1><ul>
+<li><code>position</code>:absolute或者fixed。</li>
+<li><code>float</code>:不是none。</li>
+<li><code>overflow</code>: 不是visible。</li>
+<li><code>display</code>: inline-box或者flex</li>
+<li>根元素<code>&lt;html&gt;</code></li>
+</ul>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><h2 id="右下角广告"><a href="#右下角广告" class="headerlink" title="右下角广告"></a>右下角广告</h2><p>跟随屏幕移动，设置其<code>position: fixed</code>形成了一个BFC，可对内布局。</p>
+<h2 id="浮动区域"><a href="#浮动区域" class="headerlink" title="浮动区域"></a>浮动区域</h2><p>left与right两个元素，通常情况下，将left设置为BFC(float)那么如果right的高度特别大，right元素会环绕在left的四周，这也是float最初的设计，文字排版中做图片环绕的功能。如果将right也设置为BFC(float)那么两个元素的边界才会挨在一起。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  .float-wrapper &#123;</span></span><br><span class="line"><span class="undefined">    border: 2px solid red;</span></span><br><span class="line"><span class="undefined">    overflow: auto;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">  .left &#123;</span></span><br><span class="line"><span class="undefined">    float: left;</span></span><br><span class="line"><span class="undefined">    background: yellowgreen;</span></span><br><span class="line"><span class="undefined">    width: 50px;</span></span><br><span class="line"><span class="undefined">    height: 50px;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">  .right &#123;</span></span><br><span class="line"><span class="undefined">    float: left;</span></span><br><span class="line"><span class="undefined">    background: hotpink;</span></span><br><span class="line"><span class="undefined">    height: 100px;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"float-wrapper"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"left"</span>&gt;</span>left<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span>right<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="清除浮动"><a href="#清除浮动" class="headerlink" title="清除浮动"></a>清除浮动</h2><p>当其内部元素都为float时，会造成高度塌陷，因为我们的BFC是独立的，所以我们可以为父元素设置为BFC，解决清除浮动。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">.wrapper &#123; overflow: auto; &#125;</span></span><br><span class="line"><span class="undefined">.box &#123; float: left; width: 50px; height: 50px; &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrapper"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="解决margin无效的问题"><a href="#解决margin无效的问题" class="headerlink" title="解决margin无效的问题"></a>解决margin无效的问题</h2><p>同一个BFC内，会出现margin合并的问题，我们可以在区域内营造出他自己的BFC环境，与外界隔离即可。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  .box &#123;</span></span><br><span class="line"><span class="undefined">    width: 50px;</span></span><br><span class="line"><span class="undefined">    height: 50px;</span></span><br><span class="line"><span class="undefined">    margin: 50px 0;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">  .wrapper &#123;</span></span><br><span class="line"><span class="undefined">    overflow: auto;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- margin出现重合 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- margin恢复 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="其他-圣杯布局"><a href="#其他-圣杯布局" class="headerlink" title="其他-圣杯布局"></a>其他-圣杯布局</h1><p>按照解析顺序，center在前。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"center"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"left"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>会使用到<code>margin-left: -100px;</code>他会向左去走，如果这个元素之前被挤下来了，那么他会又上去。</p>
+<p>使用<code>padding: 0 100px</code>然后在将元素浮动到位置，使用<code>position</code>之后，定位到空缺里，实现左右两侧固定。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  header, footer &#123;</span></span><br><span class="line"><span class="undefined">    background: hotpink;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">  .wrapper &#123;</span></span><br><span class="line"><span class="undefined">    padding: 0 50px;</span></span><br><span class="line"><span class="undefined">    overflow: auto;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">  .center &#123;</span></span><br><span class="line"><span class="undefined">    float: left;</span></span><br><span class="line"><span class="undefined">    width: 100%;</span></span><br><span class="line"><span class="undefined">    background: yellowgreen;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">  .left &#123;</span></span><br><span class="line"><span class="undefined">    position: relative;</span></span><br><span class="line"><span class="undefined">    float: left;</span></span><br><span class="line"><span class="undefined">    left: -50px;</span></span><br><span class="line"><span class="undefined">    width: 50px;</span></span><br><span class="line"><span class="undefined">    margin-left: -100%;</span></span><br><span class="line"><span class="undefined">    background: deeppink;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">  .right &#123;</span></span><br><span class="line"><span class="undefined">    position: relative;</span></span><br><span class="line"><span class="undefined">    right: -50px;</span></span><br><span class="line"><span class="undefined">    float: left;</span></span><br><span class="line"><span class="undefined">    width: 50px;</span></span><br><span class="line"><span class="undefined">    margin-left: -50px;</span></span><br><span class="line"><span class="undefined">    background: deeppink;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"> </span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">header</span>&gt;</span>header<span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"center"</span>&gt;</span>center<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"left"</span>&gt;</span>left<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span>right<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">footer</span>&gt;</span>footer<span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>本身使用<code>float</code>+<code>margin-left: -50px</code>就可以实现，但是会覆盖住<code>center</code>所以，设置了<code>wrapper</code>的两侧的<code>padding</code>,并且将其向两侧定位即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/07/模拟async自执行函数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -932,94 +1028,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/20/利用二进制码表示状态/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/20/利用二进制码表示状态/" class="post-title-link" itemprop="url">利用二进制码表示状态</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-20 23:19:34" itemprop="dateCreated datePublished" datetime="2020-04-20T23:19:34+08:00">2020-04-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在前端中，二进制码似乎在平常的开发中很少会去使用到，但是在一些框架中，也会看到其作为开发的一部分存在，并且结合位运算，有时也能达到较好的使用效果。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react\packages\shared\ReactSideEffectTags.js 中使用的相关状态码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> type SideEffectTag = number;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Don't change these two values. They're used by React Dev Tools.</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> NoEffect = <span class="comment">/*              */</span> <span class="number">0b00000000000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> PerformedWork = <span class="comment">/*         */</span> <span class="number">0b00000000001</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can change the rest (and add more).</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Placement = <span class="comment">/*             */</span> <span class="number">0b00000000010</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Update = <span class="comment">/*                */</span> <span class="number">0b00000000100</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> PlacementAndUpdate = <span class="comment">/*    */</span> <span class="number">0b00000000110</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Deletion = <span class="comment">/*              */</span> <span class="number">0b00000001000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> ContentReset = <span class="comment">/*          */</span> <span class="number">0b00000010000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Callback = <span class="comment">/*              */</span> <span class="number">0b00000100000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> DidCapture = <span class="comment">/*            */</span> <span class="number">0b00001000000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Ref = <span class="comment">/*                   */</span> <span class="number">0b00010000000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Snapshot = <span class="comment">/*              */</span> <span class="number">0b00100000000</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="简单的位运算"><a href="#简单的位运算" class="headerlink" title="简单的位运算"></a>简单的位运算</h2><p>位运算不会进位，不要与二进制的加减运算混淆</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 与(AND)      或(OR)      异或(XOR)     非(NOT)</span><br><span class="line"></span><br><span class="line">  0b001       0b001        0b011        </span><br><span class="line">&amp; 0b010     | 0b010      ^ 0b001      ~ 0b011</span><br><span class="line">--------    --------     --------     --------</span><br><span class="line">  0b000       0b011        0b010        0b100</span><br></pre></td></tr></table></figure>
-<p>在js中的数字类型转换中:</p>
-<ul>
-<li><code>0</code>,<code>NaN</code>对应的boolean值为<code>false</code>  </li>
-<li><code>123</code>,<code>-123</code>,<code>Infinity</code>,<code>...</code>对应的boolean值为<code>true</code>。</li>
-</ul>
-<p>所以利用这一特性可以将二进制数位运算的值转换为boolean值。</p>
-<h2 id="运用位运算实例"><a href="#运用位运算实例" class="headerlink" title="运用位运算实例"></a>运用位运算实例</h2><p>吃饭，睡觉，打豆豆为例</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存在的各种状态（为了对齐，借鉴React的书写方式）</span></span><br><span class="line"><span class="keyword">const</span> Eat = <span class="comment">/*      */</span> <span class="number">0b001</span> <span class="comment">// 吃饭</span></span><br><span class="line"><span class="keyword">const</span> Sleep = <span class="comment">/*    */</span> <span class="number">0b010</span> <span class="comment">// 睡觉</span></span><br><span class="line"><span class="keyword">const</span> Fight = <span class="comment">/*    */</span> <span class="number">0b100</span> <span class="comment">// 打豆豆</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Mode = <span class="comment">/*       */</span> <span class="number">0b000</span> <span class="comment">// 用户的初始状态</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> eatAndSleep = Mode | Eat | Sleep <span class="comment">// 0b011</span></span><br><span class="line"><span class="keyword">let</span> emptyMode = Mode <span class="comment">// 0b000</span></span><br><span class="line"><span class="keyword">let</span> fightMode = Mode | Fight <span class="comment">// 0b100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检验是否吃饭</span></span><br><span class="line"><span class="built_in">console</span>.log(eatAndSleep &amp; Eat) <span class="comment">// 1 (0b001) -&gt; true</span></span><br><span class="line"><span class="built_in">console</span>.log(emptyMode &amp; Eat) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(fightMode &amp; Eat) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检验是否打豆豆</span></span><br><span class="line"><span class="built_in">console</span>.log(eatAndSleep &amp; Fight) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(emptyMode &amp; Fight) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(fightMode &amp; Fight) <span class="comment">// 4 (0b100) -&gt; true</span></span><br></pre></td></tr></table></figure>
-<h3 id="添加类型"><a href="#添加类型" class="headerlink" title="添加类型"></a>添加类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mode = Mode | Eat <span class="comment">// 增加吃饭的标记 0b001</span></span><br></pre></td></tr></table></figure>
-<h3 id="是否有类型"><a href="#是否有类型" class="headerlink" title="是否有类型"></a>是否有类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> hasEat = Mode &amp; Eat <span class="comment">// 结果0或者非0</span></span><br><span class="line"><span class="comment">// let hasEat = !!(Mode &amp; Eat) // 结果为true/false</span></span><br></pre></td></tr></table></figure>
-<h3 id="去除类型"><a href="#去除类型" class="headerlink" title="去除类型"></a>去除类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mode = mode ^ Eat <span class="comment">// 去除睡觉的标记 0b000</span></span><br><span class="line"></span><br><span class="line">mode = mode &amp; ~(Eat) <span class="comment">// 去除睡觉的标记</span></span><br><span class="line">mode = mode &amp; ~(Eat | Sleep) <span class="comment">// 去除 睡觉，吃饭 的标记</span></span><br></pre></td></tr></table></figure>
-<h3 id="更为通用的方法"><a href="#更为通用的方法" class="headerlink" title="更为通用的方法"></a>更为通用的方法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断是否存在当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  currentMode 当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  targetMode  目标状态</span></span><br><span class="line"><span class="comment"> * @return &#123;Boolean&#125;             是否存在</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasMode</span>(<span class="params">currentMode, targetMode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (currentMode &amp; targetMode) !== <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 为当前状态码添加状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  currentMode 当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  targetMode  目标状态</span></span><br><span class="line"><span class="comment"> * @return &#123;Number&#125;              新生成的状态吗</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addMode</span>(<span class="params">currentMode, targetMode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> currentMode | targetMode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 为当前状态码去除状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  currentMode 当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  targetMode  目标状态</span></span><br><span class="line"><span class="comment"> * @return &#123;Number&#125;              新生成的状态吗</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeMode</span>(<span class="params">currentMode, targetMode</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// return currentMode &amp; ~targetMode // 也可使用</span></span><br><span class="line">  <span class="keyword">return</span> currentMode ^ targetMode <span class="comment">// 可使用 ^异或去除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><h3 id="使用封装的方法"><a href="#使用封装的方法" class="headerlink" title="使用封装的方法"></a>使用封装的方法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> eatMode = addMode(Mode, Eat)</span><br><span class="line"><span class="keyword">let</span> eatAndSleepMode = addMode(eatMode, Sleep)</span><br><span class="line"><span class="built_in">console</span>.log(hasMode(eatAndSleepMode, Eat)) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> sleepMode = removeMode(eatAndSleepMode, Eat)</span><br><span class="line"><span class="built_in">console</span>.log(hasMode(sleepMode, Eat)) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="直接使用二进制操作"><a href="#直接使用二进制操作" class="headerlink" title="直接使用二进制操作"></a>直接使用二进制操作</h3><blockquote>
-<p>React源码中大量使用到了位操作</p>
-</blockquote>
-<p><code>!!</code>操作可以直接转换为boolean值</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> eatAndSleepMode = Mode | Eat | Sleep</span><br><span class="line"><span class="built_in">console</span>.log(!!(eatAndSleepMode &amp; Eat)) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> sleepMode = eatAndSleepMode &amp; ~Eat</span><br><span class="line"><span class="built_in">console</span>.log(!!(sleepMode &amp; Eat)) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<p>有时React会直接操作当前mode</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">effectTag |= Ref <span class="comment">// 将Ref标识添加到effectTag中</span></span><br><span class="line"></span><br><span class="line">effectTag &amp;= ~Placement <span class="comment">// 将Placement状态从effectTag中去除</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1091,7 +1099,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-count">139</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

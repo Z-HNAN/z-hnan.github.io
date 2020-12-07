@@ -188,6 +188,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/04/devServer实现局域网内访问/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/04/devServer实现局域网内访问/" class="post-title-link" itemprop="url">devServer实现局域网内访问</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-04 22:06:06" itemprop="dateCreated datePublished" datetime="2019-10-04T22:06:06+08:00">2019-10-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>在react项目中，经常会使用到devServer, 此时如果设备在同一局域网下应该是可以胡同的（同一wifi环境）</p>
+</blockquote>
+<ol>
+<li><p>检查本机防火墙设置</p>
+</li>
+<li><p>开启devServer相关配置（重点）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">devServer: &#123;</span><br><span class="line">  port: <span class="number">8080</span>,</span><br><span class="line">  disableHostCheck: <span class="literal">true</span>,</span><br><span class="line">  host: <span class="string">'0.0.0.0'</span>,</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/04/eolinkerAMS开源版架设/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -946,122 +1020,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/路由router/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/07/05/路由router/" class="post-title-link" itemprop="url">路由router</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-07-05 09:07:21" itemprop="dateCreated datePublished" datetime="2019-07-05T09:07:21+08:00">2019-07-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="react-router-dom"><a href="#react-router-dom" class="headerlink" title="react-router-dom"></a>react-router-dom</h2><blockquote>
-<p>在3.x以上使用<code>react-router-dom</code>,在以下使用<code>react-router</code></p>
-</blockquote>
-<h4 id="BrowseRouter-VS-HashRouter"><a href="#BrowseRouter-VS-HashRouter" class="headerlink" title="BrowseRouter VS HashRouter"></a>BrowseRouter VS HashRouter</h4><ul>
-<li><p>BrowseRouter url变换的方式，多用于服务端渲染的方式 其依靠h5的 history API</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://www.demo.com/</span><br><span class="line">http://www.demo.com/personal/</span><br><span class="line">http://www.demo.com/personal/login/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>HashRouter 使用哈西路由， 使用js构造history API， 基于history stack来完成的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://www.demo.com/#/</span><br><span class="line">http://www.demo.com/#/personal/</span><br><span class="line">http://www.demo.com/#/personal/login/</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="Router匹配规则"><a href="#Router匹配规则" class="headerlink" title="Router匹配规则"></a>Router匹配规则</h4><p>一般情况下是都可以匹配的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">1. http://www.demo.com/#/</span><br><span class="line">2. http://www.demo.com/#/user</span><br><span class="line"></span><br><span class="line">都能匹配到</span><br><span class="line">&lt;Route path=&quot;/&quot; component /&gt; 1. 2.</span><br><span class="line">&lt;Route path=&quot;/&quot; exact component /&gt; 1.</span><br><span class="line"></span><br><span class="line">// 权限校验</span><br><span class="line">&lt;Route path=&quot;/pay&quot; render=&#123;() =&gt; &#123;</span><br><span class="line">  let flag = localStorage.getItem(&apos;FLAG&apos;)</span><br><span class="line">  if (flag &amp;&amp; flag === &apos;SAFE&apos;) &#123;</span><br><span class="line">    return &lt;Pay/&gt;</span><br><span class="line">  &#125;</span><br><span class="line">  return &apos;当前环境不安全，终止交易&apos;</span><br><span class="line">&#125;&#125;/&gt;</span><br><span class="line"></span><br><span class="line">// 使用 Switch组件只匹配一个,即匹配一个后跳出</span><br><span class="line">&lt;HashRouter&gt;</span><br><span class="line">&lt;Swtich&gt;</span><br><span class="line">  &lt;Route path=&quot;/&quot; exact component=&#123;A&#125;/&gt;   // 由于` / `匹配的太广泛，所以加一下react</span><br><span class="line">  &lt;Route path=&quot;/user&quot; component=&#123;A&#125;/&gt;</span><br><span class="line">  &lt;Route path=&quot;/pay&quot; component=&#123;A&#125;/&gt;</span><br><span class="line">  &lt;Route  render=&#123;() =&gt; &#123;return &apos;404&apos;&#125; &#125;/&gt; 或者 &lt;Redirect to=&apos;/&apos; /&gt;</span><br><span class="line">&lt;/Switch&gt;</span><br><span class="line">&lt;/HashRouter&gt;</span><br><span class="line"></span><br><span class="line">&lt;Router /&gt; 不设置Path是匹配所有的</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 重定向</span><br><span class="line">&lt;Redirect to=&quot;/?lx=404&quot; /&gt;</span><br><span class="line">&lt;Redirect to=&#123;&#123;</span><br><span class="line">  pathname: &apos;/&apos;,</span><br><span class="line">  search: &apos;?/lx=404&apos;</span><br><span class="line">&#125;&#125; /&gt;</span><br><span class="line"></span><br><span class="line">// 如果加入了PUSH属性， 会加入到HISTORY SATCK中增添一条记录</span><br><span class="line"></span><br><span class="line">&lt;Redirect from=&apos;/custom&apos; to=&apos;/custom/list&apos; /&gt;</span><br><span class="line">如果请求的HASH是 &apos;/custom&apos; 那么就重定向到 &apos;/custom/list&apos;</span><br></pre></td></tr></table></figure></p>
-<h4 id="lt-Link-gt-与-lt-NavLink-gt"><a href="#lt-Link-gt-与-lt-NavLink-gt" class="headerlink" title="&lt;Link&gt; 与 &lt;NavLink&gt;"></a><code>&lt;Link&gt;</code> 与 <code>&lt;NavLink&gt;</code></h4><p>必须都包裹在<hashrouter></hashrouter>中</p>
-<ul>
-<li>原理：最终都会转换成<code>&lt;a href=&quot;#/&quot; &gt;xxx&lt;/a&gt;</code></li>
-<li>使用：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;Link to=&apos;/&apos;&gt;&lt;/Link&gt; 普通的跳转</span><br><span class="line">&lt;Link to=&#123; &#123;</span><br><span class="line">  pathname: &apos;xxx&apos;,</span><br><span class="line">  search: &apos;xxx&apos;,</span><br><span class="line">  state: &apos;xx&apos;</span><br><span class="line">&#125; &#125; &gt;&lt;/Link&gt;</span><br><span class="line"></span><br><span class="line">&lt;NavLink&gt;使用方法一样  可以点击的跳转，但是其原理是匹配hash，并不是onClick增加的active</span><br><span class="line">&lt;NavLink activeClass=&quot;active&quot; activeStyle&gt;</span><br><span class="line">一般一级路由的nav不能简单使用NavLink的点击添加active,（因为Nav已经被渲染好了，</span><br><span class="line">并没有因为hash的改变而重新渲染）</span><br><span class="line">注意：当 &lt;NavLink to=&quot;/&quot; /&gt; 时, 要使用 exact</span><br><span class="line"></span><br><span class="line">1. 解决方案1 -&gt; 将nav放到各Nav组件中（不推荐）</span><br><span class="line">2. 解决方案2 -&gt; 使用withRouter包起来 export default withRouter(connect()(Nav)),</span><br><span class="line">      只要让其通过路由管控就可以，模拟成受路由管控的组件，即可根据路由对的改变而更新</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="受控组件在props上增添的属性"><a href="#受控组件在props上增添的属性" class="headerlink" title="受控组件在props上增添的属性"></a>受控组件在props上增添的属性</h4><ul>
-<li><p>HISTORY 基于 history stack历史信息栈</p>
-<ul>
-<li>PUSH 追加一条信息 this.props.history.push(‘./plan’)</li>
-<li>GO 前往第几条 1，往后的一页， -1 往前的一页</li>
-<li>GO-BACK &lt;=&gt; GO(-1)</li>
-<li>GO-FORWARD &lt;=&gt; GO(1)</li>
-</ul>
-</li>
-<li><p>LOCATION 获取当前hash路由渲染组件信息</p>
-<ul>
-<li>pathname 当前hash地址</li>
-<li>search 当前 问号 + 传值<br><code>http://www.demo.com/#/plan?lx=1</code> -&gt; ?lx=1</li>
-<li>state 基于REDIRECY/LINK/NAV-LINK, 对象中设置state,即可在这获取<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;LINK to=&#123; &#123;<span class="attr">pathname</span>: <span class="string">'plan'</span>, <span class="attr">search</span>:<span class="string">''</span>, <span class="attr">state</span>: &#123;&#125;&#125; &#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>MATCH 获取当前路由匹配结果<ul>
-<li>PARAMS 如果匹配地址参数，路径传参才使用</li>
-</ul>
-</li>
-</ul>
-<h6 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h6><ul>
-<li>search <code>?id=1</code>， 需要解析，可支持刷新，地址栏有状态</li>
-<li>state <code>to={ {pathname: &#39;/&#39;, state: id} }</code>, 直接获取，地址栏无状态，但是不可刷新，可以做成支付页等</li>
-<li>URL传递 将参数作为地址一部分 restful /detail/3<ol>
-<li>更改路由规则  <code>&lt;Route path=&quot;/detail:id&quot;</code> component={A}/&gt;</li>
-<li>设置pathname <code>to={ {pathname: &#39;/detail/${id}&#39; } }</code></li>
-<li>解析 获取到match, <code>let { match: {param} } = this.props</code> param.id即可 </li>
-</ol>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1133,7 +1091,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-count">139</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

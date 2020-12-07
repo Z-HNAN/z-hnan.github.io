@@ -188,6 +188,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/20/利用二进制码表示状态/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/20/利用二进制码表示状态/" class="post-title-link" itemprop="url">利用二进制码表示状态</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-20 23:19:34" itemprop="dateCreated datePublished" datetime="2020-04-20T23:19:34+08:00">2020-04-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在前端中，二进制码似乎在平常的开发中很少会去使用到，但是在一些框架中，也会看到其作为开发的一部分存在，并且结合位运算，有时也能达到较好的使用效果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react\packages\shared\ReactSideEffectTags.js 中使用的相关状态码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> type SideEffectTag = number;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Don't change these two values. They're used by React Dev Tools.</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> NoEffect = <span class="comment">/*              */</span> <span class="number">0b00000000000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> PerformedWork = <span class="comment">/*         */</span> <span class="number">0b00000000001</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can change the rest (and add more).</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Placement = <span class="comment">/*             */</span> <span class="number">0b00000000010</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Update = <span class="comment">/*                */</span> <span class="number">0b00000000100</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> PlacementAndUpdate = <span class="comment">/*    */</span> <span class="number">0b00000000110</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Deletion = <span class="comment">/*              */</span> <span class="number">0b00000001000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> ContentReset = <span class="comment">/*          */</span> <span class="number">0b00000010000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Callback = <span class="comment">/*              */</span> <span class="number">0b00000100000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> DidCapture = <span class="comment">/*            */</span> <span class="number">0b00001000000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Ref = <span class="comment">/*                   */</span> <span class="number">0b00010000000</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Snapshot = <span class="comment">/*              */</span> <span class="number">0b00100000000</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="简单的位运算"><a href="#简单的位运算" class="headerlink" title="简单的位运算"></a>简单的位运算</h2><p>位运算不会进位，不要与二进制的加减运算混淆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 与(AND)      或(OR)      异或(XOR)     非(NOT)</span><br><span class="line"></span><br><span class="line">  0b001       0b001        0b011        </span><br><span class="line">&amp; 0b010     | 0b010      ^ 0b001      ~ 0b011</span><br><span class="line">--------    --------     --------     --------</span><br><span class="line">  0b000       0b011        0b010        0b100</span><br></pre></td></tr></table></figure>
+<p>在js中的数字类型转换中:</p>
+<ul>
+<li><code>0</code>,<code>NaN</code>对应的boolean值为<code>false</code>  </li>
+<li><code>123</code>,<code>-123</code>,<code>Infinity</code>,<code>...</code>对应的boolean值为<code>true</code>。</li>
+</ul>
+<p>所以利用这一特性可以将二进制数位运算的值转换为boolean值。</p>
+<h2 id="运用位运算实例"><a href="#运用位运算实例" class="headerlink" title="运用位运算实例"></a>运用位运算实例</h2><p>吃饭，睡觉，打豆豆为例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存在的各种状态（为了对齐，借鉴React的书写方式）</span></span><br><span class="line"><span class="keyword">const</span> Eat = <span class="comment">/*      */</span> <span class="number">0b001</span> <span class="comment">// 吃饭</span></span><br><span class="line"><span class="keyword">const</span> Sleep = <span class="comment">/*    */</span> <span class="number">0b010</span> <span class="comment">// 睡觉</span></span><br><span class="line"><span class="keyword">const</span> Fight = <span class="comment">/*    */</span> <span class="number">0b100</span> <span class="comment">// 打豆豆</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Mode = <span class="comment">/*       */</span> <span class="number">0b000</span> <span class="comment">// 用户的初始状态</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> eatAndSleep = Mode | Eat | Sleep <span class="comment">// 0b011</span></span><br><span class="line"><span class="keyword">let</span> emptyMode = Mode <span class="comment">// 0b000</span></span><br><span class="line"><span class="keyword">let</span> fightMode = Mode | Fight <span class="comment">// 0b100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检验是否吃饭</span></span><br><span class="line"><span class="built_in">console</span>.log(eatAndSleep &amp; Eat) <span class="comment">// 1 (0b001) -&gt; true</span></span><br><span class="line"><span class="built_in">console</span>.log(emptyMode &amp; Eat) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(fightMode &amp; Eat) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检验是否打豆豆</span></span><br><span class="line"><span class="built_in">console</span>.log(eatAndSleep &amp; Fight) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(emptyMode &amp; Fight) <span class="comment">// 0 (0b000) -&gt; false</span></span><br><span class="line"><span class="built_in">console</span>.log(fightMode &amp; Fight) <span class="comment">// 4 (0b100) -&gt; true</span></span><br></pre></td></tr></table></figure>
+<h3 id="添加类型"><a href="#添加类型" class="headerlink" title="添加类型"></a>添加类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mode = Mode | Eat <span class="comment">// 增加吃饭的标记 0b001</span></span><br></pre></td></tr></table></figure>
+<h3 id="是否有类型"><a href="#是否有类型" class="headerlink" title="是否有类型"></a>是否有类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> hasEat = Mode &amp; Eat <span class="comment">// 结果0或者非0</span></span><br><span class="line"><span class="comment">// let hasEat = !!(Mode &amp; Eat) // 结果为true/false</span></span><br></pre></td></tr></table></figure>
+<h3 id="去除类型"><a href="#去除类型" class="headerlink" title="去除类型"></a>去除类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mode = mode ^ Eat <span class="comment">// 去除睡觉的标记 0b000</span></span><br><span class="line"></span><br><span class="line">mode = mode &amp; ~(Eat) <span class="comment">// 去除睡觉的标记</span></span><br><span class="line">mode = mode &amp; ~(Eat | Sleep) <span class="comment">// 去除 睡觉，吃饭 的标记</span></span><br></pre></td></tr></table></figure>
+<h3 id="更为通用的方法"><a href="#更为通用的方法" class="headerlink" title="更为通用的方法"></a>更为通用的方法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断是否存在当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  currentMode 当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  targetMode  目标状态</span></span><br><span class="line"><span class="comment"> * @return &#123;Boolean&#125;             是否存在</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasMode</span>(<span class="params">currentMode, targetMode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (currentMode &amp; targetMode) !== <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 为当前状态码添加状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  currentMode 当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  targetMode  目标状态</span></span><br><span class="line"><span class="comment"> * @return &#123;Number&#125;              新生成的状态吗</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addMode</span>(<span class="params">currentMode, targetMode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> currentMode | targetMode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 为当前状态码去除状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  currentMode 当前的状态</span></span><br><span class="line"><span class="comment"> * @param  &#123;Number&#125;  targetMode  目标状态</span></span><br><span class="line"><span class="comment"> * @return &#123;Number&#125;              新生成的状态吗</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeMode</span>(<span class="params">currentMode, targetMode</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// return currentMode &amp; ~targetMode // 也可使用</span></span><br><span class="line">  <span class="keyword">return</span> currentMode ^ targetMode <span class="comment">// 可使用 ^异或去除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><h3 id="使用封装的方法"><a href="#使用封装的方法" class="headerlink" title="使用封装的方法"></a>使用封装的方法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> eatMode = addMode(Mode, Eat)</span><br><span class="line"><span class="keyword">let</span> eatAndSleepMode = addMode(eatMode, Sleep)</span><br><span class="line"><span class="built_in">console</span>.log(hasMode(eatAndSleepMode, Eat)) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> sleepMode = removeMode(eatAndSleepMode, Eat)</span><br><span class="line"><span class="built_in">console</span>.log(hasMode(sleepMode, Eat)) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h3 id="直接使用二进制操作"><a href="#直接使用二进制操作" class="headerlink" title="直接使用二进制操作"></a>直接使用二进制操作</h3><blockquote>
+<p>React源码中大量使用到了位操作</p>
+</blockquote>
+<p><code>!!</code>操作可以直接转换为boolean值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> eatAndSleepMode = Mode | Eat | Sleep</span><br><span class="line"><span class="built_in">console</span>.log(!!(eatAndSleepMode &amp; Eat)) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> sleepMode = eatAndSleepMode &amp; ~Eat</span><br><span class="line"><span class="built_in">console</span>.log(!!(sleepMode &amp; Eat)) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>有时React会直接操作当前mode</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">effectTag |= Ref <span class="comment">// 将Ref标识添加到effectTag中</span></span><br><span class="line"></span><br><span class="line">effectTag &amp;= ~Placement <span class="comment">// 将Placement状态从effectTag中去除</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/14/深拷贝/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1198,157 +1286,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/07/浏览器工作原理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/07/浏览器工作原理/" class="post-title-link" itemprop="url">浏览器工作原理</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-07 14:20:23" itemprop="dateCreated datePublished" datetime="2020-03-07T14:20:23+08:00">2020-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-03 01:07:06" itemprop="dateModified" datetime="2020-08-03T01:07:06+08:00">2020-08-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="宏观"><a href="#宏观" class="headerlink" title="宏观"></a>宏观</h2><ol>
-<li>将网址转换为IP地址，通过浏览器缓存-系统缓存-路由器缓存-ISP供应商缓存 去DNS服务器查询网址所对应的ip地址</li>
-<li>向ip地址服务器发出请求</li>
-<li>目标服务器解析请求，返回内容</li>
-<li>浏览器相应内容，并呈现给用户</li>
-</ol>
-<h2 id="主要分析浏览器拿到文档时，他是如何进行渲染的"><a href="#主要分析浏览器拿到文档时，他是如何进行渲染的" class="headerlink" title="主要分析浏览器拿到文档时，他是如何进行渲染的"></a>主要分析浏览器拿到文档时，他是如何进行渲染的</h2><blockquote>
-<p>浏览器主要内核为webkit版和Gecko</p>
-</blockquote>
-<h3 id="大致流程"><a href="#大致流程" class="headerlink" title="大致流程"></a>大致流程</h3><p>浏览器首次绘制</p>
-<p>1.渲染引擎从网络层获取文档内容</p>
-<p>2.DOM部分有DOM解析器生成DOM树（DOM tree），样式部分由样式解析器生成样式规则（style rules）</p>
-<p>2.两者通过附加（attachment）生成渲染树（render tree）</p>
-<p>3.该渲染树进行布局(layout),添加坐标位置信息</p>
-<p>4.最后经过绘制（painting）经由渲染引擎经行绘制</p>
-<p>浏览器进行二次绘制</p>
-<p>发生重绘（repaint）回流/重排（reflow）</p>
-<p>重绘对应的是painting阶段，也就是改变了元素的样式，并未改变元素的位置，如background,color,visible等，对其他元素没有什么影响</p>
-<p>回流对应的是layout阶段，也就是元素的位置发生了改变，需要浏览器根据当前窗口的大小重新计算各个元素的位置，进行定位后，在绘制，如果浏览器自身窗口大小也发生了改变，那么也就会应用于reflow,元素的位置是根据当前的窗口大小进行改变的</p>
-<blockquote>
-<p>按照流程来讲，reflow -&gt; repaint，所以发生reflow时，一定会经历repaint, 发生repaint时，不会触发reflow</p>
-</blockquote>
-<h3 id="如何避免DOM回流"><a href="#如何避免DOM回流" class="headerlink" title="如何避免DOM回流"></a>如何避免DOM回流</h3><blockquote>
-<p>避免操作DOM，就是最好的避免DOM回流的方式，使用现代框架，基于virtualDOM以及DOMDiff能很好的解决问题，所以使用第三方框架是较好的一种选择，这里展示的是手动操作DOM时的一些优化建议</p>
-</blockquote>
-<ul>
-<li>分离读写操作</li>
-</ul>
-<p>读操作，放在一起，写操作放在一起，现代浏览器会做部分优化，会对连续的写操作进行缓存，一次处理</p>
-<ul>
-<li>缓存布局信息</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 看似一次回流，其实中间穿插了读写，较影响性能</span></span><br><span class="line">element.style.width = element.clientWidth + <span class="number">10</span> + <span class="string">'px'</span></span><br><span class="line">element.style.height = element.clientHeight + <span class="number">10</span> + <span class="string">'px'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 缓存布局信息</span></span><br><span class="line"><span class="keyword">const</span> widht = element.clientWidth</span><br><span class="line"><span class="keyword">const</span> height = element.clientHeight</span><br><span class="line"></span><br><span class="line">element.style.width = width + <span class="number">10</span> + <span class="string">'px'</span></span><br><span class="line">element.style.height = height + <span class="number">10</span> + <span class="string">'px'</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>批量文档修改</li>
-</ul>
-<p>使用<code>fragment</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fragment = <span class="built_in">document</span>.createDocumentFragment()</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">const</span> newLi = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>)</span><br><span class="line">  newLi.innerText = i</span><br><span class="line">  fragment.appendChild(newLi)</span><br><span class="line">&#125;</span><br><span class="line">element.appendChild(fragment)</span><br><span class="line">fragment = <span class="literal">null</span> <span class="comment">// 手动释放</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用字符串拼接</li>
-</ul>
-<p>基于模板字符串的方式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> liContent = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  liContent += <span class="string">`&lt;li&gt;<span class="subst">$&#123;i&#125;</span>&lt;/li&gt;`</span></span><br><span class="line">&#125;</span><br><span class="line">element.innerHtml = liContent</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>动画效果应该尽可能的脱离文档流，避免影响其他元素</p>
-</li>
-<li><p>CSS使用有硬件加速的效果，底层做了避免回流操作</p>
-</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">element.style.transform = <span class="string">'translateX(200px)'</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>尽可能避免使用table布局</li>
-</ul>
-<p>文档的特性是流式布局，所以使用table布局，会进行多次回流操作</p>
-<h2 id="渲染关键路劲"><a href="#渲染关键路劲" class="headerlink" title="渲染关键路劲"></a>渲染关键路劲</h2><h3 id="css"><a href="#css" class="headerlink" title="css"></a>css</h3><p>由于样式有层叠的属性，所以必须要等样式全部加载完后再进行,否则会进行多次重建CSSOM,一般建议将style放在head部分，建立在下文中的style标签容易会被阻塞，从而重建CSSOM</p>
-<h3 id="html"><a href="#html" class="headerlink" title="html"></a>html</h3><p>由于文档是从上到下构建的，从而可以一边接受一边展示，所谓的流式。</p>
-<h3 id="js"><a href="#js" class="headerlink" title="js"></a>js</h3><p>js代码在执行时，也是从上到下执行的，但是由于其又可以改变css，也可以改变DOM结构，所以js执行的时候，CSSOM,DOM构建需暂停</p>
-<h3 id="一般情况构建"><a href="#一般情况构建" class="headerlink" title="一般情况构建"></a>一般情况构建</h3><p>如果只有html与css,即没有script代码嵌入到html中，那么会一边构建CSSOM，一边构建DOM，待两者最长的一个完成时（两者可以同时构建）,组成render-tree，经过定位，绘制呈现到浏览器上</p>
-<p>如果有html,css,js,那么在执行到js的时候，必须要停止css,和html的解析，又因为样式必须一次性加载完毕（否则可能获取的错误的CSS），所以最终的加载顺序<code>CSSOM -&gt; JS -&gt; HTML</code>,所以如果js代码写在html之前，就无法获取之后的内容，因为之后的html还未执行到。</p>
-<h2 id="优化渲染关键路径"><a href="#优化渲染关键路径" class="headerlink" title="优化渲染关键路径"></a>优化渲染关键路径</h2><p>三种因素会互相制约</p>
-<ul>
-<li>关键资源的数量</li>
-<li>关键路径的长度</li>
-<li>关键字节的数量</li>
-</ul>
-<p>关键资源指的是那些阻塞页面首次渲染的资源，如js,css,阻塞关键渲染，浏览器处理渲染的工作量越少，CPU占用的其他资源也越少</p>
-<p>关键路径的长度是指关键路径的总耗时，每一步耗时越长其总体被阻塞的时间就会越长，其受到网络情况，关键资源数量，以及关键字节大小有关。</p>
-<p>关键字节数量是指资源的字节大小，浏览器下载字节越少，其处理速度就会越快。</p>
-<h3 id="缩小DOM"><a href="#缩小DOM" class="headerlink" title="缩小DOM"></a>缩小DOM</h3><ul>
-<li>缩减文件的尺寸，去除注释，去除无用的代码</li>
-<li>使用gzip压缩</li>
-<li>使用缓存</li>
-</ul>
-<h3 id="优化CSSOM"><a href="#优化CSSOM" class="headerlink" title="优化CSSOM"></a>优化CSSOM</h3><ul>
-<li>只将首屏资源放入，由于css会阻塞页面，在暂时用不到的地方可以设置为预加载，或者使用hack的方式加载</li>
-</ul>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"style.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">media</span>=<span class="string">"print"</span> <span class="attr">onload</span>=<span class="string">"this.media='all'"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>将主要的首屏渲染放入head中，减缓下载的时间，可参考<a href="https://github.com/addyosmani/critical" target="_blank" rel="noopener">critical css</a></p>
-</li>
-<li><p>少使用<code>@import</code>他会使文件串行加载</p>
-</li>
-</ul>
-<h3 id="优化js"><a href="#优化js" class="headerlink" title="优化js"></a>优化js</h3><ul>
-<li>js文件也要压缩，使用tree-shaking功能进行优化</li>
-<li>使用异步加载js,<code>&lt;script async src=&quot;...&quot;&gt;&lt;/script&gt;</code></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1420,7 +1357,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-count">139</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

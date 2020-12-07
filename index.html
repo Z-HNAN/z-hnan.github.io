@@ -188,6 +188,162 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/07/多包管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="浩南">
+      <meta itemprop="description" content="Keep Output!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Z-HNAN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/07/多包管理/" class="post-title-link" itemprop="url">多包管理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-12-07 19:52:31 / 修改时间：23:01:14" itemprop="dateCreated datePublished" datetime="2020-12-07T19:52:31+08:00">2020-12-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="多包管理方式"><a href="#多包管理方式" class="headerlink" title="多包管理方式"></a>多包管理方式</h2><p>常见的开发方式可以将多个项目放在同一个git仓库里，采用不同的子目录做区分即可，一撸到底，但是不同的包管理起来相对比较混乱，一个依赖可能会造成全局安装，或者不同的项目会相互影响，如果设计到子项目之间的相互调用就不太优雅。</p>
+<p>采用<code>monorepo</code>的多包管理方式，即还是将多个项目放在同一个git仓库里</p>
+<p>采用<code>multirepo</code>的多包管理方式，将多个项目放在不同的git仓库里</p>
+<p>相比较两种多包管理方式，<code>monorepo</code>的方式有两个优点</p>
+<ul>
+<li><p>项目内某一个包更新，可以在内部直接更新引用即可，如果是多git仓库管理等，则需要发布此包，另外引用到该包的包也都需要再发布一次</p>
+</li>
+<li><p>可以在项目最外层定义一些公共配置，比如<code>eslintrc.js</code>等</p>
+</li>
+</ul>
+<h2 id="使用lerna"><a href="#使用lerna" class="headerlink" title="使用lerna"></a>使用<code>lerna</code></h2><p>lernaJS是由Babel团队出的一个多包管理工具。因为Babel包含很多子包，以前都是放在多个仓库里的，管理比较困难，特别是有调用系统内包的时候，发布比较麻烦。所以为了能更好更快的夸包管理，babel推出了lernaJS，使用了monorepo的概念，现在React,Babel,Angular,Jest都在使用这个工具来管理包。</p>
+<p>基本使用方式</p>
+<ul>
+<li>初始化<code>lerna</code>项目</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lerna init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时项目目录</span></span><br><span class="line">.</span><br><span class="line">├── lerna.json</span><br><span class="line">├── package.json</span><br><span class="line">└── packages</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建子项目<code>demo1</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">lerna create demo1</span><br><span class="line"><span class="comment"># 也可使用默认值创建</span></span><br><span class="line">lerna create demo1 -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时项目目录</span></span><br><span class="line">.</span><br><span class="line">├── lerna.json</span><br><span class="line">├── package.json</span><br><span class="line">└── packages</span><br><span class="line">    └── demo1</span><br><span class="line">        ├── README.md</span><br><span class="line">        ├── __tests__</span><br><span class="line">        │   └── demo1.test.js</span><br><span class="line">        ├── lib</span><br><span class="line">        │   └── demo1.js</span><br><span class="line">        └── package.json</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建子包依赖</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">lerna create utils</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时项目目录</span></span><br><span class="line">.</span><br><span class="line">├── lerna.json</span><br><span class="line">├── package.json</span><br><span class="line">└── packages</span><br><span class="line">    ├── demo1</span><br><span class="line">    │   ├── README.md</span><br><span class="line">    │   ├── __tests__</span><br><span class="line">    │   │   └── demo1.test.js</span><br><span class="line">    │   ├── lib</span><br><span class="line">    │   │   └── demo1.js</span><br><span class="line">    │   └── package.json</span><br><span class="line">    └── utils</span><br><span class="line">        ├── README.md</span><br><span class="line">        ├── __tests__</span><br><span class="line">        │   └── utils.test.js</span><br><span class="line">        ├── lib</span><br><span class="line">        │   └── utils.js</span><br><span class="line">        └── package.json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 为demo1项目安装utils</span></span><br><span class="line">lerna add utils --scope=demo1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时demo1的依赖项中已经有了utils</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"utils"</span>: <span class="string">"^0.0.0"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装外部依赖</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lerna add lodash --scope=utils</span><br><span class="line"></span><br><span class="line"><span class="comment"># 此时utils的依赖项中已经有了lodash</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"lodash"</span>: <span class="string">"^4.17.20"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>跑项目命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行所有包中package.json中的scripts命令</span></span><br><span class="line">lerna run &lt;scripts&gt;</span><br><span class="line"><span class="comment"># 运行指定子项目的scripts命令</span></span><br><span class="line">lerna run &lt;scripts&gt; --scope=&lt;subName&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行所有包中的命令</span></span><br><span class="line">lerna <span class="built_in">exec</span> <span class="string">'&lt;script&gt;'</span></span><br><span class="line"><span class="comment"># 运行指定子包包中的命令</span></span><br><span class="line">lerna <span class="built_in">exec</span> <span class="string">'&lt;scripts&gt;'</span> --scope=&lt;subName&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下两个命令相同</span></span><br><span class="line">lerna run build --scope=demo1</span><br><span class="line">lerna <span class="built_in">exec</span> <span class="string">'npm run build'</span> --scope=demo1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其他命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">lerna bootstrap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出所有依赖</span></span><br><span class="line">lerna list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看本次的改动</span></span><br><span class="line">leran changed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布</span></span><br><span class="line">lerna publish <span class="comment"># 创建版本并发布npm</span></span><br><span class="line">lerna version <span class="comment"># 修改版本，不会发布npm，会同步到github</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从外部引入一个包</span></span><br><span class="line">lerna import &lt;path-to-external-repository&gt;</span><br></pre></td></tr></table></figure>
+<p>其他用法可以结合<code>lerna exec</code>比如删除某个子项目的包<code>leran exec &#39;yarn remove lodash&#39; --scope=utils</code></p>
+<h3 id="lerna的版本lerna-json中的version配置项"><a href="#lerna的版本lerna-json中的version配置项" class="headerlink" title="lerna的版本lerna.json中的version配置项"></a>lerna的版本<code>lerna.json</code>中的<code>version</code>配置项</h3><ul>
+<li>Fixed</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"version": "0.0.0"</span><br></pre></td></tr></table></figure>
+<p>全局固定为一个版本，发包的时候全部统一升级一个版本</p>
+<p>当升级时，遵循<code>semver</code>规范</p>
+<ul>
+<li>Independent</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"version": "independent"</span><br></pre></td></tr></table></figure>
+<p>每个子包使用各自的版本控制</p>
+<h3 id="lerna拓扑执行"><a href="#lerna拓扑执行" class="headerlink" title="lerna拓扑执行"></a>lerna拓扑执行</h3><p>这一点也是lerna一大卖点，相对比与yarn的多包管理方式，他可以分析包中的依赖然后去打包执行</p>
+<p>比如上面提到的<code>demo1</code>项目依赖到了<code>utils</code>项目，那么打包时，就应该先打包<code>utils</code>包，再去打包<code>demo1</code>包</p>
+<p>举个例子</p>
+<blockquote>
+<p>lerna默认生成代码为<code>lib/&lt;name&gt;.js</code></p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 增加utils打包能力 */</span></span><br><span class="line"><span class="comment">// 1.修改lib/index.js</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'utils index build...'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.package.json添加scripts</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"build"</span>: <span class="string">"node ./lib/index.js"</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 增加demo1打包能力 */</span></span><br><span class="line"><span class="comment">// 1.修改lib/index.js</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'demo1 index build...'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.package.json添加scripts</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"build"</span>: <span class="string">"node ./lib/index.js"</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>lerna run build --sort</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先打印了utils... 再打印了demo1</span></span><br><span class="line">utils index build...</span><br><span class="line">demo1 index build...</span><br></pre></td></tr></table></figure>
+<h2 id="使用lerna-yarn"><a href="#使用lerna-yarn" class="headerlink" title="使用lerna+yarn"></a>使用<code>lerna+yarn</code></h2><p>创建基于<code>lerna</code>的<code>yarnWorkspaces</code>管理方式,将依赖提取到最外侧</p>
+<blockquote>
+<p>推荐使用<code>lerna init</code>创建<code>monorepo</code>项目，使用<code>yarn workspaces</code>后, 外部项目<code>package.json.name</code>为<code>root</code></p>
+</blockquote>
+<ul>
+<li>创建项目</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建lerna工程</span></span><br><span class="line">lerna init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装lerna</span></span><br><span class="line">yarn add -D -W lerna</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改lerna.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"packages"</span>: [</span><br><span class="line">    <span class="string">"packages/*"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"0.0.0"</span>,</span><br><span class="line">  <span class="string">"npmClient"</span>: <span class="string">"yarn"</span>,</span><br><span class="line">  <span class="string">"useWorkspaces"</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 修改package.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"root"</span>,</span><br><span class="line">  <span class="string">"private"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="string">"workspaces"</span>: [</span><br><span class="line">    <span class="string">"packages/*"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"lerna"</span>: <span class="string">"^3.22.1"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建子项目</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以手动去目录中创建项目</span></span><br><span class="line">mkdir -p packages/demo</span><br><span class="line"><span class="built_in">cd</span> packages/demo</span><br><span class="line">yarn init -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以使用lerna创建子项目</span></span><br><span class="line">lerna create demo -y</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装/移除依赖</li>
+</ul>
+<blockquote>
+<p>一般可将编译使用，比如<code>babel</code>,<code>typescript</code>,<code>webpack</code>放到最外侧root的依赖</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># root包的安装</span></span><br><span class="line">yarn add lodash -W -D</span><br><span class="line"><span class="comment"># root包的去除</span></span><br><span class="line">yarn remove lodash -W -D </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># demo包中安装依赖lodash</span></span><br><span class="line">yarn workspace demo add lodash</span><br><span class="line"><span class="comment"># demo包移除依赖lodash</span></span><br><span class="line">yarn workspace demo remove lodash</span><br></pre></td></tr></table></figure>
+<p>注意：<code>yarn workspace &lt;subPackage&gt;</code>是在子包下执行命令，<code>yarn workspaces &lt;script&gt;</code>是yarn多包管理的命令</p>
+<ul>
+<li>运行命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行子包中命令,即进入到子包中run相应的命令</span></span><br><span class="line">yarn workspace run &lt;subPackage&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包所有,但是没有拓扑去执行</span></span><br><span class="line">yarn workspaces run build</span><br><span class="line"><span class="comment"># 可以使用lerna去拓扑执行</span></span><br><span class="line">lerna run build</span><br></pre></td></tr></table></figure>
+<ul>
+<li>项目内安装依赖</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yarn workspace安装依赖</span></span><br><span class="line">yarn workspace demo add utils@0.0.0 <span class="comment"># 这里必须加上版本号，当前项目中的版本依赖</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用lerna安装子依赖</span></span><br><span class="line">lerna add utils --scope=demo</span><br></pre></td></tr></table></figure>
+<ul>
+<li>发布版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前版本改动</span></span><br><span class="line">lerna changed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布version</span></span><br><span class="line">lerna version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布npm等</span></span><br><span class="line">lerna publish</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其他</li>
+</ul>
+<p>安装依赖 <code>yarn install</code>等价于<code>lerna bootstrap</code></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://segmentfault.com/a/1190000019350611" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019350611</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/108118011" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/108118011</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/71385053" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/71385053</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/22/postMessage使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -974,66 +1130,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/03/加油-China/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="浩南">
-      <meta itemprop="description" content="Keep Output!">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Z-HNAN">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/03/加油-China/" class="post-title-link" itemprop="url">加油,China</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-03 03:13:27 / 修改时间：03:21:51" itemprop="dateCreated datePublished" datetime="2020-09-03T03:13:27+08:00">2020-09-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/img/2020/09/01/flag.jpg" alt="China"></p>
-<p>加油，中国，一起共度难关！🇨🇳🇨🇳🇨🇳</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1105,7 +1201,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-count">139</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
